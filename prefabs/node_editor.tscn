@@ -45,8 +45,6 @@ texture = ExtResource("2_ujkkt")
 
 [node name="Line" type="Line2D" parent="."]
 texture_repeat = 2
-position = Vector2(-496, -192)
-points = PackedVector2Array(0, 272, 456, 272, 456, -48, 0, -48, 0, 272)
 width = 4.0
 joint_mode = 2
 begin_cap_mode = 2

@@ -59,12 +59,20 @@ func reposition_elements():
 	$Rotate.position = Vector2(rect.end.x, rect.position.y)
 	$Copy.position = Vector2(rect.position.x, rect.end.y)
 	$Resize.position = rect.end
+	$Line.points = [
+		rect.position,
+		Vector2(rect.position.x, rect.end.y),
+		rect.end,
+		Vector2(rect.end.x, rect.position.y),
+		rect.position
+	]
 
 func vanish_elements():
 	$Trash.position = -Vector2.ONE * 69420
 	$Rotate.position = -Vector2.ONE * 69420
 	$Copy.position = -Vector2.ONE * 69420
 	$Resize.position = -Vector2.ONE * 69420
+	$Line.points = []
 
 enum ButtonEnum { NONE = -1, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
@@ -88,13 +96,13 @@ func _on_trash_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.TRASH
-			if grid_size == Vector2(32, 32):
-				set_grid_size(Vector2(64, 64))
-			else:
-				set_grid_size(Vector2(32, 32))
-			# editing_node.queue_free()
-			# editing_node = null
-			# vanish_elements()
+#			if grid_size == Vector2(32, 32):
+#				set_grid_size(Vector2(64, 64))
+#			else:
+#				set_grid_size(Vector2(32, 32))
+			editing_node.queue_free()
+			editing_node = null
+			vanish_elements()
 		elif button_pressed == ButtonEnum.TRASH:
 			button_pressed == ButtonEnum.NONE
 
@@ -139,9 +147,10 @@ func _unhandled_input(event):
 		var diff = event.position - mouse_pos
 		match button_pressed:
 			ButtonEnum.RESIZE:
+				var a = ((editing_node.position - grid_offset).posmodv(amnt) / 8).floor() # FIXME: it's supposed to snap to the grid...
 				var v = (diff.abs() / amnt).floor() * diff.sign() * amnt / 8
-				editing_node.width = clamp(og_width + v.x, MIN_SIZE.x, MAX_SIZE.x)
-				editing_node.height = clamp(og_height + v.y, MIN_SIZE.y, MAX_SIZE.y)
+				editing_node.width = clamp(og_width + v.x + a.x, MIN_SIZE.x, MAX_SIZE.x)
+				editing_node.height = clamp(og_height + v.y + a.y, MIN_SIZE.y, MAX_SIZE.y)
 				reposition_elements()
 			ButtonEnum.NODE:
 				editing_node.position = (((og_pos + diff) / amnt).floor() * amnt + grid_offset).clamp(MIN_POSITION * 8, MAX_POSITION * 8)

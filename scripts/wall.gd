@@ -3,11 +3,11 @@ class_name Wall
 
 extends StaticBody2D
 
-@export var width = 1:
+@export var width = 64:
 	set(val):
 		width = val
 		reset_hitbox()
-@export var height = 1:
+@export var height = 64:
 	set(val):
 		height = val
 		reset_hitbox()
@@ -19,7 +19,7 @@ func reset_hitbox():
 		return
 	queue_redraw()
 	hitbox.scale = Vector2(width, height)
-	hitbox.position = hitbox.scale * 4
+	hitbox.position = hitbox.scale * 0.5
 
 func _ready():
 	reset_hitbox()
@@ -30,7 +30,7 @@ var outline = 0
 func _draw():
 	if Engine.is_editor_hint():
 		return
-	draw_rect(Rect2(0, 0, width * 8, height * 8), GameInfo.wall_color)
+	draw_rect(Rect2(0, 0, width, height), GameInfo.wall_color)
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):

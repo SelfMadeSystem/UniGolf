@@ -30,7 +30,7 @@ func _draw():
 	)
 
 func get_points():
-	return _get_points() * Transform2D.IDENTITY.scaled(8 * hitbox.scale.abs())
+	return _get_points() * Transform2D.IDENTITY.scaled(hitbox.scale.abs())
 
 func _get_points() -> PackedVector2Array:
 	match (flipped):

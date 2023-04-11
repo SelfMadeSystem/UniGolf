@@ -4,20 +4,21 @@
 [ext_resource type="Texture2D" uid="uid://bms5s3na3ow4w" path="res://assets/slope.svg" id="2_rpqg0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
-size = Vector2(8, 8)
+size = Vector2(1, 1)
 
 [node name="Slope" type="Area2D"]
 linear_damp = 0.0
 script = ExtResource("1_gbwyi")
+width = 8
+height = 8
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
-position = Vector2(32, 32)
-scale = Vector2(8, 8)
+position = Vector2(0.5, 0.5)
 shape = SubResource("RectangleShape2D_lkq47")
 
 [node name="Sprite" type="Sprite2D" parent="HitBox"]
 texture_repeat = 2
-scale = Vector2(0.0330578, 0.0330578)
+scale = Vector2(0.00413223, 0.00413223)
 texture = ExtResource("2_rpqg0")
 region_rect = Rect2(0, 0, 259, 260)
 

@@ -8,11 +8,11 @@ enum Angle { ANGLE_0, ANGLE_90, ANGLE_180, ANGLE_270 }
 	set(val):
 		flipped = val
 		reset_sprite()
-@export var width = 8:
+@export var width = 64:
 	set(val):
 		width = val
 		reset_sprite()
-@export var height = 8:
+@export var height = 64:
 	set(val):
 		height = val
 		reset_sprite()
@@ -26,7 +26,7 @@ func reset_sprite():
 		return
 	sprite.rotation = -flipped * PI/2
 	hitbox.scale = Vector2(width, height)
-	hitbox.position = hitbox.scale * 4
+	hitbox.position = hitbox.scale * 0.5
 
 var grav_dir = Vector2.LEFT
 @export var grav = 3200

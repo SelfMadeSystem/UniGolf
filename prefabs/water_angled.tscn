@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://ceye2673rkda6"]
+
+[ext_resource type="Script" path="res://scripts/water_angled.gd" id="1_cdfgk"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_bthpr"]
+points = PackedVector2Array(-4, -4, 4, 4, -4, 4)
+
+[node name="Water" type="Area2D"]
+collision_layer = 2
+collision_mask = 2
+linear_damp_space_override = 3
+linear_damp = 0.0
+script = ExtResource("1_cdfgk")
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+position = Vector2(4, 4)
+shape = SubResource("ConvexPolygonShape2D_bthpr")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="input_event" from="." to="." method="_on_input_event"]

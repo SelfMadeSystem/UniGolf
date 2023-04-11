@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3 uid="uid://cravviqoqd7fr"]
+
+[ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
+[ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
+[ext_resource type="Texture2D" uid="uid://c0ipcd20y2552" path="res://assets/icons/Info.png" id="2_ujkkt"]
+[ext_resource type="Texture2D" uid="uid://c8l5mwpvsnsdj" path="res://assets/icons/Resize.png" id="3_0bbys"]
+[ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
+[ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
+size = Vector2(40, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d0m1h"]
+size = Vector2(40, 40)
+
+[node name="NodeEditor" type="Node2D"]
+z_index = 9
+script = ExtResource("1_rivm0")
+
+[node name="Copy" type="Sprite2D" parent="."]
+position = Vector2(-128, 320)
+scale = Vector2(0.701754, 0.701755)
+texture = ExtResource("1_kyu4h")
+offset = Vector2(-28, 28)
+
+[node name="Info" type="Sprite2D" parent="."]
+position = Vector2(-192, 232)
+scale = Vector2(0.597015, 0.597015)
+texture = ExtResource("2_ujkkt")
+
+[node name="Trash" type="Sprite2D" parent="."]
+position = Vector2(-128, 320)
+scale = Vector2(0.8, 0.740741)
+texture = ExtResource("4_eqyul")
+offset = Vector2(-25, -27)
+
+[node name="Line" type="Line2D" parent="."]
+texture_repeat = 2
+position = Vector2(-496, -192)
+points = PackedVector2Array(0, 272, 456, 272, 456, -48, 0, -48, 0, 272)
+width = 4.0
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="Resize" type="Area2D" parent="."]
+z_index = 9
+position = Vector2(-128, 320)
+
+[node name="Resize" type="Sprite2D" parent="Resize"]
+scale = Vector2(0.701754, 0.701754)
+texture = ExtResource("3_0bbys")
+offset = Vector2(28, 28)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Resize"]
+position = Vector2(20, 20)
+shape = SubResource("RectangleShape2D_3sxyp")
+
+[node name="Rotate" type="Area2D" parent="."]
+z_index = 9
+position = Vector2(-128, 320)
+
+[node name="Rotate" type="Sprite2D" parent="Rotate"]
+scale = Vector2(0.769231, 0.769231)
+texture = ExtResource("6_lxbl4")
+offset = Vector2(26, -26)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Rotate"]
+position = Vector2(20, -20)
+shape = SubResource("RectangleShape2D_d0m1h")
+
+[connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
+[connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]

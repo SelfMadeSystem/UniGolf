@@ -1,0 +1,164 @@
+[gd_scene load_steps=10 format=3 uid="uid://dwhbum768g3up"]
+
+[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="1_m206b"]
+[ext_resource type="Script" path="res://scripts/level.gd" id="1_n55kl"]
+[ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="2_ehtsh"]
+[ext_resource type="PackedScene" uid="uid://3xn1ldg5w2bd" path="res://scenes/World1.tscn" id="2_xs8g3"]
+[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="4_rm634"]
+[ext_resource type="PackedScene" uid="uid://c0nhw3l7v477e" path="res://prefabs/wall_angled.tscn" id="6_ttpf3"]
+[ext_resource type="PackedScene" uid="uid://qi03cirumaps" path="res://prefabs/water.tscn" id="7_rpdcr"]
+[ext_resource type="PackedScene" uid="uid://ceye2673rkda6" path="res://prefabs/water_angled.tscn" id="8_sray6"]
+[ext_resource type="PackedScene" uid="uid://ctowfk21e7k47" path="res://prefabs/slope.tscn" id="9_fmlm2"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_n55kl")
+next_scene = ExtResource("2_xs8g3")
+
+[node name="Ball" parent="." instance=ExtResource("1_m206b")]
+position = Vector2(320, 896)
+can_sleep = false
+
+[node name="Goal" parent="." instance=ExtResource("4_rm634")]
+position = Vector2(320, 128)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(0, 24)
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall" parent="Walls" instance=ExtResource("2_ehtsh")]
+width = 75
+height = 2
+
+[node name="Wall4" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(0, 984)
+width = 75
+height = 2
+
+[node name="Wall2" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(0, 16)
+width = 2
+height = 121
+
+[node name="Wall15" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(256, 256)
+width = 8
+height = 8
+
+[node name="Wall18" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(352, 168)
+width = 8
+height = 8
+
+[node name="Wall19" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(408, 96)
+width = 8
+height = 8
+
+[node name="Wall20" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(448, 24)
+width = 8
+height = 8
+
+[node name="Wall21" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(40, 48)
+width = 8
+height = 8
+
+[node name="Wall3" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(584, 16)
+width = 2
+height = 121
+
+[node name="Wall16" parent="Walls" instance=ExtResource("6_ttpf3")]
+position = Vector2(320, 256)
+width = 8
+height = 8
+
+[node name="Wall17" parent="Walls" instance=ExtResource("6_ttpf3")]
+position = Vector2(192, 256)
+flipped = 1
+width = 8
+height = 8
+
+[node name="Wall9" parent="Walls" instance=ExtResource("6_ttpf3")]
+position = Vector2(64, 192)
+flipped = 3
+width = 32
+height = 8
+
+[node name="Wall10" parent="Walls" instance=ExtResource("6_ttpf3")]
+position = Vector2(64, 128)
+width = 32
+height = 8
+
+[node name="Water" type="Node2D" parent="."]
+
+[node name="Water" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(384, 416)
+width = 8
+height = 16
+
+[node name="Water4" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(184, 400)
+width = 8
+height = 16
+
+[node name="Water5" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(56, 496)
+width = 8
+height = 16
+
+[node name="Water2" parent="Water" instance=ExtResource("8_sray6")]
+position = Vector2(448, 416)
+flipped = 3
+width = 8
+height = 16
+
+[node name="Water3" parent="Water" instance=ExtResource("8_sray6")]
+position = Vector2(320, 416)
+flipped = 2
+width = 8
+height = 16
+
+[node name="Slopes" type="Node2D" parent="."]
+
+[node name="Slope5" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(256, 640)
+flipped = 2
+grav = 2200
+
+[node name="Slope6" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(320, 640)
+flipped = 2
+grav = 2200
+
+[node name="Slope7" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(256, 576)
+flipped = 2
+grav = 2200
+
+[node name="Slope8" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(320, 576)
+flipped = 2
+grav = 2200
+
+[node name="Slope9" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(384, 896)
+flipped = 1
+grav = 2200
+
+[node name="Slope10" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(448, 896)
+flipped = 1
+grav = 2200
+
+[node name="Slope11" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(384, 832)
+flipped = 1
+grav = 2200
+
+[node name="Slope12" parent="Slopes" instance=ExtResource("9_fmlm2")]
+position = Vector2(448, 832)
+flipped = 1
+grav = 2200

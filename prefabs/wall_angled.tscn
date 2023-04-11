@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0nhw3l7v477e"]
+
+[ext_resource type="Script" path="res://scripts/wall_angled.gd" id="1_ovhl4"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_10mqh"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_8cjd3"]
+points = PackedVector2Array(-4, -4, 4, 4, -4, 4)
+
+[node name="Wall" type="StaticBody2D"]
+y_sort_enabled = true
+use_parent_material = true
+input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_10mqh")
+script = ExtResource("1_ovhl4")
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+position = Vector2(4, 4)
+shape = SubResource("ConvexPolygonShape2D_8cjd3")
+debug_color = Color(1, 0, 0.0862745, 0.419608)
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

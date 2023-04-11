@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://bsqi3qjwgjv4a"]
+
+[ext_resource type="Script" path="res://scripts/ice.gd" id="1_elugm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
+size = Vector2(16, 16)
+
+[sub_resource type="Gradient" id="Gradient_2l7j5"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_8fxjs"]
+gradient = SubResource("Gradient_2l7j5")
+fill_from = Vector2(0.8, 0.3)
+fill_to = Vector2(0, 1)
+
+[node name="Ice" type="Area2D"]
+linear_damp_space_override = 3
+linear_damp = 0.0
+script = ExtResource("1_elugm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_lkq47")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(3.57628e-07, 4.17233e-07)
+scale = Vector2(0.25, 0.25)
+texture = SubResource("GradientTexture2D_8fxjs")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

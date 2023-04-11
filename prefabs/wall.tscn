@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://drwdakie2e3yt"]
+
+[ext_resource type="Script" path="res://scripts/wall.gd" id="1_vel55"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_10mqh"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
+size = Vector2(8, 8)
+
+[node name="Wall" type="StaticBody2D"]
+y_sort_enabled = true
+use_parent_material = true
+input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_10mqh")
+script = ExtResource("1_vel55")
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+position = Vector2(4, 4)
+shape = SubResource("RectangleShape2D_lkq47")
+debug_color = Color(1, 0, 0.0862745, 0.419608)
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

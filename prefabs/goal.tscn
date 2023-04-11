@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbjbnyddt56rj"]
+
+[ext_resource type="Script" path="res://scripts/goal.gd" id="1_qyaml"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kueul"]
+
+[node name="Goal" type="Area2D"]
+scale = Vector2(4, 4)
+collision_layer = 128
+collision_mask = 128
+gravity_space_override = 1
+gravity_point = true
+gravity_point_center = Vector2(0, 0)
+gravity_direction = Vector2(0, 0)
+linear_damp_space_override = 3
+linear_damp = 3.0
+script = ExtResource("1_qyaml")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_kueul")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

@@ -1,0 +1,40 @@
+[gd_scene load_steps=6 format=3 uid="uid://1u4j0gj6s8r7"]
+
+[ext_resource type="Script" path="res://scripts/ball.gd" id="1_ps3hi"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qx6mg"]
+friction = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qdpj5"]
+radius = 16.0
+
+[sub_resource type="Curve" id="Curve_u0lu2"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6xikl"]
+radius = 4.0
+
+[node name="Ball" type="RigidBody2D"]
+z_index = 1
+collision_layer = 129
+collision_mask = 129
+physics_material_override = SubResource("PhysicsMaterial_qx6mg")
+lock_rotation = true
+linear_damp = 1.2
+script = ExtResource("1_ps3hi")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_qdpj5")
+
+[node name="Line2D" type="Line2D" parent="."]
+unique_name_in_owner = true
+width_curve = SubResource("Curve_u0lu2")
+
+[node name="WaterDetector" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WaterDetector"]
+shape = SubResource("CircleShape2D_6xikl")

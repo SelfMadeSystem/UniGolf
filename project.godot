@@ -1,0 +1,53 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="MonoGolf"
+run/main_scene="res://scenes/World.tscn"
+config/features=PackedStringArray("4.0", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[autoload]
+
+GameInfo="*res://scripts/game_info.gd"
+NodeEditor="*res://prefabs/node_editor.tscn"
+
+[display]
+
+window/size/viewport_width=600
+window/size/viewport_height=1000
+window/stretch/mode="viewport"
+window/handheld/orientation=1
+
+[dotnet]
+
+project/assembly_name="MonoGolf"
+
+[layer_names]
+
+2d_physics/layer_1="Wall, Land, Conveyors, Slopes, etc."
+2d_physics/layer_2="Water"
+2d_physics/layer_8="Goal"
+
+[physics]
+
+common/physics_ticks_per_second=240
+2d/default_gravity_vector=Vector2(0, 0)
+2d/default_linear_damp=0.0
+2d/default_angular_damp=0.0
+
+[rendering]
+
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_2d=3
+anti_aliasing/quality/msaa_3d=3
+anti_aliasing/quality/screen_space_aa=1
+renderer/default_gravity_vector=Vector2(0, 1)

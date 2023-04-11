@@ -25,14 +25,17 @@ func proceed_to_edit_node(node: Node2D):
 		return
 	next_node = node
 
+func actually_proceed_to_edit_node(node: Node2D):
+	if editing_node:
+		editing_node.input_event.disconnect(_on_editing_node_input_event)
+	editing_node = node
+	editing_node.input_event.connect(_on_editing_node_input_event)
+	reposition_elements()
+
 func _process(delta):
 	if next_node && editing_node != next_node:
 		if button_pressed == -1:
-			if editing_node:
-				editing_node.input_event.disconnect(_on_editing_node_input_event)
-			editing_node = next_node
-			editing_node.input_event.connect(_on_editing_node_input_event)
-			reposition_elements()
+			actually_proceed_to_edit_node(next_node)
 		else:
 			next_node = null
 
@@ -42,6 +45,12 @@ func reposition_elements():
 	$Rotate.position = Vector2(rect.end.x, rect.position.y)
 	$Copy.position = Vector2(rect.position.x, rect.end.y)
 	$Resize.position = rect.end
+
+func vanish_elements():
+	$Trash.position = -Vector2.ONE * 69420
+	$Rotate.position = -Vector2.ONE * 69420
+	$Copy.position = -Vector2.ONE * 69420
+	$Resize.position = -Vector2.ONE * 69420
 
 enum ButtonEnum { NONE = -1, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
@@ -58,6 +67,27 @@ func _on_rotate_input_event(viewport, event, shape_idx):
 			button_pressed = ButtonEnum.ROTATE
 			editing_node.flipped = (editing_node.flipped + 1) % 4
 		elif button_pressed == ButtonEnum.ROTATE:
+			button_pressed == ButtonEnum.NONE
+
+func _on_trash_input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == 1 && event.pressed:
+			button_pressed = ButtonEnum.TRASH
+			editing_node.queue_free()
+			editing_node = null
+			vanish_elements()
+		elif button_pressed == ButtonEnum.TRASH:
+			button_pressed == ButtonEnum.NONE
+
+func _on_copy_input_event(viewport, event, shape_idx):
+	if event is InputEventMouseButton:
+		if event.button_index == 1 && event.pressed:
+			button_pressed = ButtonEnum.COPY
+			var clone = editing_node.duplicate()
+			clone.position += Vector2(16, 16)
+			editing_node.add_sibling(clone)
+			actually_proceed_to_edit_node(clone)
+		elif button_pressed == ButtonEnum.COPY:
 			button_pressed == ButtonEnum.NONE
 
 func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
@@ -88,4 +118,9 @@ func _unhandled_input(event):
 				mouse_rel_accum.x = fmod(mouse_rel_accum.x, 8)
 				mouse_rel_accum.y = fmod(mouse_rel_accum.y, 8)
 				reposition_elements()
+
+
+
+
+
 

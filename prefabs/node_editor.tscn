@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cravviqoqd7fr"]
+[gd_scene load_steps=15 format=3 uid="uid://cravviqoqd7fr"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://c8l5mwpvsnsdj" path="res://assets/icons/Resize.png" id="3_0bbys"]
 [ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
 [ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
+[ext_resource type="Shader" path="res://assets/shaders/grid.gdshader" id="7_4p2lq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
 size = Vector2(40, 40)
@@ -18,6 +19,20 @@ size = Vector2(40, 40)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lu42b"]
 size = Vector2(40, 40)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_mltie"]
+shader = ExtResource("7_4p2lq")
+shader_parameter/cell_size = Vector2(64, 64)
+shader_parameter/offset = Vector2(31, 31)
+shader_parameter/width = 2
+shader_parameter/color = Color(0, 0, 0, 0.47451)
+
+[sub_resource type="Gradient" id="Gradient_x0ble"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 0, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2q3qt"]
+gradient = SubResource("Gradient_x0ble")
 
 [node name="NodeEditor" type="Node2D"]
 z_index = 9
@@ -88,6 +103,13 @@ offset = Vector2(-28, 28)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Copy"]
 position = Vector2(-20, 20)
 shape = SubResource("RectangleShape2D_lu42b")
+
+[node name="Grid" type="Sprite2D" parent="."]
+z_index = 1
+material = SubResource("ShaderMaterial_mltie")
+scale = Vector2(11.125, 20.75)
+texture = SubResource("GradientTexture2D_2q3qt")
+offset = Vector2(32, 32)
 
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]

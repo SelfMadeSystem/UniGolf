@@ -1,10 +1,17 @@
 extends Node2D
 
-const MIN_SIZE = 8
-const MAX_SIZE = 128
+const MIN_SIZE = Vector2(8, 8)
+const MAX_SIZE = Vector2(128, 128)
 
-const MIN_POSITION = 0
-const MAX_POSITION = 128
+const MIN_POSITION = Vector2(0, 0)
+const MAX_POSITION = Vector2(128, 128)
+
+var grid_size = Vector2(64, 64)
+var grid_offset = Vector2(32, 32)
+
+func set_grid_size(size: Vector2):
+	grid_size = size
+	($Grid.material as ShaderMaterial).set_shader_parameter("cell_size", size)
 
 # Assume properties on node:
 # width: int
@@ -28,9 +35,16 @@ func proceed_to_edit_node(node: Node2D):
 func actually_proceed_to_edit_node(node: Node2D):
 	if editing_node:
 		editing_node.input_event.disconnect(_on_editing_node_input_event)
+		editing_node.tree_exited.disconnect(deyeet)
 	editing_node = node
 	editing_node.input_event.connect(_on_editing_node_input_event)
+	editing_node.tree_exited.connect(deyeet)
 	reposition_elements()
+
+func deyeet():
+	editing_node = null
+	button_pressed = ButtonEnum.NONE
+	vanish_elements()
 
 func _process(delta):
 	if next_node && editing_node != next_node:
@@ -60,6 +74,7 @@ func _on_resize_input_event(_viewport: Node, event: InputEvent, _shape_idx: int)
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.RESIZE
+			set_mouse_pos(event)
 
 func _on_rotate_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
@@ -73,9 +88,13 @@ func _on_trash_input_event(viewport, event, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.TRASH
-			editing_node.queue_free()
-			editing_node = null
-			vanish_elements()
+			if grid_size == Vector2(32, 32):
+				set_grid_size(Vector2(64, 64))
+			else:
+				set_grid_size(Vector2(32, 32))
+			# editing_node.queue_free()
+			# editing_node = null
+			# vanish_elements()
 		elif button_pressed == ButtonEnum.TRASH:
 			button_pressed == ButtonEnum.NONE
 
@@ -94,29 +113,38 @@ func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.NODE
+			set_mouse_pos(event)
 
-var mouse_rel_accum = Vector2.ZERO
+var mouse_pos = Vector2.ZERO
+var og_width = 0
+var og_height = 0
+var og_pos = Vector2.ZERO
+
+func set_mouse_pos(event: InputEventMouseButton):
+	mouse_pos = event.position
+	og_width = editing_node.width
+	og_height = editing_node.height
+	og_pos = editing_node.position
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
-			mouse_rel_accum = Vector2.ZERO
 	elif event is InputEventMouseMotion:
+		if button_pressed < 0:
+			return
+		var amnt = Vector2(8, 8)
+		if $Grid.visible:
+			amnt = grid_size
+		var diff = event.position - mouse_pos
 		match button_pressed:
 			ButtonEnum.RESIZE:
-				mouse_rel_accum += event.relative
-				editing_node.width = clamp(editing_node.width + (mouse_rel_accum.x as int) / 8, MIN_SIZE, MAX_SIZE)
-				editing_node.height = clamp(editing_node.height + (mouse_rel_accum.y as int) / 8, MIN_SIZE, MAX_SIZE)
-				mouse_rel_accum.x = fmod(mouse_rel_accum.x, 8)
-				mouse_rel_accum.y = fmod(mouse_rel_accum.y, 8)
+				var v = (diff.abs() / amnt).floor() * diff.sign() * amnt / 8
+				editing_node.width = clamp(og_width + v.x, MIN_SIZE.x, MAX_SIZE.x)
+				editing_node.height = clamp(og_height + v.y, MIN_SIZE.y, MAX_SIZE.y)
 				reposition_elements()
 			ButtonEnum.NODE:
-				mouse_rel_accum += event.relative
-				editing_node.position.x = clamp(editing_node.position.x / 8 + (mouse_rel_accum.x as int) / 8, MIN_POSITION, MAX_POSITION) * 8
-				editing_node.position.y = clamp(editing_node.position.y / 8 + (mouse_rel_accum.y as int) / 8, MIN_POSITION, MAX_POSITION) * 8
-				mouse_rel_accum.x = fmod(mouse_rel_accum.x, 8)
-				mouse_rel_accum.y = fmod(mouse_rel_accum.y, 8)
+				editing_node.position = (((og_pos + diff) / amnt).floor() * amnt + grid_offset).clamp(MIN_POSITION * 8, MAX_POSITION * 8)
 				reposition_elements()
 
 

@@ -21,102 +21,99 @@ can_sleep = false
 [node name="Goal" parent="." instance=ExtResource("4_rm634")]
 position = Vector2(320, 128)
 
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(0, 24)
-
 [node name="Walls" type="Node2D" parent="."]
 
 [node name="Wall" parent="Walls" instance=ExtResource("2_ehtsh")]
-width = 75
-height = 2
+width = 80
+height = 4
 
 [node name="Wall4" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(0, 984)
-width = 75
-height = 2
+position = Vector2(0, 992)
+width = 80
+height = 4
 
 [node name="Wall2" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(0, 16)
-width = 2
-height = 121
+position = Vector2(0, 32)
+width = 4
+height = 120
+
+[node name="Wall3" parent="Walls" instance=ExtResource("2_ehtsh")]
+position = Vector2(608, 32)
+width = 4
+height = 120
 
 [node name="Wall15" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(256, 256)
+position = Vector2(288, 224)
 width = 8
 height = 8
 
 [node name="Wall18" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(352, 168)
+position = Vector2(352, 160)
 width = 8
 height = 8
 
 [node name="Wall19" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(408, 96)
+position = Vector2(416, 96)
 width = 8
 height = 8
 
 [node name="Wall20" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(448, 24)
+position = Vector2(480, 32)
 width = 8
 height = 8
 
 [node name="Wall21" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(40, 48)
+position = Vector2(96, 96)
 width = 8
 height = 8
 
-[node name="Wall3" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(584, 16)
-width = 2
-height = 121
-
 [node name="Wall16" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(320, 256)
+position = Vector2(352, 224)
 width = 8
 height = 8
 
 [node name="Wall17" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(192, 256)
+position = Vector2(224, 224)
 flipped = 1
 width = 8
 height = 8
 
 [node name="Wall9" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(64, 192)
+position = Vector2(32, 224)
 flipped = 3
 width = 32
 height = 8
 
 [node name="Wall10" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(64, 128)
+position = Vector2(32, 160)
 width = 32
 height = 8
 
 [node name="Water" type="Node2D" parent="."]
 
 [node name="Water" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(384, 416)
+position = Vector2(416, 416)
 width = 8
 height = 16
 
 [node name="Water4" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(184, 400)
+position = Vector2(224, 352)
 width = 8
 height = 16
 
 [node name="Water5" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(56, 496)
+position = Vector2(96, 480)
 width = 8
 height = 16
 
 [node name="Water2" parent="Water" instance=ExtResource("8_sray6")]
-position = Vector2(448, 416)
+position = Vector2(480, 416)
 flipped = 3
 width = 8
 height = 16
 
 [node name="Water3" parent="Water" instance=ExtResource("8_sray6")]
-position = Vector2(320, 416)
+position = Vector2(352, 416)
 flipped = 2
 width = 8
 height = 16
@@ -124,41 +121,41 @@ height = 16
 [node name="Slopes" type="Node2D" parent="."]
 
 [node name="Slope5" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(256, 640)
+position = Vector2(224, 608)
 flipped = 2
 grav = 2200
 
 [node name="Slope6" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(320, 640)
+position = Vector2(288, 608)
 flipped = 2
 grav = 2200
 
 [node name="Slope7" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(256, 576)
+position = Vector2(224, 544)
 flipped = 2
 grav = 2200
 
 [node name="Slope8" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(320, 576)
+position = Vector2(288, 544)
 flipped = 2
 grav = 2200
 
 [node name="Slope9" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(384, 896)
+position = Vector2(416, 800)
 flipped = 1
 grav = 2200
 
 [node name="Slope10" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(448, 896)
+position = Vector2(480, 800)
 flipped = 1
 grav = 2200
 
 [node name="Slope11" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(384, 832)
+position = Vector2(416, 736)
 flipped = 1
 grav = 2200
 
 [node name="Slope12" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(448, 832)
+position = Vector2(480, 736)
 flipped = 1
 grav = 2200

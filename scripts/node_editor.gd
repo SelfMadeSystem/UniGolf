@@ -111,7 +111,10 @@ func _on_copy_input_event(viewport, event, shape_idx):
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.COPY
 			var clone = editing_node.duplicate()
-			clone.position += Vector2(16, 16)
+			if $Grid.visible:
+				clone.position += grid_size
+			else:
+				clone.position += Vector2(16, 16)
 			editing_node.add_sibling(clone)
 			actually_proceed_to_edit_node(clone)
 		elif button_pressed == ButtonEnum.COPY:
@@ -152,7 +155,6 @@ func _unhandled_input(event):
 				editing_node.height = p.y
 				reposition_elements()
 			ButtonEnum.NODE:
-				amnt = Vector2.ONE
 				var p = og_pos + diff
 				editing_node.position = ((p + grid_offset) / amnt).round() * amnt - grid_offset
 				reposition_elements()

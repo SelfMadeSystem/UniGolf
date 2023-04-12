@@ -24,8 +24,8 @@ NodeEditor="*res://prefabs/node_editor.tscn"
 
 window/size/viewport_width=640
 window/size/viewport_height=1024
-window/stretch/mode="viewport"
 window/handheld/orientation=1
+window/stretch/mode="viewport"
 
 [dotnet]
 

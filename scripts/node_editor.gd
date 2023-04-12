@@ -25,7 +25,7 @@ var editing_node: Node2D
 var next_node: Node2D
 
 func get_rect() -> Rect2:
-	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height))
+	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height)).grow(4)
 
 func proceed_to_edit_node(node: Node2D):
 	if button_pressed > -1:
@@ -124,14 +124,12 @@ func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx
 			set_mouse_pos(event)
 
 var mouse_pos = Vector2.ZERO
-var og_width = 0
-var og_height = 0
+var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
 
 func set_mouse_pos(event: InputEventMouseButton):
 	mouse_pos = event.position
-	og_width = editing_node.width
-	og_height = editing_node.height
+	og_size = Vector2(editing_node.width, editing_node.height)
 	og_pos = editing_node.position
 
 func _unhandled_input(event):
@@ -147,13 +145,16 @@ func _unhandled_input(event):
 		var diff = event.position - mouse_pos
 		match button_pressed:
 			ButtonEnum.RESIZE:
-				var a = ((editing_node.position - grid_offset).posmodv(amnt)).floor() # FIXME: it's supposed to snap to the grid...
-				var v = (diff.abs() / amnt).floor() * diff.sign() * amnt
-				editing_node.width = clamp(og_width + v.x + a.x, MIN_SIZE.x, MAX_SIZE.x)
-				editing_node.height = clamp(og_height + v.y + a.y, MIN_SIZE.y, MAX_SIZE.y)
+				var p = og_size + diff
+				var a = editing_node.position.posmodv(amnt)
+				p = ((p + grid_offset + a) / amnt).round() * amnt - grid_offset - a
+				editing_node.width = p.x
+				editing_node.height = p.y
 				reposition_elements()
 			ButtonEnum.NODE:
-				editing_node.position = (((og_pos + diff) / amnt).floor() * amnt + grid_offset).clamp(MIN_POSITION, MAX_POSITION)
+				amnt = Vector2.ONE
+				var p = og_pos + diff
+				editing_node.position = ((p + grid_offset) / amnt).round() * amnt - grid_offset
 				reposition_elements()
 
 

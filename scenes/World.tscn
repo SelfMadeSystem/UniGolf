@@ -43,7 +43,7 @@ width = 32
 height = 960
 
 [node name="Wall15" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(288, 224)
+position = Vector2(480, 224)
 width = 64
 height = 64
 
@@ -120,7 +120,7 @@ height = 64
 grav = 2200
 
 [node name="Slope6" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(288, 608)
+position = Vector2(96, 864)
 flipped = 2
 width = 64
 height = 64
@@ -134,7 +134,7 @@ height = 64
 grav = 2200
 
 [node name="Slope8" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(288, 544)
+position = Vector2(168, 672)
 flipped = 2
 width = 64
 height = 64

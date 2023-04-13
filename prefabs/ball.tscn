@@ -25,7 +25,6 @@ linear_damp = 1.2
 script = ExtResource("1_ps3hi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 shape = SubResource("CircleShape2D_qdpj5")
 
 [node name="Line2D" type="Line2D" parent="."]

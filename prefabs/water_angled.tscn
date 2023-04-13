@@ -5,7 +5,7 @@
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_dixiv"]
 points = PackedVector2Array(-0.5, -0.5, 0.5, 0.5, -0.5, 0.5)
 
-[node name="Water" type="Area2D"]
+[node name="Water" type="Area2D" groups=["Persist"]]
 collision_layer = 2
 collision_mask = 2
 linear_damp_space_override = 3

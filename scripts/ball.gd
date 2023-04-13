@@ -56,9 +56,17 @@ func get_mouse_strength():
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	if Input.is_mouse_button_pressed(1):
-		mouse_down = true
-		mouse_timer = get_tree().create_timer(0.1)
+	if GameInfo.editing:
+		freeze = true
+		$WaterDetector.collision_layer = 0
+		$WaterDetector.collision_mask = 0
+	else:
+		freeze = false
+		$WaterDetector.collision_layer = 2
+		$WaterDetector.collision_mask = 2
+		if Input.is_mouse_button_pressed(1):
+			mouse_down = true
+			mouse_timer = get_tree().create_timer(0.1)
 	
 	get_parent().remove_child.call_deferred(self)
 	if GameInfo.ball:
@@ -74,25 +82,28 @@ func _physics_process(_delta):
 			global_position = limit_origin + diff.normalized() * limit_radius
 			linear_velocity = linear_velocity.reflect(diff.normalized().orthogonal())
 	if mouse_down && global_position != starting_position && !limited:
-		get_tree().reload_current_scene()
+		GameInfo.reload_scene()
 		global_position = starting_position
 
 func _process(_delta):
 	%Line2D.clear_points()
+	if !Input.is_mouse_button_pressed(1):
+			mouse_down = false
 	if mouse_down && !limited:
 		%Line2D.add_point(get_mouse_strength())
 		%Line2D.add_point(Vector2.ZERO)
 
 func _unhandled_input(event):
-	if !GameInfo.editing && !GameInfo.changing_scene\
-	&& !limited && event is InputEventMouseButton:
-		if event.button_index == 1:
-			if event.pressed:
-				linear_velocity = Vector2.ZERO
-				mouse_timer = get_tree().create_timer(0.1)
-			elif mouse_down && mouse_timer.time_left <= 0:
-				freeze = false
-				var mouse_strength = get_mouse_strength()
-				if mouse_strength.length_squared() >= 15 * 15:
-					linear_velocity += get_mouse_strength() * ball_speed
-			mouse_down = event.pressed
+	if !GameInfo.editing && !GameInfo.changing_scene:
+		if !limited && event is InputEventMouseButton:
+			if event.button_index == 1:
+				if event.pressed:
+					linear_velocity = Vector2.ZERO
+					mouse_timer = get_tree().create_timer(0.1)
+				else:
+					if mouse_down && mouse_timer.time_left <= 0:
+						freeze = false
+						var mouse_strength = get_mouse_strength()
+						if mouse_strength.length_squared() >= 15 * 15:
+							linear_velocity += get_mouse_strength() * ball_speed
+				mouse_down = event.pressed

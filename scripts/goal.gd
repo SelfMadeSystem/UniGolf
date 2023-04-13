@@ -35,7 +35,7 @@ func _process(_delta):
 			ball.set_limited()
 			ball = null
 			await get_tree().create_timer(0.5).timeout
-			GameInfo.change_scene(current_scene, current_scene.next_scene)
+			current_scene.end_scene()
 
 func _on_body_entered(body):
 	if body is Ball:

@@ -15,7 +15,7 @@ gradient = SubResource("Gradient_2l7j5")
 fill_from = Vector2(0.8, 0.3)
 fill_to = Vector2(0, 1)
 
-[node name="Ice" type="Area2D"]
+[node name="Ice" type="Area2D" groups=["Persist"]]
 linear_damp_space_override = 3
 linear_damp = 0.0
 script = ExtResource("1_elugm")

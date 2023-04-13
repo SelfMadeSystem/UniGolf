@@ -1,9 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://dwhbum768g3up"]
+[gd_scene load_steps=9 format=3 uid="uid://dwhbum768g3up"]
 
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="1_m206b"]
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_n55kl"]
 [ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="2_ehtsh"]
-[ext_resource type="PackedScene" uid="uid://3xn1ldg5w2bd" path="res://scenes/World1.tscn" id="2_xs8g3"]
 [ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="4_rm634"]
 [ext_resource type="PackedScene" uid="uid://c0nhw3l7v477e" path="res://prefabs/wall_angled.tscn" id="6_ttpf3"]
 [ext_resource type="PackedScene" uid="uid://qi03cirumaps" path="res://prefabs/water.tscn" id="7_rpdcr"]
@@ -12,7 +11,6 @@
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_n55kl")
-next_scene = ExtResource("2_xs8g3")
 
 [node name="Ball" parent="." instance=ExtResource("1_m206b")]
 position = Vector2(320, 896)
@@ -28,19 +26,19 @@ width = 640
 height = 32
 
 [node name="Wall4" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(0, 992)
+position = Vector2(0, 928)
 width = 640
-height = 32
+height = 96
 
 [node name="Wall2" parent="Walls" instance=ExtResource("2_ehtsh")]
 position = Vector2(0, 32)
 width = 32
-height = 960
+height = 896
 
 [node name="Wall3" parent="Walls" instance=ExtResource("2_ehtsh")]
 position = Vector2(608, 32)
 width = 32
-height = 960
+height = 896
 
 [node name="Wall15" parent="Walls" instance=ExtResource("2_ehtsh")]
 position = Vector2(480, 224)
@@ -68,10 +66,10 @@ width = 64
 height = 64
 
 [node name="Wall16" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(352, 224)
+position = Vector2(296, 224)
 
 [node name="Wall17" parent="Walls" instance=ExtResource("6_ttpf3")]
-position = Vector2(224, 224)
+position = Vector2(288, 160)
 flipped = 1
 
 [node name="Wall9" parent="Walls" instance=ExtResource("6_ttpf3")]
@@ -83,37 +81,10 @@ width = 256
 position = Vector2(32, 160)
 width = 256
 
-[node name="Water" type="Node2D" parent="."]
-
-[node name="Water" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(416, 416)
-width = 64
-height = 128
-
-[node name="Water4" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(224, 352)
-width = 64
-height = 128
-
-[node name="Water5" parent="Water" instance=ExtResource("7_rpdcr")]
-position = Vector2(96, 480)
-width = 64
-height = 128
-
-[node name="Water2" parent="Water" instance=ExtResource("8_sray6")]
-position = Vector2(480, 416)
-flipped = 3
-height = 128
-
-[node name="Water3" parent="Water" instance=ExtResource("8_sray6")]
-position = Vector2(352, 416)
-flipped = 2
-height = 128
-
 [node name="Slopes" type="Node2D" parent="."]
 
 [node name="Slope5" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(224, 608)
+position = Vector2(288, 672)
 flipped = 2
 width = 64
 height = 64
@@ -127,14 +98,7 @@ height = 64
 grav = 2200
 
 [node name="Slope7" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(224, 544)
-flipped = 2
-width = 64
-height = 64
-grav = 2200
-
-[node name="Slope8" parent="Slopes" instance=ExtResource("9_fmlm2")]
-position = Vector2(168, 672)
+position = Vector2(288, 608)
 flipped = 2
 width = 64
 height = 64
@@ -167,3 +131,30 @@ flipped = 1
 width = 64
 height = 64
 grav = 2200
+
+[node name="Water" type="Node2D" parent="."]
+
+[node name="Water" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(416, 544)
+width = 64
+height = 128
+
+[node name="Water4" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(224, 352)
+width = 64
+height = 128
+
+[node name="Water5" parent="Water" instance=ExtResource("7_rpdcr")]
+position = Vector2(96, 480)
+width = 64
+height = 128
+
+[node name="Water2" parent="Water" instance=ExtResource("8_sray6")]
+position = Vector2(480, 544)
+flipped = 3
+height = 128
+
+[node name="Water3" parent="Water" instance=ExtResource("8_sray6")]
+position = Vector2(352, 544)
+flipped = 2
+height = 128

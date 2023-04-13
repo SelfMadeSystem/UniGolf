@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cravviqoqd7fr"]
+[gd_scene load_steps=17 format=3 uid="uid://cravviqoqd7fr"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
 [ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
 [ext_resource type="Shader" path="res://assets/shaders/grid.gdshader" id="7_4p2lq"]
+[ext_resource type="Texture2D" uid="uid://bjbp0x88g2fge" path="res://assets/icons/Grid.png" id="8_7dv7m"]
+[ext_resource type="Texture2D" uid="uid://gti58spvrnpl" path="res://assets/icons/Play.png" id="8_flewc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
 size = Vector2(40, 40)
@@ -109,7 +111,47 @@ scale = Vector2(11.125, 20.75)
 texture = SubResource("GradientTexture2D_2q3qt")
 offset = Vector2(32, 32)
 
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Bottom" type="Control" parent="UI"]
+layout_mode = 3
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -64.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="ColorRect" type="ColorRect" parent="UI/Bottom"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="VFlowContainer" type="VFlowContainer" parent="UI/Bottom"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Play" type="TextureRect" parent="UI/Bottom/VFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("8_flewc")
+
+[node name="Grid" type="TextureRect" parent="UI/Bottom/VFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("8_7dv7m")
+
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
 [connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]
 [connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
+[connection signal="gui_input" from="UI/Bottom/VFlowContainer/Play" to="." method="_on_play_gui_input"]
+[connection signal="gui_input" from="UI/Bottom/VFlowContainer/Grid" to="." method="_on_grid_gui_input"]

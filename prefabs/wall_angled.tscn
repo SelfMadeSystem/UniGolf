@@ -9,7 +9,7 @@ bounce = 1.0
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_8cjd3"]
 points = PackedVector2Array(-0.5, -0.5, 0.5, 0.5, -0.5, 0.5)
 
-[node name="Wall" type="StaticBody2D"]
+[node name="Wall" type="StaticBody2D" groups=["Persist"]]
 y_sort_enabled = true
 use_parent_material = true
 input_pickable = true

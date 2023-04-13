@@ -9,7 +9,7 @@ bounce = 1.0
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
 size = Vector2(1, 1)
 
-[node name="Wall" type="StaticBody2D"]
+[node name="Wall" type="StaticBody2D" groups=["Persist"]]
 y_sort_enabled = true
 use_parent_material = true
 input_pickable = true

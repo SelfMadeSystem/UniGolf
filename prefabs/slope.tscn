@@ -6,14 +6,15 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
 size = Vector2(1, 1)
 
-[node name="Slope" type="Area2D"]
+[node name="Slope" type="Area2D" groups=["Persist"]]
 linear_damp = 0.0
 script = ExtResource("1_gbwyi")
 width = 8
 height = 8
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 0.5)
+position = Vector2(4, 4)
+scale = Vector2(8, 8)
 shape = SubResource("RectangleShape2D_lkq47")
 
 [node name="Sprite" type="Sprite2D" parent="HitBox"]

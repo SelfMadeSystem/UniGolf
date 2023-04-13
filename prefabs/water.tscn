@@ -5,7 +5,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_lkq47"]
 size = Vector2(1, 1)
 
-[node name="Water" type="Area2D"]
+[node name="Water" type="Area2D" groups=["Persist"]]
 collision_layer = 2
 collision_mask = 2
 linear_damp_space_override = 3

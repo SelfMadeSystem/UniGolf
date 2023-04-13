@@ -23,22 +23,28 @@ func set_grid_size(size: Vector2):
 # scale the node's hitbox, sprite etc.
 var editing_node: Node2D
 var next_node: Node2D
+var removing_node = false
 
-func get_rect() -> Rect2:
+func get_editing_rect() -> Rect2:
 	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height)).grow(4)
 
 func proceed_to_edit_node(node: Node2D):
 	if button_pressed > -1:
 		return
 	next_node = node
+	if !node:
+		removing_node = true
 
 func actually_proceed_to_edit_node(node: Node2D):
 	if editing_node:
 		editing_node.input_event.disconnect(_on_editing_node_input_event)
 		editing_node.tree_exited.disconnect(deyeet)
 	editing_node = node
-	editing_node.input_event.connect(_on_editing_node_input_event)
-	editing_node.tree_exited.connect(deyeet)
+	if editing_node:
+		editing_node.input_event.connect(_on_editing_node_input_event)
+		editing_node.tree_exited.connect(deyeet)
+	else:
+		next_node = null
 	reposition_elements()
 
 func deyeet():
@@ -47,16 +53,21 @@ func deyeet():
 	vanish_elements()
 
 func _process(delta):
-	if next_node && editing_node != next_node:
+	if (next_node || removing_node) && editing_node != next_node:
+		removing_node = false
 		if button_pressed == -1:
 			actually_proceed_to_edit_node(next_node)
 		else:
 			next_node = null
 
 func reposition_elements():
-	var rect = get_rect()
+	if !editing_node:
+		vanish_elements()
+		return
+	var rect = get_editing_rect()
 	$Trash.position = rect.position
 	$Rotate.position = Vector2(rect.end.x, rect.position.y)
+	$Rotate.visible = editing_node.get("flipped") != null
 	$Copy.position = Vector2(rect.position.x, rect.end.y)
 	$Resize.position = rect.end
 	$Line.points = [
@@ -85,6 +96,8 @@ func _on_resize_input_event(_viewport: Node, event: InputEvent, _shape_idx: int)
 			set_mouse_pos(event)
 
 func _on_rotate_input_event(viewport, event, shape_idx):
+	if editing_node.get("flipped") == null:
+		return
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.ROTATE
@@ -139,6 +152,8 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
+		elif button_pressed == ButtonEnum.NONE:
+			proceed_to_edit_node(null)
 	elif event is InputEventMouseMotion:
 		if button_pressed < 0:
 			return
@@ -151,6 +166,7 @@ func _unhandled_input(event):
 				var p = og_size + diff
 				var a = editing_node.position.posmodv(amnt)
 				p = ((p + grid_offset + a) / amnt).round() * amnt - grid_offset - a
+				p = p.clamp(MIN_SIZE, MAX_SIZE)
 				editing_node.width = p.x
 				editing_node.height = p.y
 				reposition_elements()
@@ -159,8 +175,49 @@ func _unhandled_input(event):
 				editing_node.position = ((p + grid_offset) / amnt).round() * amnt - grid_offset
 				reposition_elements()
 
+func save_scene():
+	var scene = PackedScene.new()
+	var result = scene.pack(get_tree().current_scene)
+	assert(result == OK)
+	return scene
 
 
 
 
 
+var grid_was_visible = false
+
+func _on_play_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.pressed && event.button_index == 1:
+			if GameInfo.editing:
+				GameInfo.editing = false
+				grid_was_visible = $Grid.visible
+				$Grid.visible = false
+				%Play.texture = preload("res://assets/icons/Pause.png")
+				var stuff = LevelSaver.serialize_level()
+				GameInfo.current_level = stuff
+				get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
+				LevelSaver.deserialize_level.bind(stuff).call_deferred()
+			else:
+				GameInfo.editing = true
+				$Grid.visible = grid_was_visible
+				%Play.texture = preload("res://assets/icons/Play.png")
+				GameInfo.reload_scene()
+
+
+func _on_grid_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.pressed && event.button_index == 1:
+			if $Grid.visible:
+				if grid_size.x > 32:
+					set_grid_size(Vector2(32, 32))
+					%Grid.texture = preload("res://assets/icons/Grid_Small.png")
+				else:
+					$Grid.visible = false
+					%Grid.texture = preload("res://assets/icons/Grid.png")
+					%Grid.modulate.v = 0.3
+			else:
+				$Grid.visible = true
+				set_grid_size(Vector2(64, 64))
+				%Grid.modulate.v = 1

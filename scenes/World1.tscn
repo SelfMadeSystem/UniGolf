@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://3xn1ldg5w2bd"]
+[gd_scene load_steps=5 format=3 uid="uid://dsap5weqt6d2t"]
 
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_l2c6a"]
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_61ogs"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://dwhbum768g3up"]
+[gd_scene load_steps=9 format=3 uid="uid://budnagghu0cik"]
 
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="1_m206b"]
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_n55kl"]
@@ -24,11 +24,6 @@ position = Vector2(320, 128)
 [node name="Wall" parent="Walls" instance=ExtResource("2_ehtsh")]
 width = 640
 height = 32
-
-[node name="Wall4" parent="Walls" instance=ExtResource("2_ehtsh")]
-position = Vector2(0, 928)
-width = 640
-height = 96
 
 [node name="Wall2" parent="Walls" instance=ExtResource("2_ehtsh")]
 position = Vector2(0, 32)

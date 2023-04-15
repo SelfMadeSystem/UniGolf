@@ -85,6 +85,10 @@ func vanish_elements():
 	$Resize.position = -Vector2.ONE * 69420
 	$Line.points = []
 
+enum ActionEnum { DRAG, SELECT, PLACE }
+
+var current_action = ActionEnum.DRAG
+
 enum ButtonEnum { NONE = -1, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
 var button_pressed: ButtonEnum = ButtonEnum.NONE
@@ -192,17 +196,21 @@ func _on_play_gui_input(event):
 		if event.pressed && event.button_index == 1:
 			if GameInfo.editing:
 				GameInfo.editing = false
+				for node in get_tree().get_nodes_in_group("EditorHide"):
+					node.visible = false
 				grid_was_visible = $Grid.visible
 				$Grid.visible = false
-				%Play.texture = preload("res://assets/icons/Pause.png")
+				%PlayButton.texture = preload("res://assets/icons/Pause.png")
 				var stuff = LevelSaver.serialize_level()
 				GameInfo.current_level = stuff
 				get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
 				LevelSaver.deserialize_level.bind(stuff).call_deferred()
 			else:
 				GameInfo.editing = true
+				for node in get_tree().get_nodes_in_group("EditorHide"):
+					node.visible = true
 				$Grid.visible = grid_was_visible
-				%Play.texture = preload("res://assets/icons/Play.png")
+				%PlayButton.texture = preload("res://assets/icons/Play.png")
 				GameInfo.reload_scene()
 
 
@@ -212,12 +220,12 @@ func _on_grid_gui_input(event):
 			if $Grid.visible:
 				if grid_size.x > 32:
 					set_grid_size(Vector2(32, 32))
-					%Grid.texture = preload("res://assets/icons/Grid_Small.png")
+					%GridButton.texture = preload("res://assets/icons/Grid_Small.png")
 				else:
 					$Grid.visible = false
-					%Grid.texture = preload("res://assets/icons/Grid.png")
-					%Grid.modulate.v = 0.3
+					%GridButton.texture = preload("res://assets/icons/Grid.png")
+					%GridButton.modulate.v = 0.3
 			else:
 				$Grid.visible = true
 				set_grid_size(Vector2(64, 64))
-				%Grid.modulate.v = 1
+				%GridButton.modulate.v = 1

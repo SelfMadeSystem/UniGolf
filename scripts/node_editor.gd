@@ -89,6 +89,21 @@ enum ActionEnum { DRAG, SELECT, PLACE }
 
 var current_action = ActionEnum.DRAG
 
+var current_object = preload("res://prefabs/wall.tscn")
+
+func set_action(action: ActionEnum):
+	current_action = action
+	%DragButton.modulate.v = 0.2
+	%SelectButton.modulate.v = 0.2
+	%PlaceButton.modulate.v = 0.2
+	match action:
+		ActionEnum.DRAG:
+			%DragButton.modulate.v = 1
+		ActionEnum.SELECT:
+			%SelectButton.modulate.v = 1
+		ActionEnum.PLACE:
+			%PlaceButton.modulate.v = 1
+
 enum ButtonEnum { NONE = -1, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
 var button_pressed: ButtonEnum = ButtonEnum.NONE
@@ -158,6 +173,15 @@ func _unhandled_input(event):
 			button_pressed = ButtonEnum.NONE
 		elif button_pressed == ButtonEnum.NONE:
 			proceed_to_edit_node(null)
+			match current_action:
+				ActionEnum.PLACE:
+					var node = current_object.instantiate()
+					node.width = 64
+					node.height = 64
+					node.position = event.position
+					get_tree().current_scene.add_child(node)
+					proceed_to_edit_node(node)
+					set_action(ActionEnum.DRAG)
 	elif event is InputEventMouseMotion:
 		if button_pressed < 0:
 			return
@@ -213,7 +237,6 @@ func _on_play_gui_input(event):
 				%PlayButton.texture = preload("res://assets/icons/Play.png")
 				GameInfo.reload_scene()
 
-
 func _on_grid_gui_input(event):
 	if event is InputEventMouseButton:
 		if event.pressed && event.button_index == 1:
@@ -229,3 +252,46 @@ func _on_grid_gui_input(event):
 				$Grid.visible = true
 				set_grid_size(Vector2(64, 64))
 				%GridButton.modulate.v = 1
+
+
+func _on_drag_button_pressed():
+	set_action(ActionEnum.DRAG)
+
+
+func _on_select_button_pressed():
+	set_action(ActionEnum.SELECT)
+
+func _on_place_button_pressed():
+	set_action(ActionEnum.PLACE)
+
+func _on_objects_button_pressed():
+	var selectScene = preload("res://prefabs/object_select.tscn")
+	var select = selectScene.instantiate()
+	$UI.add_child(select)
+	select.add_object({
+		"prefab": preload("res://prefabs/wall.tscn"),
+		"name": "Wall"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/wall_angled.tscn"),
+		"name": "Wall"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/water.tscn"),
+		"name": "Water"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/water_angled.tscn"),
+		"name": "Water"
+	})
+	select.selected.connect(func(a):
+		%PlaceButton.get_child(0).queue_free()
+		var b = a.instantiate()
+		b.width = 48
+		b.height = 48
+		b.position = Vector2(8, 8)
+		%PlaceButton.add_child(b)
+		current_object = a
+		set_action(ActionEnum.PLACE)
+	)
+

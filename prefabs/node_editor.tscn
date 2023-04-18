@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://cravviqoqd7fr"]
+[gd_scene load_steps=21 format=3 uid="uid://cravviqoqd7fr"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
@@ -11,7 +11,8 @@
 [ext_resource type="Texture2D" uid="uid://gti58spvrnpl" path="res://assets/icons/Play.png" id="8_flewc"]
 [ext_resource type="Texture2D" uid="uid://dm2k4v5xtr54a" path="res://assets/icons/Drag.png" id="10_tnt2h"]
 [ext_resource type="Texture2D" uid="uid://cvvdbxqsntce4" path="res://assets/icons/Select.png" id="11_0yhnq"]
-[ext_resource type="Texture2D" uid="uid://blaetnobp0mmu" path="res://assets/icons/Place.png" id="12_hx1ns"]
+[ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="12_j00wc"]
+[ext_resource type="Texture2D" uid="uid://dcdgij4bgejfd" path="res://assets/icons/SelectObject.png" id="12_rjjtj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
 size = Vector2(40, 40)
@@ -108,6 +109,7 @@ position = Vector2(-20, 20)
 shape = SubResource("RectangleShape2D_lu42b")
 
 [node name="Grid" type="Sprite2D" parent="."]
+visible = false
 z_index = 1
 material = SubResource("ShaderMaterial_mltie")
 scale = Vector2(11.125, 20.75)
@@ -115,6 +117,7 @@ texture = SubResource("GradientTexture2D_2q3qt")
 offset = Vector2(32, 32)
 
 [node name="UI" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="Bottom" type="Control" parent="UI"]
 layout_mode = 3
@@ -162,19 +165,51 @@ texture = ExtResource("8_7dv7m")
 [node name="VSeparator" type="VSeparator" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
 layout_mode = 2
 
-[node name="DragButton" type="TextureRect" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+[node name="DragButton" type="TextureButton" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+unique_name_in_owner = true
 layout_mode = 2
-texture = ExtResource("10_tnt2h")
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("10_tnt2h")
 
-[node name="SelectButton" type="TextureRect" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+[node name="SelectButton" type="TextureButton" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+unique_name_in_owner = true
 layout_mode = 2
-texture = ExtResource("11_0yhnq")
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("11_0yhnq")
 
-[node name="PlaceButton" type="TextureRect" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+[node name="PlaceButton" type="Button" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture = ExtResource("12_hx1ns")
+size_flags_vertical = 0
+mouse_default_cursor_shape = 2
 
-[node name="ItemsPopup" type="CanvasLayer" parent="."]
+[node name="Wall" parent="UI/Bottom/VFlowContainer/PlaceButton" instance=ExtResource("12_j00wc")]
+position = Vector2(8, 8)
+width = 48
+height = 48
+
+[node name="ObjectsButton" type="Button" parent="UI/Bottom/VFlowContainer" groups=["EditorHide"]]
+custom_minimum_size = Vector2(20, 64)
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="UI/Bottom/VFlowContainer/ObjectsButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -25.0
+offset_top = -20.0
+offset_right = 25.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(0.5, 0.5)
+pivot_offset = Vector2(25, 20)
+texture = ExtResource("12_rjjtj")
+stretch_mode = 2
 
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
@@ -182,3 +217,7 @@ texture = ExtResource("12_hx1ns")
 [connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
 [connection signal="gui_input" from="UI/Bottom/VFlowContainer/PlayButton" to="." method="_on_play_gui_input"]
 [connection signal="gui_input" from="UI/Bottom/VFlowContainer/GridButton" to="." method="_on_grid_gui_input"]
+[connection signal="pressed" from="UI/Bottom/VFlowContainer/DragButton" to="." method="_on_drag_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/VFlowContainer/SelectButton" to="." method="_on_select_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/VFlowContainer/PlaceButton" to="." method="_on_place_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/VFlowContainer/ObjectsButton" to="." method="_on_objects_button_pressed"]

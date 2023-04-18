@@ -37,6 +37,8 @@ func serialize_level():
 	var save_arr = []
 	
 	for node in persists:
+		if node.get_parent() is Control:
+			continue
 		save_arr.append(get_saved_dict(node))
 	
 	return {

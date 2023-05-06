@@ -225,16 +225,6 @@ func _unhandled_input(event):
 				editing_node.position = ((p + grid_offset) / amnt).round() * amnt - grid_offset
 				reposition_elements()
 
-func save_scene():
-	var scene = PackedScene.new()
-	var result = scene.pack(get_tree().current_scene)
-	assert(result == OK)
-	return scene
-
-
-
-
-
 var grid_was_visible = false
 
 func _on_play_button_pressed():
@@ -317,3 +307,8 @@ func _on_objects_button_pressed():
 func _on_leave_button_pressed():
 	# TODO: Save
 	GameInfo.to_main_menu()
+
+
+func _on_save_button_pressed():
+	var dict = LevelSaver.serialize_level()
+	LevelSaver.save_to_file("level", dict)

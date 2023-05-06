@@ -74,3 +74,19 @@ func get_saved_dict(node: Node2D):
 	
 	return save_dict
 
+func save_to_file(path: String, data: Dictionary):
+	var save_game = FileAccess.open("user://" + path, FileAccess.WRITE)
+	save_game.store_line(JSON.stringify(data))
+	save_game.close()
+
+func load_from_file(path: String):
+	if not FileAccess.file_exists("user://" + path):
+		return null
+	var save_game = FileAccess.open("user://" + path, FileAccess.READ)
+	var json = JSON.new()
+
+	json.parse(save_game.get_as_text())
+
+	save_game.close()
+
+	return json.data

@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://cravviqoqd7fr"]
+[gd_scene load_steps=23 format=3 uid="uid://cravviqoqd7fr"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
@@ -10,6 +10,7 @@
 [ext_resource type="Texture2D" uid="uid://bjbp0x88g2fge" path="res://assets/icons/Grid.png" id="8_7dv7m"]
 [ext_resource type="Texture2D" uid="uid://bpo36mtgmaj1i" path="res://assets/icons/Leave.png" id="8_d1q4l"]
 [ext_resource type="Texture2D" uid="uid://gti58spvrnpl" path="res://assets/icons/Play.png" id="8_flewc"]
+[ext_resource type="Texture2D" uid="uid://c0ch34sadcjfi" path="res://assets/icons/Save.png" id="10_rwrf8"]
 [ext_resource type="Texture2D" uid="uid://dm2k4v5xtr54a" path="res://assets/icons/Drag.png" id="10_tnt2h"]
 [ext_resource type="Texture2D" uid="uid://cvvdbxqsntce4" path="res://assets/icons/Select.png" id="11_0yhnq"]
 [ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="12_j00wc"]
@@ -126,6 +127,7 @@ texture_normal = ExtResource("8_d1q4l")
 
 [node name="Bottom" type="Control" parent="UI"]
 layout_mode = 3
+anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -157,6 +159,10 @@ alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 texture_normal = ExtResource("8_flewc")
+
+[node name="SaveButton" type="TextureButton" parent="UI/Bottom/Left" groups=["EditorHide"]]
+layout_mode = 2
+texture_normal = ExtResource("10_rwrf8")
 
 [node name="Center" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
@@ -246,6 +252,7 @@ stretch_mode = 2
 [connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
 [connection signal="pressed" from="UI/LeaveButton" to="." method="_on_leave_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Center/GridButton" to="." method="_on_grid_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/DragButton" to="." method="_on_drag_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/SelectButton" to="." method="_on_select_button_pressed"]

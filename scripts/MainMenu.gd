@@ -2,7 +2,8 @@ extends Control
 
 
 func _on_play_pressed():
-	pass # Replace with function body.
+	var dict = LevelSaver.load_from_file("level")
+	GameInfo.change_scene(dict)
 
 
 func _on_edit_pressed():

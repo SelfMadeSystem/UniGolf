@@ -119,9 +119,13 @@ offset = Vector2(32, 32)
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 0
 
+[node name="LeaveButton" type="TextureButton" parent="UI" groups=["EditorHide"]]
+offset_right = 60.0
+offset_bottom = 68.0
+texture_normal = ExtResource("8_d1q4l")
+
 [node name="Bottom" type="Control" parent="UI"]
 layout_mode = 3
-anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -149,17 +153,10 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="LeaveButton" type="TextureButton" parent="UI/Bottom/Left" groups=["EditorHide"]]
-layout_mode = 2
-texture_normal = ExtResource("8_d1q4l")
-
-[node name="VSeparator" type="VSeparator" parent="UI/Bottom/Left" groups=["EditorHide"]]
-layout_mode = 2
-
-[node name="GridButton" type="TextureButton" parent="UI/Bottom/Left" groups=["EditorHide"]]
+[node name="PlayButton" type="TextureButton" parent="UI/Bottom/Left"]
 unique_name_in_owner = true
 layout_mode = 2
-texture_normal = ExtResource("8_7dv7m")
+texture_normal = ExtResource("8_flewc")
 
 [node name="Center" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
@@ -176,10 +173,10 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="PlayButton" type="TextureButton" parent="UI/Bottom/Center"]
+[node name="GridButton" type="TextureButton" parent="UI/Bottom/Center" groups=["EditorHide"]]
 unique_name_in_owner = true
 layout_mode = 2
-texture_normal = ExtResource("8_flewc")
+texture_normal = ExtResource("8_7dv7m")
 
 [node name="Right" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
@@ -247,9 +244,9 @@ stretch_mode = 2
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
 [connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]
 [connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
-[connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
-[connection signal="pressed" from="UI/Bottom/Left/GridButton" to="." method="_on_grid_button_pressed"]
-[connection signal="pressed" from="UI/Bottom/Center/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="UI/LeaveButton" to="." method="_on_leave_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Center/GridButton" to="." method="_on_grid_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/DragButton" to="." method="_on_drag_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/SelectButton" to="." method="_on_select_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]

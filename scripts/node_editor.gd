@@ -184,8 +184,9 @@ func _unhandled_input(event):
 			button_pressed = ButtonEnum.NONE
 		elif button_pressed == ButtonEnum.NONE:
 			proceed_to_edit_node(null)
+			if !GameInfo.editing:
+				return
 			var f = func():
-				print(button_pressed)
 				if button_pressed != ButtonEnum.NONE:
 					return
 				match current_action:
@@ -201,6 +202,8 @@ func _unhandled_input(event):
 			f.call_deferred()
 	elif event is InputEventMouseMotion:
 		if button_pressed < 0:
+			return
+		if editing_node == null:
 			return
 		if mouse_pos == null:
 			set_mouse_pos(event.position)

@@ -9,7 +9,9 @@ extends Node
 @export var changing_scene: bool
 
 var current_level: Dictionary = {}
-var editing = true
+var editing = false
+
+var node_editor: NodeEditor = null
 
 func change_scene(to: Dictionary):
 	changing_scene = true
@@ -21,6 +23,9 @@ func change_scene(to: Dictionary):
 func __into_scene(to: Dictionary):
 	get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
 	current_level = to
+	
+	var current_editor = node_editor
+
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 		var current = get_tree().current_scene
@@ -28,6 +33,10 @@ func __into_scene(to: Dictionary):
 		var tween = get_tree().create_tween()
 		tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
 		tween.tween_callback(func(): changing_scene = false)
+		
+		if current_editor != null:
+			current.add_child(current_editor)
+			node_editor = current_editor
 	a.call_deferred()
 
 func reload_scene():
@@ -35,3 +44,20 @@ func reload_scene():
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 	a.call_deferred()
+
+func handle_object_input(object: Node, event: InputEvent):
+	if GameInfo.editing && event is InputEventMouseButton:
+		if event.button_index == 1 && event.pressed:
+			node_editor.proceed_to_edit_node(object)
+
+func to_main_menu():
+	get_tree().change_scene_to_packed(preload("res://scenes/MainMenu.tscn"))
+	for child in get_children():
+		child.queue_free()
+	
+	ball = null
+	goal = null
+	changing_scene = false
+	current_level = {}
+	editing = false
+	node_editor = null

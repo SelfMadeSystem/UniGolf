@@ -1,3 +1,5 @@
+class_name NodeEditor
+
 extends Node2D
 
 const MIN_SIZE = Vector2(8, 8)
@@ -25,6 +27,13 @@ var editing_node: Node2D
 var next_node: Node2D
 var removing_node = false
 
+func _ready():
+	if Engine.is_editor_hint():
+		return
+	GameInfo.node_editor = self
+	get_parent().remove_child.call_deferred(self)
+	GameInfo.add_child.call_deferred(self)
+
 func get_editing_rect() -> Rect2:
 	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height)).grow(4)
 
@@ -46,13 +55,15 @@ func actually_proceed_to_edit_node(node: Node2D):
 	else:
 		next_node = null
 	reposition_elements()
+	button_pressed = ButtonEnum.NODE
+	mouse_pos = null
 
 func deyeet():
 	editing_node = null
 	button_pressed = ButtonEnum.NONE
 	vanish_elements()
 
-func _process(delta):
+func _process(_delta):
 	if (next_node || removing_node) && editing_node != next_node:
 		removing_node = false
 		if button_pressed == -1:
@@ -112,9 +123,9 @@ func _on_resize_input_event(_viewport: Node, event: InputEvent, _shape_idx: int)
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.RESIZE
-			set_mouse_pos(event)
+			set_mouse_pos(event.position)
 
-func _on_rotate_input_event(viewport, event, shape_idx):
+func _on_rotate_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if editing_node.get("flipped") == null:
 		return
 	if event is InputEventMouseButton:
@@ -122,9 +133,9 @@ func _on_rotate_input_event(viewport, event, shape_idx):
 			button_pressed = ButtonEnum.ROTATE
 			editing_node.flipped = (editing_node.flipped + 1) % 4
 		elif button_pressed == ButtonEnum.ROTATE:
-			button_pressed == ButtonEnum.NONE
+			button_pressed = ButtonEnum.NONE
 
-func _on_trash_input_event(viewport, event, shape_idx):
+func _on_trash_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.TRASH
@@ -136,9 +147,9 @@ func _on_trash_input_event(viewport, event, shape_idx):
 			editing_node = null
 			vanish_elements()
 		elif button_pressed == ButtonEnum.TRASH:
-			button_pressed == ButtonEnum.NONE
+			button_pressed = ButtonEnum.NONE
 
-func _on_copy_input_event(viewport, event, shape_idx):
+func _on_copy_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.COPY
@@ -150,20 +161,20 @@ func _on_copy_input_event(viewport, event, shape_idx):
 			editing_node.add_sibling(clone)
 			actually_proceed_to_edit_node(clone)
 		elif button_pressed == ButtonEnum.COPY:
-			button_pressed == ButtonEnum.NONE
+			button_pressed = ButtonEnum.NONE
 
 func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			button_pressed = ButtonEnum.NODE
-			set_mouse_pos(event)
+			set_mouse_pos(event.position)
 
 var mouse_pos = Vector2.ZERO
 var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
 
-func set_mouse_pos(event: InputEventMouseButton):
-	mouse_pos = event.position
+func set_mouse_pos(pos: Vector2):
+	mouse_pos = pos
 	og_size = Vector2(editing_node.width, editing_node.height)
 	og_pos = editing_node.position
 
@@ -173,18 +184,26 @@ func _unhandled_input(event):
 			button_pressed = ButtonEnum.NONE
 		elif button_pressed == ButtonEnum.NONE:
 			proceed_to_edit_node(null)
-			match current_action:
-				ActionEnum.PLACE:
-					var node = current_object.instantiate()
-					node.width = 64
-					node.height = 64
-					node.position = event.position
-					get_tree().current_scene.add_child(node)
-					proceed_to_edit_node(node)
-					set_action(ActionEnum.DRAG)
+			var f = func():
+				print(button_pressed)
+				if button_pressed != ButtonEnum.NONE:
+					return
+				match current_action:
+					ActionEnum.PLACE:
+						var node = current_object.instantiate()
+						node.width = 64
+						node.height = 64
+						node.position = event.position
+						get_tree().current_scene.add_child(node)
+						actually_proceed_to_edit_node(node)
+						button_pressed = ButtonEnum.NODE
+						set_mouse_pos(event.position)
+			f.call_deferred()
 	elif event is InputEventMouseMotion:
 		if button_pressed < 0:
 			return
+		if mouse_pos == null:
+			set_mouse_pos(event.position)
 		var amnt = Vector2(8, 8)
 		if $Grid.visible:
 			amnt = grid_size
@@ -215,43 +234,39 @@ func save_scene():
 
 var grid_was_visible = false
 
-func _on_play_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.pressed && event.button_index == 1:
-			if GameInfo.editing:
-				GameInfo.editing = false
-				for node in get_tree().get_nodes_in_group("EditorHide"):
-					node.visible = false
-				grid_was_visible = $Grid.visible
-				$Grid.visible = false
-				%PlayButton.texture = preload("res://assets/icons/Pause.png")
-				var stuff = LevelSaver.serialize_level()
-				GameInfo.current_level = stuff
-				get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
-				LevelSaver.deserialize_level.bind(stuff).call_deferred()
-			else:
-				GameInfo.editing = true
-				for node in get_tree().get_nodes_in_group("EditorHide"):
-					node.visible = true
-				$Grid.visible = grid_was_visible
-				%PlayButton.texture = preload("res://assets/icons/Play.png")
-				GameInfo.reload_scene()
+func _on_play_button_pressed():
+	if GameInfo.editing:
+		GameInfo.editing = false
+		for node in get_tree().get_nodes_in_group("EditorHide"):
+			node.visible = false
+		grid_was_visible = $Grid.visible
+		$Grid.visible = false
+		%PlayButton.texture_normal = preload("res://assets/icons/Pause.png")
+		var stuff = LevelSaver.serialize_level()
+		GameInfo.current_level = stuff
+		get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
+		LevelSaver.deserialize_level.bind(stuff).call_deferred()
+	else:
+		GameInfo.editing = true
+		for node in get_tree().get_nodes_in_group("EditorHide"):
+			node.visible = true
+		$Grid.visible = grid_was_visible
+		%PlayButton.texture_normal = preload("res://assets/icons/Play.png")
+		GameInfo.reload_scene()
 
-func _on_grid_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.pressed && event.button_index == 1:
-			if $Grid.visible:
-				if grid_size.x > 32:
-					set_grid_size(Vector2(32, 32))
-					%GridButton.texture = preload("res://assets/icons/Grid_Small.png")
-				else:
-					$Grid.visible = false
-					%GridButton.texture = preload("res://assets/icons/Grid.png")
-					%GridButton.modulate.v = 0.3
-			else:
-				$Grid.visible = true
-				set_grid_size(Vector2(64, 64))
-				%GridButton.modulate.v = 1
+func _on_grid_button_pressed():
+	if $Grid.visible:
+		if grid_size.x > 32:
+			set_grid_size(Vector2(32, 32))
+			%GridButton.texture_normal = preload("res://assets/icons/Grid_Small.png")
+		else:
+			$Grid.visible = false
+			%GridButton.texture_normal = preload("res://assets/icons/Grid.png")
+			%GridButton.modulate.v = 0.3
+	else:
+		$Grid.visible = true
+		set_grid_size(Vector2(64, 64))
+		%GridButton.modulate.v = 1
 
 
 func _on_drag_button_pressed():
@@ -295,3 +310,7 @@ func _on_objects_button_pressed():
 		set_action(ActionEnum.PLACE)
 	)
 
+
+func _on_leave_button_pressed():
+	# TODO: Save
+	GameInfo.to_main_menu()

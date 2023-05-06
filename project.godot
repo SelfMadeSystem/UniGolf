@@ -11,14 +11,13 @@ config_version=5
 [application]
 
 config/name="MonoGolf"
-run/main_scene="res://scenes/Blank.tscn"
+run/main_scene="res://scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.0", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
 GameInfo="*res://scripts/game_info.gd"
-NodeEditor="*res://prefabs/node_editor.tscn"
 LevelSaver="*res://scripts/level_saver.gd"
 
 [display]

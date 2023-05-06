@@ -37,6 +37,4 @@ func _on_area_entered(area: Area2D):
 		parent.vanish()
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if GameInfo.editing && event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			NodeEditor.proceed_to_edit_node(self)
+	GameInfo.handle_object_input(self, event)

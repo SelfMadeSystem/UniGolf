@@ -8,12 +8,15 @@ extends Node
 @export var goal: Goal
 @export var changing_scene: bool
 
+var ball_prev_shoot: Vector2 = Vector2()
+
 var current_level: Dictionary = {}
 var editing = false
 
 var node_editor: NodeEditor = null
 
 func change_scene(to: Dictionary):
+	ball_prev_shoot = Vector2()
 	changing_scene = true
 	var tween = get_tree().create_tween()
 	var current = get_tree().current_scene
@@ -21,6 +24,7 @@ func change_scene(to: Dictionary):
 	tween.tween_callback(__into_scene.bind(to))
 
 func __into_scene(to: Dictionary):
+	ball_prev_shoot = Vector2()
 	get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
 	current_level = to
 	
@@ -32,7 +36,11 @@ func __into_scene(to: Dictionary):
 		current.global_position = Vector2(get_viewport().get_visible_rect().size.x * 1.5, 0)
 		var tween = get_tree().create_tween()
 		tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
-		tween.tween_callback(func(): changing_scene = false)
+		tween.tween_callback(func():
+			changing_scene = false
+			if !editing:
+				ball.unfreeze()
+		)
 		
 		if current_editor != null:
 			current.add_child(current_editor)
@@ -61,3 +69,4 @@ func to_main_menu():
 	current_level = {}
 	editing = false
 	node_editor = null
+	ball_prev_shoot = Vector2()

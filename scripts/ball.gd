@@ -56,7 +56,7 @@ func get_mouse_strength():
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	if GameInfo.editing:
+	if GameInfo.editing || GameInfo.changing_scene:
 		freeze = true
 		$WaterDetector.collision_layer = 0
 		$WaterDetector.collision_mask = 0
@@ -74,6 +74,14 @@ func _ready():
 	GameInfo.ball = self
 	GameInfo.add_child.call_deferred(self)
 
+	%PrevLine.add_point(GameInfo.ball_prev_shoot)
+	%PrevLine.add_point(Vector2.ZERO)
+
+func unfreeze():
+	freeze = false
+	$WaterDetector.collision_layer = 2
+	$WaterDetector.collision_mask = 2
+
 func _physics_process(_delta):
 	if limited:
 		var diff = global_position - limit_origin
@@ -86,12 +94,12 @@ func _physics_process(_delta):
 		global_position = starting_position
 
 func _process(_delta):
-	%Line2D.clear_points()
+	%ShootLine.clear_points()
 	if !Input.is_mouse_button_pressed(1):
 			mouse_down = false
 	if mouse_down && !limited:
-		%Line2D.add_point(get_mouse_strength())
-		%Line2D.add_point(Vector2.ZERO)
+		%ShootLine.add_point(get_mouse_strength())
+		%ShootLine.add_point(Vector2.ZERO)
 
 func _unhandled_input(event):
 	if !GameInfo.editing && !GameInfo.changing_scene:
@@ -104,6 +112,8 @@ func _unhandled_input(event):
 					if mouse_down && mouse_timer.time_left <= 0:
 						freeze = false
 						var mouse_strength = get_mouse_strength()
+						%PrevLine.clear_points()
+						GameInfo.ball_prev_shoot = mouse_strength
 						if mouse_strength.length_squared() >= 15 * 15:
 							linear_velocity += get_mouse_strength() * ball_speed
 				mouse_down = event.pressed

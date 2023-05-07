@@ -232,6 +232,7 @@ func toggle_editor_hide():
 		node.visible = !node.visible
 
 func _on_play_button_pressed():
+	GameInfo.ball_prev_shoot = Vector2()
 	if GameInfo.editing:
 		GameInfo.editing = false
 		toggle_editor_hide()
@@ -291,6 +292,10 @@ func _on_objects_button_pressed():
 	select.add_object({
 		"prefab": preload("res://prefabs/water_angled.tscn"),
 		"name": "Water"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/slope.tscn"),
+		"name": "Slope"
 	})
 	select.selected.connect(func(a):
 		%PlaceButton.get_child(0).queue_free()

@@ -76,11 +76,13 @@ func reposition_elements():
 		vanish_elements()
 		return
 	var rect = get_editing_rect()
-	$Trash.position = rect.position
-	$Rotate.position = Vector2(rect.end.x, rect.position.y)
+	var min = Vector2.ONE * 48
+	var max = get_viewport_rect().size - min - Vector2.DOWN * 64
+	$Trash.position = rect.position.clamp(min, max)
+	$Rotate.position = Vector2(rect.end.x, rect.position.y).clamp(min, max)
 	$Rotate.visible = editing_node.get("flipped") != null
-	$Copy.position = Vector2(rect.position.x, rect.end.y)
-	$Resize.position = rect.end
+	$Copy.position = Vector2(rect.position.x, rect.end.y).clamp(min, max)
+	$Resize.position = rect.end.clamp(min, max)
 	$Line.points = [
 		rect.position,
 		Vector2(rect.position.x, rect.end.y),

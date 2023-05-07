@@ -16,6 +16,7 @@ func _draw():
 
 @export var ball_speed = 18.0
 @export var mouse_limit = 125.0
+@export var line_length = 2.0
 
 @onready var starting_position = global_position
 
@@ -74,7 +75,7 @@ func _ready():
 	GameInfo.ball = self
 	GameInfo.add_child.call_deferred(self)
 
-	%PrevLine.add_point(GameInfo.ball_prev_shoot)
+	%PrevLine.add_point(GameInfo.ball_prev_shoot * line_length)
 	%PrevLine.add_point(Vector2.ZERO)
 
 func unfreeze():
@@ -98,7 +99,7 @@ func _process(_delta):
 	if !Input.is_mouse_button_pressed(1):
 			mouse_down = false
 	if mouse_down && !limited:
-		%ShootLine.add_point(get_mouse_strength())
+		%ShootLine.add_point(get_mouse_strength() * line_length)
 		%ShootLine.add_point(Vector2.ZERO)
 
 func _unhandled_input(event):

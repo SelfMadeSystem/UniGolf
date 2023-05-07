@@ -26,7 +26,7 @@ offset_top = 32.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
-text = "Mono Golf"
+text = "Uni Golf"
 label_settings = SubResource("LabelSettings_nbge2")
 
 [node name="HFlowContainer" type="VBoxContainer" parent="."]

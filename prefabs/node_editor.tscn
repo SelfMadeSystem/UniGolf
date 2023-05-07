@@ -268,14 +268,6 @@ icon = ExtResource("11_n740k")
 icon_alignment = 1
 expand_icon = true
 
-[node name="SavePopup" type="Control" parent="UI"]
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
 [connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]

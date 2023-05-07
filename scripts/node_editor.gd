@@ -227,34 +227,34 @@ func _unhandled_input(event):
 
 var grid_was_visible = false
 
+func toggle_editor_hide():
+	for node in get_tree().get_nodes_in_group("EditorHide"):
+		node.visible = !node.visible
+
 func _on_play_button_pressed():
 	if GameInfo.editing:
 		GameInfo.editing = false
-		for node in get_tree().get_nodes_in_group("EditorHide"):
-			node.visible = false
+		toggle_editor_hide()
 		grid_was_visible = $Grid.visible
 		$Grid.visible = false
-		%PlayButton.texture_normal = preload("res://assets/icons/Pause.png")
 		var stuff = LevelSaver.serialize_level()
 		GameInfo.current_level = stuff
 		get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
 		LevelSaver.deserialize_level.bind(stuff).call_deferred()
 	else:
 		GameInfo.editing = true
-		for node in get_tree().get_nodes_in_group("EditorHide"):
-			node.visible = true
+		toggle_editor_hide()
 		$Grid.visible = grid_was_visible
-		%PlayButton.texture_normal = preload("res://assets/icons/Play.png")
 		GameInfo.reload_scene()
 
 func _on_grid_button_pressed():
 	if $Grid.visible:
 		if grid_size.x > 32:
 			set_grid_size(Vector2(32, 32))
-			%GridButton.texture_normal = preload("res://assets/icons/Grid_Small.png")
+			%GridButton.icon = preload("res://assets/icons/Grid_Small.png")
 		else:
 			$Grid.visible = false
-			%GridButton.texture_normal = preload("res://assets/icons/Grid.png")
+			%GridButton.icon = preload("res://assets/icons/Grid.png")
 			%GridButton.modulate.v = 0.3
 	else:
 		$Grid.visible = true
@@ -312,3 +312,8 @@ func _on_leave_button_pressed():
 func _on_save_button_pressed():
 	var dict = LevelSaver.serialize_level()
 	LevelSaver.save_to_file("level", dict)
+
+
+func _on_more_button_pressed():
+	pass # Replace with function body.
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://cravviqoqd7fr"]
+[gd_scene load_steps=24 format=3 uid="uid://bv28hrltpc6hc"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
@@ -7,14 +7,15 @@
 [ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
 [ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
 [ext_resource type="Shader" path="res://assets/shaders/grid.gdshader" id="7_4p2lq"]
+[ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="8_0aihf"]
 [ext_resource type="Texture2D" uid="uid://bjbp0x88g2fge" path="res://assets/icons/Grid.png" id="8_7dv7m"]
 [ext_resource type="Texture2D" uid="uid://bpo36mtgmaj1i" path="res://assets/icons/Leave.png" id="8_d1q4l"]
 [ext_resource type="Texture2D" uid="uid://gti58spvrnpl" path="res://assets/icons/Play.png" id="8_flewc"]
 [ext_resource type="Texture2D" uid="uid://c0ch34sadcjfi" path="res://assets/icons/Save.png" id="10_rwrf8"]
 [ext_resource type="Texture2D" uid="uid://dm2k4v5xtr54a" path="res://assets/icons/Drag.png" id="10_tnt2h"]
 [ext_resource type="Texture2D" uid="uid://cvvdbxqsntce4" path="res://assets/icons/Select.png" id="11_0yhnq"]
+[ext_resource type="Texture2D" uid="uid://dcdgij4bgejfd" path="res://assets/icons/More.png" id="11_n740k"]
 [ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="12_j00wc"]
-[ext_resource type="Texture2D" uid="uid://dcdgij4bgejfd" path="res://assets/icons/SelectObject.png" id="12_rjjtj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
 size = Vector2(40, 40)
@@ -120,12 +121,20 @@ offset = Vector2(32, 32)
 [node name="UI" type="CanvasLayer" parent="."]
 layer = 0
 
-[node name="LeaveButton" type="TextureButton" parent="UI" groups=["EditorHide"]]
-offset_right = 60.0
-offset_bottom = 68.0
-texture_normal = ExtResource("8_d1q4l")
+[node name="PauseButton" type="Button" parent="UI" groups=["EditorHide"]]
+visible = false
+custom_minimum_size = Vector2(64, 64)
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -60.0
+offset_bottom = 66.0
+grow_horizontal = 0
+icon = ExtResource("8_0aihf")
+expand_icon = true
 
 [node name="Bottom" type="Control" parent="UI"]
+custom_minimum_size = Vector2(0, 68)
 layout_mode = 3
 anchors_preset = 12
 anchor_top = 1.0
@@ -148,21 +157,41 @@ color = Color(0, 0, 0, 1)
 
 [node name="Left" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -33.5
+offset_right = 131.0
+offset_bottom = 33.5
 grow_vertical = 2
 alignment = 1
 
-[node name="PlayButton" type="TextureButton" parent="UI/Bottom/Left"]
-unique_name_in_owner = true
+[node name="LeaveButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture_normal = ExtResource("8_flewc")
+icon = ExtResource("8_d1q4l")
+icon_alignment = 1
+expand_icon = true
 
-[node name="SaveButton" type="TextureButton" parent="UI/Bottom/Left" groups=["EditorHide"]]
+[node name="SaveButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture_normal = ExtResource("10_rwrf8")
+icon = ExtResource("10_rwrf8")
+expand_icon = true
+
+[node name="MoreButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
+custom_minimum_size = Vector2(32, 64)
+layout_mode = 2
+icon = ExtResource("11_n740k")
+icon_alignment = 1
+expand_icon = true
+
+[node name="GridButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+icon = ExtResource("8_7dv7m")
+expand_icon = true
 
 [node name="Center" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
@@ -179,10 +208,12 @@ grow_horizontal = 2
 grow_vertical = 2
 alignment = 1
 
-[node name="GridButton" type="TextureButton" parent="UI/Bottom/Center" groups=["EditorHide"]]
-unique_name_in_owner = true
+[node name="PlayButton" type="Button" parent="UI/Bottom/Center" groups=["EditorHide"]]
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
-texture_normal = ExtResource("8_7dv7m")
+icon = ExtResource("8_flewc")
+icon_alignment = 1
+expand_icon = true
 
 [node name="Right" type="VFlowContainer" parent="UI/Bottom"]
 layout_mode = 1
@@ -198,18 +229,24 @@ grow_horizontal = 0
 grow_vertical = 2
 alignment = 1
 
-[node name="DragButton" type="TextureButton" parent="UI/Bottom/Right" groups=["EditorHide"]]
+[node name="DragButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("10_tnt2h")
+icon = ExtResource("10_tnt2h")
+icon_alignment = 1
+expand_icon = true
 
-[node name="SelectButton" type="TextureButton" parent="UI/Bottom/Right" groups=["EditorHide"]]
+[node name="SelectButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]
 unique_name_in_owner = true
 modulate = Color(0.2, 0.2, 0.2, 1)
+custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_default_cursor_shape = 2
-texture_normal = ExtResource("11_0yhnq")
+icon = ExtResource("11_0yhnq")
+icon_alignment = 1
+expand_icon = true
 
 [node name="PlaceButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]
 unique_name_in_owner = true
@@ -227,33 +264,20 @@ height = 48
 [node name="ObjectsButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
-
-[node name="TextureRect" type="TextureRect" parent="UI/Bottom/Right/ObjectsButton"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -25.0
-offset_top = -20.0
-offset_right = 25.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-scale = Vector2(0.5, 0.5)
-pivot_offset = Vector2(25, 20)
-texture = ExtResource("12_rjjtj")
-stretch_mode = 2
+icon = ExtResource("11_n740k")
+icon_alignment = 1
+expand_icon = true
 
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
 [connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]
 [connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
-[connection signal="pressed" from="UI/LeaveButton" to="." method="_on_leave_button_pressed"]
-[connection signal="pressed" from="UI/Bottom/Left/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="pressed" from="UI/Bottom/Center/GridButton" to="." method="_on_grid_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/MoreButton" to="." method="_on_more_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/GridButton" to="." method="_on_grid_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Center/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/DragButton" to="." method="_on_drag_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/SelectButton" to="." method="_on_select_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]

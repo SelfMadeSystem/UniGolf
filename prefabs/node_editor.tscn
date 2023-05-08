@@ -286,7 +286,8 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="Panel" parent="UI/SaveDialogue"]
+[node name="SavePanel" type="Panel" parent="UI/SaveDialogue"]
+unique_name_in_owner = true
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -297,7 +298,7 @@ offset_right = 416.0
 offset_bottom = -96.0
 grow_vertical = 0
 
-[node name="Name" type="LineEdit" parent="UI/SaveDialogue/Panel"]
+[node name="Name" type="LineEdit" parent="UI/SaveDialogue/SavePanel"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -325,4 +326,7 @@ placeholder_text = "Level Name"
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/ObjectsButton" to="." method="_on_objects_button_pressed"]
 [connection signal="gui_input" from="UI/SaveDialogue/SaveDialogueExit" to="." method="_on_save_dialogue_exit_gui_input"]
-[connection signal="text_changed" from="UI/SaveDialogue/Panel/Name" to="." method="_on_name_text_changed"]
+[connection signal="focus_entered" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_focus_entered"]
+[connection signal="focus_exited" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_focus_exited"]
+[connection signal="text_changed" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_text_changed"]
+[connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_text_submitted"]

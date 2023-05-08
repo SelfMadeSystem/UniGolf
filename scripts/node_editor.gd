@@ -331,3 +331,18 @@ func _on_save_dialogue_exit_gui_input(event:InputEvent):
 
 func _on_name_text_changed(new_text:String):
 	GameInfo.level_name = new_text
+
+
+func _on_name_text_submitted(new_text):
+	GameInfo.level_name = new_text
+	%SaveDialogue.visible = false
+
+var prev_height = 0
+
+func _on_name_focus_entered():
+	if OS.get_name() == "Android" || OS.get_name() == "iOS":
+		prev_height = %SavePanel.position.y
+		%SavePanel.position.y = 0 #for now. Figure out when to call DisplayServer.virtual_keyboard_get_height()
+
+func _on_name_focus_exited():
+	%SavePanel.position.y = prev_height

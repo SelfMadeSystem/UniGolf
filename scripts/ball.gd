@@ -54,6 +54,8 @@ func get_mouse_strength():
 		mouse_pos = mouse_pos.normalized() * mouse_limit
 	return -mouse_pos
 
+var layer = 0
+
 func _ready():
 	if Engine.is_editor_hint():
 		return
@@ -74,6 +76,10 @@ func _ready():
 		GameInfo.ball.get_parent().remove_child.call_deferred(GameInfo.ball)
 	GameInfo.ball = self
 	GameInfo.add_child.call_deferred(self)
+	
+	layer = collision_layer
+	collision_layer = 0
+	collision_mask = 0
 
 	%PrevLine.add_point(GameInfo.ball_prev_shoot * line_length)
 	%PrevLine.add_point(Vector2.ZERO)
@@ -90,6 +96,7 @@ func _physics_process(_delta):
 		if diff.length_squared() > limit_radius * limit_radius:
 			global_position = limit_origin + diff.normalized() * limit_radius
 			linear_velocity = linear_velocity.reflect(diff.normalized().orthogonal())
+	
 	if mouse_down && global_position != starting_position && !limited:
 		GameInfo.reload_scene()
 		global_position = starting_position
@@ -115,6 +122,8 @@ func _unhandled_input(event):
 						var mouse_strength = get_mouse_strength()
 						%PrevLine.clear_points()
 						GameInfo.ball_prev_shoot = mouse_strength
+						collision_layer = layer
+						collision_mask = layer
 						if mouse_strength.length_squared() >= 15 * 15:
-							linear_velocity += get_mouse_strength() * ball_speed
+							linear_velocity = get_mouse_strength() * ball_speed
 				mouse_down = event.pressed

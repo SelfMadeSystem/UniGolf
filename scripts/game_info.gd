@@ -20,10 +20,13 @@ var node_editor: NodeEditor = null
 func _process(__):
 	# TODO: Make a better way for detecting if in level
 	if current_level.has("name") && Input.is_action_just_pressed("pause"):
-		get_tree().paused = true
-		get_tree().root.add_child(
-			preload("res://scenes/PauseMenu.tscn").instantiate()
-		)
+		pause()
+
+func pause():
+	get_tree().paused = true
+	get_tree().root.add_child(
+		preload("res://scenes/PauseMenu.tscn").instantiate()
+	)
 
 func change_scene(to: Dictionary):
 	ball_prev_shoot = Vector2()

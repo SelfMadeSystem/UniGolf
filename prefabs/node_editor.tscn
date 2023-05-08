@@ -268,6 +268,48 @@ icon = ExtResource("11_n740k")
 icon_alignment = 1
 expand_icon = true
 
+[node name="SaveDialogue" type="Control" parent="UI"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SaveDialogueExit" type="Control" parent="UI/SaveDialogue"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="UI/SaveDialogue"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 32.0
+offset_top = -160.0
+offset_right = 416.0
+offset_bottom = -96.0
+grow_vertical = 0
+
+[node name="Name" type="LineEdit" parent="UI/SaveDialogue/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 8.0
+offset_top = 8.0
+offset_right = -8.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+placeholder_text = "Level Name"
+
 [connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
 [connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
 [connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]
@@ -282,3 +324,5 @@ expand_icon = true
 [connection signal="pressed" from="UI/Bottom/Right/SelectButton" to="." method="_on_select_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/ObjectsButton" to="." method="_on_objects_button_pressed"]
+[connection signal="gui_input" from="UI/SaveDialogue/SaveDialogueExit" to="." method="_on_save_dialogue_exit_gui_input"]
+[connection signal="text_changed" from="UI/SaveDialogue/Panel/Name" to="." method="_on_name_text_changed"]

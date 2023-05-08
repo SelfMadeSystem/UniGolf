@@ -4,6 +4,8 @@ extends Node
 @export var wall_color = Color.from_hsv(0, 1, 0.65)
 @export var water_color = Color.from_hsv(0.63, 0.82, 0.89)
 
+@export var level_name = "Level"
+
 @export var ball: Ball
 @export var goal: Goal
 @export var changing_scene: bool
@@ -14,6 +16,14 @@ var current_level: Dictionary = {}
 var editing = false
 
 var node_editor: NodeEditor = null
+
+func _process(__):
+	# TODO: Make a better way for detecting if in level
+	if current_level.has("name") && Input.is_action_just_pressed("pause"):
+		get_tree().paused = true
+		get_tree().root.add_child(
+			preload("res://scenes/PauseMenu.tscn").instantiate()
+		)
 
 func change_scene(to: Dictionary):
 	ball_prev_shoot = Vector2()
@@ -38,7 +48,7 @@ func __into_scene(to: Dictionary):
 		tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
 		tween.tween_callback(func():
 			changing_scene = false
-			if !editing:
+			if !editing && ball != null:
 				ball.unfreeze()
 		)
 		

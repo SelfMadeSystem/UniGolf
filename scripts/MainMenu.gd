@@ -2,8 +2,7 @@ extends Control
 
 
 func _on_play_pressed():
-	var dict = LevelSaver.load_from_file("level")
-	GameInfo.change_scene(dict)
+	get_tree().change_scene_to_file("res://scenes/LoadLevelMenu.tscn")
 
 
 func _on_edit_pressed():

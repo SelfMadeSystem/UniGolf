@@ -318,9 +318,16 @@ func _on_leave_button_pressed():
 
 func _on_save_button_pressed():
 	var dict = LevelSaver.serialize_level()
-	LevelSaver.save_to_file("level", dict)
-
+	LevelSaver.save_to_file(GameInfo.level_name, dict)
 
 func _on_more_button_pressed():
-	pass # Replace with function body.
+	%SaveDialogue.visible = true
 
+func _on_save_dialogue_exit_gui_input(event:InputEvent):
+	if %SaveDialogue.visible == true:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+				%SaveDialogue.visible = false
+
+func _on_name_text_changed(new_text:String):
+	GameInfo.level_name = new_text

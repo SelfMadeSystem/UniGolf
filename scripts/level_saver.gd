@@ -1,5 +1,10 @@
 extends Node
 
+const SAVE_DIR = "user://levels/"
+
+func _ready():
+	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+
 func deserialize_level(stuff: Dictionary):
 	var nodes: Array = stuff.get("nodes", [])
 	var end = Vector2(
@@ -42,6 +47,7 @@ func serialize_level():
 		save_arr.append(get_saved_dict(node))
 	
 	return {
+		"name": GameInfo.level_name,
 		"nodes": save_arr,
 		"end_x": GameInfo.goal.position.x,
 		"end_y": GameInfo.goal.position.y
@@ -74,15 +80,34 @@ func get_saved_dict(node: Node2D):
 	
 	return save_dict
 
-func save_to_file(path: String, data: Dictionary):
-	var save_game = FileAccess.open("user://" + path, FileAccess.WRITE)
+func sanitize_file_name(file_name: String) -> String:
+	var sanitized = ""
+	
+	for c in file_name.to_ascii_buffer():
+		if c == 0:
+			break
+		if c >= 48 && c <= 57 || \
+			c >= 65 && c <= 90 || \
+			c >= 97 && c <= 122 || \
+			c == 95:
+			sanitized += String.chr(c)
+		else:
+			sanitized += "_"
+
+	
+	return sanitized + ".json"
+
+func save_to_file(file_name: String, data: Dictionary):
+	file_name = sanitize_file_name(file_name)
+	var save_game = FileAccess.open(SAVE_DIR + file_name, FileAccess.WRITE)
 	save_game.store_line(JSON.stringify(data))
 	save_game.close()
 
-func load_from_file(path: String):
-	if not FileAccess.file_exists("user://" + path):
+func load_from_file(file_name: String):
+	file_name = sanitize_file_name(file_name)
+	if not FileAccess.file_exists(SAVE_DIR + file_name):
 		return null
-	var save_game = FileAccess.open("user://" + path, FileAccess.READ)
+	var save_game = FileAccess.open(SAVE_DIR + file_name, FileAccess.READ)
 	var json = JSON.new()
 
 	json.parse(save_game.get_as_text())

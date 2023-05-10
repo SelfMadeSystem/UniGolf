@@ -6,9 +6,11 @@ extends Node
 
 @export var level_name = "Level"
 
-@export var ball: Ball
-@export var goal: Goal
 @export var changing_scene: bool
+
+var ball: Ball
+var goal: Goal
+var pause_button: PauseButton
 
 var ball_prev_shoot: Vector2 = Vector2()
 
@@ -17,10 +19,7 @@ var editing = false
 
 var node_editor: NodeEditor = null
 
-func _process(__):
-	# TODO: Make a better way for detecting if in level
-	if current_level.has("name") && Input.is_action_just_pressed("pause"):
-		pause()
+var current_scene = preload("res://scenes/Blank.tscn")
 
 func pause():
 	get_tree().paused = true
@@ -38,7 +37,7 @@ func change_scene(to: Dictionary):
 
 func __into_scene(to: Dictionary):
 	ball_prev_shoot = Vector2()
-	get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
+	get_tree().change_scene_to_packed(current_scene)
 	current_level = to
 	
 	var current_editor = node_editor
@@ -61,7 +60,8 @@ func __into_scene(to: Dictionary):
 	a.call_deferred()
 
 func reload_scene():
-	get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
+	print(GameInfo.current_scene)
+	get_tree().change_scene_to_packed(current_scene)
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 	a.call_deferred()
@@ -78,6 +78,7 @@ func to_main_menu():
 	
 	ball = null
 	goal = null
+	pause_button = null
 	changing_scene = false
 	current_level = {}
 	editing = false

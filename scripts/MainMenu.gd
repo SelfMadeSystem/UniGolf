@@ -2,6 +2,7 @@ extends Control
 
 
 func _on_play_pressed():
+	GameInfo.current_scene = preload("res://scenes/Blank.tscn")
 	get_tree().change_scene_to_file("res://scenes/LoadLevelMenu.tscn")
 
 

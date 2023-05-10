@@ -30,6 +30,7 @@ var removing_node = false
 func _ready():
 	if Engine.is_editor_hint():
 		return
+	GameInfo.current_scene = preload("res://scenes/BlankPlaytest.tscn")
 	GameInfo.node_editor = self
 	get_parent().remove_child.call_deferred(self)
 	GameInfo.add_child.call_deferred(self)
@@ -236,19 +237,31 @@ func toggle_editor_hide():
 func _on_play_button_pressed():
 	GameInfo.ball_prev_shoot = Vector2()
 	if GameInfo.editing:
-		GameInfo.editing = false
-		toggle_editor_hide()
-		grid_was_visible = $Grid.visible
-		$Grid.visible = false
-		var stuff = LevelSaver.serialize_level()
-		GameInfo.current_level = stuff
-		get_tree().change_scene_to_packed(preload("res://scenes/Blank.tscn"))
-		LevelSaver.deserialize_level.bind(stuff).call_deferred()
+		play()
 	else:
-		GameInfo.editing = true
-		toggle_editor_hide()
-		$Grid.visible = grid_was_visible
-		GameInfo.reload_scene()
+		pause()
+
+func play():
+	GameInfo.editing = false
+	toggle_editor_hide()
+	grid_was_visible = $Grid.visible
+	$Grid.visible = false
+	var stuff = LevelSaver.serialize_level()
+	GameInfo.current_level = stuff
+	get_tree().change_scene_to_packed(preload("res://scenes/BlankPlaytest.tscn"))
+	LevelSaver.deserialize_level.bind(stuff).call_deferred()
+
+func pause():
+	GameInfo.editing = true
+	toggle_editor_hide()
+	$Grid.visible = grid_was_visible
+	GameInfo.reload_scene()
+
+
+func _notification(what):
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		if !GameInfo.editing && GameInfo.node_editor != null:
+			pause()
 
 func _on_grid_button_pressed():
 	if $Grid.visible:

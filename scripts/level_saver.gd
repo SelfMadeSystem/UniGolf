@@ -31,7 +31,9 @@ func deserialize_node(stuff: Dictionary):
 	if stuff.has("height"):
 		node.height = stuff["height"]
 	if stuff.has("flipped"):
-		node.flipped = stuff["flipped"]
+		# JSON doesn't support integers or enums.
+		# Convert JSON float to integer so it can be used as an enum.
+		node.flipped = int(stuff["flipped"])
 	if stuff.has("serialized"):
 		node.deserialize(stuff["serialized"])
 	

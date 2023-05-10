@@ -16,7 +16,7 @@ point_count = 2
 radius = 4.0
 
 [node name="Ball" type="RigidBody2D"]
-z_index = 1
+z_index = 4
 collision_layer = 129
 collision_mask = 129
 physics_material_override = SubResource("PhysicsMaterial_qx6mg")

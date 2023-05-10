@@ -1,9 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://bbluajek8qxhm"]
+[gd_scene load_steps=9 format=3 uid="uid://bbluajek8qxhm"]
 
 [ext_resource type="Script" path="res://scripts/level.gd" id="1_hwir0"]
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_r3r2l"]
 [ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="3_vh0xt"]
 [ext_resource type="Script" path="res://scripts/wall.gd" id="4_5erw0"]
+[ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="5_ieter"]
+[ext_resource type="Script" path="res://scripts/pause_button.gd" id="6_xt4ur"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6521y"]
 friction = 0.0
@@ -34,3 +36,15 @@ position = Vector2(320, 48)
 scale = Vector2(640, 96)
 shape = SubResource("RectangleShape2D_nv2uc")
 debug_color = Color(1, 0, 0.0862745, 0.419608)
+
+[node name="PauseButton" type="Button" parent="." groups=["EditorHide"]]
+z_index = 99
+custom_minimum_size = Vector2(64, 64)
+offset_right = 64.0
+offset_bottom = 64.0
+icon = ExtResource("5_ieter")
+icon_alignment = 1
+expand_icon = true
+script = ExtResource("6_xt4ur")
+
+[connection signal="pressed" from="PauseButton" to="PauseButton" method="_on_pressed"]

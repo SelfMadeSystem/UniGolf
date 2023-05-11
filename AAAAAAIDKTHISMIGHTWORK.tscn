@@ -1,0 +1,45 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0u7bfdlf5bqd"]
+
+[ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="1_cjyl5"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyyq3"]
+shader = ExtResource("1_cjyl5")
+shader_parameter/color = Color(0, 0.603922, 1, 1)
+shader_parameter/width = 8.258
+shader_parameter/pattern = 1
+shader_parameter/inside = true
+shader_parameter/add_margins = false
+
+[sub_resource type="Gradient" id="Gradient_gqtw3"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_w7enk"]
+gradient = SubResource("Gradient_gqtw3")
+width = 1
+height = 1
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CanvasGroup" type="CanvasGroup" parent="."]
+material = SubResource("ShaderMaterial_lyyq3")
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasGroup"]
+position = Vector2(192, 176)
+scale = Vector2(192.25, 192.25)
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D2" type="Sprite2D" parent="CanvasGroup"]
+position = Vector2(296, 296)
+rotation = 1.50746
+scale = Vector2(192.25, 192.25)
+skew = 1.32645
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D3" type="Sprite2D" parent="CanvasGroup"]
+position = Vector2(240, 256)
+rotation = 2.38468
+scale = Vector2(192.25, 192.25)
+skew = 1.0472
+texture = SubResource("GradientTexture2D_w7enk")

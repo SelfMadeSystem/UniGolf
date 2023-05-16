@@ -23,7 +23,7 @@ can_sleep = false
 position = Vector2(320, 128)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(0, 928)
+position = Vector2(0, 1024)
 physics_material_override = SubResource("PhysicsMaterial_6521y")
 script = ExtResource("4_5erw0")
 width = 640

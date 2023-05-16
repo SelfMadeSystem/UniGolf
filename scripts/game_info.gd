@@ -39,15 +39,18 @@ func end_scene():
 	else:
 		reload_scene()
 
-func change_scene(to: Dictionary):
+func change_scene(to: Dictionary, instant = false):
 	ball_prev_shoot = Vector2()
 	changing_scene = true
-	var tween = get_tree().create_tween()
-	var current = get_tree().current_scene
-	tween.tween_property(current, "global_position", Vector2(-get_viewport().get_visible_rect().size.x * 1.5, 0), 0.5)
-	tween.tween_callback(__into_scene.bind(to))
+	if instant:
+		__into_scene(to, true)
+	else:
+		var tween = get_tree().create_tween()
+		var current = get_tree().current_scene
+		tween.tween_property(current, "global_position", Vector2(-get_viewport().get_visible_rect().size.x * 1.5, 0), 0.5)
+		tween.tween_callback(__into_scene.bind(to))
 
-func __into_scene(to: Dictionary):
+func __into_scene(to: Dictionary, instant = false):
 	ball_prev_shoot = Vector2()
 	get_tree().change_scene_to_packed(current_scene)
 	current_level = to
@@ -57,14 +60,20 @@ func __into_scene(to: Dictionary):
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 		var current = get_tree().current_scene
-		current.global_position = Vector2(get_viewport().get_visible_rect().size.x * 1.5, 0)
-		var tween = get_tree().create_tween()
-		tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
-		tween.tween_callback(func():
+		
+		if !instant:
+			current.global_position = Vector2(get_viewport().get_visible_rect().size.x * 1.5, 0)
+			var tween = get_tree().create_tween()
+			tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
+			tween.tween_callback(func():
+				changing_scene = false
+				if !editing && ball != null:
+					ball.unfreeze()
+			)
+		else:
 			changing_scene = false
 			if !editing && ball != null:
 				ball.unfreeze()
-		)
 		
 		if current_editor != null:
 			current.add_child(current_editor)
@@ -72,7 +81,6 @@ func __into_scene(to: Dictionary):
 	a.call_deferred()
 
 func reload_scene():
-	print(GameInfo.current_scene)
 	get_tree().change_scene_to_packed(current_scene)
 	var a = func():
 		LevelSaver.deserialize_level(current_level)

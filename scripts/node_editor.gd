@@ -9,7 +9,7 @@ const MIN_POSITION = Vector2(0, 0)
 const MAX_POSITION = Vector2(1024, 1024)
 
 var grid_size = Vector2(64, 64)
-var grid_offset = Vector2(32, 32)
+var grid_offset = Vector2(0, 0)
 
 func set_grid_size(size: Vector2):
 	grid_size = size
@@ -34,6 +34,8 @@ func _ready():
 	GameInfo.node_editor = self
 	get_parent().remove_child.call_deferred(self)
 	GameInfo.add_child.call_deferred(self)
+	%Name.text = GameInfo.level_name
+	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 
 func get_editing_rect() -> Rect2:
 	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height)).grow(4)

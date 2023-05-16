@@ -27,7 +27,7 @@ offset_right = 8.0
 offset_bottom = 8.0
 text = "x"
 
-[node name="PlayAll" type="Button" parent="."]
+[node name="BottomButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -42,3 +42,4 @@ grow_vertical = 0
 text = "Play All"
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
+[connection signal="pressed" from="BottomButton" to="." method="_on_bottom_button_pressed"]

@@ -24,7 +24,7 @@ LevelSaver="*res://scripts/level_saver.gd"
 [display]
 
 window/size/viewport_width=640
-window/size/viewport_height=1024
+window/size/viewport_height=1120
 window/stretch/mode="viewport"
 window/handheld/orientation=1
 

@@ -12,16 +12,11 @@ grow_vertical = 2
 script = ExtResource("1_i7h38")
 
 [node name="ListOfLevels" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+layout_mode = 2
+offset_left = 300.0
+offset_top = 492.0
+offset_right = 340.0
+offset_bottom = 492.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -31,5 +26,19 @@ layout_mode = 0
 offset_right = 8.0
 offset_bottom = 8.0
 text = "x"
+
+[node name="PlayAll" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -32.0
+offset_top = -31.0
+offset_right = 32.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Play All"
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]

@@ -1,6 +1,5 @@
-[gd_scene load_steps=9 format=3 uid="uid://bbluajek8qxhm"]
+[gd_scene load_steps=8 format=3 uid="uid://bbluajek8qxhm"]
 
-[ext_resource type="Script" path="res://scripts/level.gd" id="1_hwir0"]
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_r3r2l"]
 [ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="3_vh0xt"]
 [ext_resource type="Script" path="res://scripts/wall.gd" id="4_5erw0"]
@@ -15,7 +14,6 @@ bounce = 1.0
 size = Vector2(1, 1)
 
 [node name="World" type="Node2D"]
-script = ExtResource("1_hwir0")
 
 [node name="Ball" parent="." instance=ExtResource("2_r3r2l")]
 position = Vector2(320, 896)

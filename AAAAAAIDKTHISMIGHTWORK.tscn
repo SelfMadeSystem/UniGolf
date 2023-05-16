@@ -1,14 +1,38 @@
-[gd_scene load_steps=5 format=3 uid="uid://d0u7bfdlf5bqd"]
+[gd_scene load_steps=8 format=3 uid="uid://d0u7bfdlf5bqd"]
 
-[ext_resource type="Shader" path="res://assets/shaders/outline.gdshader" id="1_cjyl5"]
+[ext_resource type="Shader" path="res://assets/shaders/changinshittoothershitkk.gdshader" id="1_58l7y"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_lyyq3"]
-shader = ExtResource("1_cjyl5")
-shader_parameter/color = Color(0, 0.603922, 1, 1)
-shader_parameter/width = 8.258
-shader_parameter/pattern = 1
-shader_parameter/inside = true
-shader_parameter/add_margins = false
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_eqc05"]
+shader = ExtResource("1_58l7y")
+shader_parameter/wall_detect = Color(1, 0, 0, 1)
+shader_parameter/wall_color = Color(1, 0, 0, 1)
+shader_parameter/wall_border = Color(0.7, 0, 0, 1)
+shader_parameter/wall_tl_width = Vector2(2, 2)
+shader_parameter/wall_br_width = Vector2(2, 10)
+shader_parameter/wall_offset = 10.0
+shader_parameter/wall_pattern = 1
+shader_parameter/water_detect = Color(0, 1, 1, 1)
+shader_parameter/water_color = Color(0, 0.6, 1, 1)
+shader_parameter/water_border = Color(0.3, 0.3, 0.3, 1)
+shader_parameter/water_tl_width = Vector2(0, 10)
+shader_parameter/water_br_width = Vector2(0, 0)
+shader_parameter/water_pattern = 2
+shader_parameter/border = Color(0, 0, 0, 0.4)
+shader_parameter/border_tl_width = Vector2(4, 4)
+shader_parameter/border_br_width = Vector2(4, 4)
+shader_parameter/border_pattern = 1
+
+[sub_resource type="Gradient" id="Gradient_gwdj0"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_rojig"]
+gradient = SubResource("Gradient_gwdj0")
+width = 1
+height = 1
+
+[sub_resource type="SphereMesh" id="SphereMesh_jmgcs"]
 
 [sub_resource type="Gradient" id="Gradient_gqtw3"]
 interpolation_mode = 1
@@ -23,23 +47,78 @@ height = 1
 [node name="Node2D" type="Node2D"]
 
 [node name="CanvasGroup" type="CanvasGroup" parent="."]
-material = SubResource("ShaderMaterial_lyyq3")
+material = SubResource("ShaderMaterial_eqc05")
 
-[node name="Sprite2D" type="Sprite2D" parent="CanvasGroup"]
-position = Vector2(192, 176)
+[node name="Water" type="Node2D" parent="CanvasGroup"]
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasGroup/Water"]
+position = Vector2(168, 472)
 scale = Vector2(192.25, 192.25)
-texture = SubResource("GradientTexture2D_w7enk")
+texture = SubResource("GradientTexture2D_rojig")
 
-[node name="Sprite2D2" type="Sprite2D" parent="CanvasGroup"]
-position = Vector2(296, 296)
+[node name="Sprite2D4" type="Sprite2D" parent="CanvasGroup/Water"]
+position = Vector2(328, 272)
+scale = Vector2(160, 49.0312)
+texture = SubResource("GradientTexture2D_rojig")
+
+[node name="Sprite2D5" type="Sprite2D" parent="CanvasGroup/Water"]
+position = Vector2(520, 224)
+scale = Vector2(64, 176)
+texture = SubResource("GradientTexture2D_rojig")
+
+[node name="Sprite2D2" type="Sprite2D" parent="CanvasGroup/Water"]
+position = Vector2(400, 456)
 rotation = 1.50746
 scale = Vector2(192.25, 192.25)
 skew = 1.32645
-texture = SubResource("GradientTexture2D_w7enk")
+texture = SubResource("GradientTexture2D_rojig")
 
-[node name="Sprite2D3" type="Sprite2D" parent="CanvasGroup"]
-position = Vector2(240, 256)
+[node name="Sprite2D3" type="Sprite2D" parent="CanvasGroup/Water"]
+position = Vector2(392, 424)
 rotation = 2.38468
 scale = Vector2(192.25, 192.25)
 skew = 1.0472
+texture = SubResource("GradientTexture2D_rojig")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CanvasGroup/Water"]
+position = Vector2(464, 768)
+scale = Vector2(224, 224)
+mesh = SubResource("SphereMesh_jmgcs")
+texture = SubResource("GradientTexture2D_rojig")
+
+[node name="Wall" type="Node2D" parent="CanvasGroup"]
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasGroup/Wall"]
+position = Vector2(526.008, 424)
+scale = Vector2(268.016, 72.0625)
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D4" type="Sprite2D" parent="CanvasGroup/Wall"]
+position = Vector2(384, 224)
+scale = Vector2(272, 48)
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D5" type="Sprite2D" parent="CanvasGroup/Wall"]
+position = Vector2(589, 88)
+scale = Vector2(134, 176)
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D2" type="Sprite2D" parent="CanvasGroup/Wall"]
+position = Vector2(112, 504)
+rotation = 8.76155
+scale = Vector2(192.25, 192.25)
+skew = 1.49226
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="Sprite2D3" type="Sprite2D" parent="CanvasGroup/Wall"]
+position = Vector2(152, 240)
+rotation = -0.773187
+scale = Vector2(192.25, 192.25)
+skew = 1.0472
+texture = SubResource("GradientTexture2D_w7enk")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="CanvasGroup/Wall"]
+position = Vector2(208, 784)
+scale = Vector2(224, 224)
+mesh = SubResource("SphereMesh_jmgcs")
 texture = SubResource("GradientTexture2D_w7enk")

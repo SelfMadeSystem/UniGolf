@@ -14,6 +14,8 @@ var pause_button: PauseButton
 
 var ball_prev_shoot: Vector2 = Vector2()
 
+var map_pack: MapPack
+
 var current_level: Dictionary = {}
 var editing = false
 
@@ -26,6 +28,16 @@ func pause():
 	get_tree().root.add_child(
 		preload("res://scenes/PauseMenu.tscn").instantiate()
 	)
+
+func end_scene():
+	if map_pack:
+		var next = map_pack.next_map()
+		if next == null:
+			to_main_menu()
+		else:
+			change_scene(next)
+	else:
+		reload_scene()
 
 func change_scene(to: Dictionary):
 	ball_prev_shoot = Vector2()
@@ -83,4 +95,5 @@ func to_main_menu():
 	current_level = {}
 	editing = false
 	node_editor = null
+	map_pack = null
 	ball_prev_shoot = Vector2()

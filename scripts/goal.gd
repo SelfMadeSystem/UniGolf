@@ -9,14 +9,11 @@ extends Area2D
 
 @onready var radius = ($CollisionShape2D.shape as CircleShape2D).radius * (1 + outline)
 
-var current_scene: Level
-
 var ball: Ball
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
-	current_scene = get_parent()
 	get_parent().remove_child.call_deferred(self)
 	if GameInfo.goal:
 		GameInfo.goal.get_parent().remove_child.call_deferred(GameInfo.goal)
@@ -35,7 +32,7 @@ func _process(_delta):
 			ball.set_limited()
 			ball = null
 			await get_tree().create_timer(0.5).timeout
-			current_scene.end_scene()
+			GameInfo.end_scene()
 
 func _on_body_entered(body):
 	if body is Ball:

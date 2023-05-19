@@ -17,7 +17,7 @@ func _on_edit_pressed():
 
 func _on_delete_pressed():
 	DirAccess.remove_absolute(LevelSaver.SAVE_DIR + level_name + ".json")
-	_on_cancel_pressed()
+	_on_cancel_pressed() # TODO: refresh the map list
 
 
 func _on_cancel_pressed():

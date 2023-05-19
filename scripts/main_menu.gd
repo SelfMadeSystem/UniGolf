@@ -10,10 +10,11 @@ func _on_play_pressed():
 func _on_edit_pressed():
 	var load_level = load_level_scene.instantiate()
 	load_level.button_pressed = func(json):
-		GameInfo.editing = true
-		GameInfo.current_scene = preload("res://scenes/BlankEditor.tscn")
-		GameInfo.level_name = json.data.name
-		GameInfo.change_scene(json.data, true)
+		var level_edit_menu = preload("res://prefabs/LevelEditMenu.tscn")
+		var inst = level_edit_menu.instantiate()
+		inst.json = json
+		inst.level_name = json.data.name
+		GameInfo.get_tree().root.add_child(inst)
 
 	load_level.set_bottom_button = func(button: Button, _maps):
 		button.text = "Create New Level"

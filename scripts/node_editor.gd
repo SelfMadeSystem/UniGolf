@@ -78,6 +78,17 @@ func _process(_delta):
 		else:
 			next_node = null
 
+func set_line(rect: Rect2):
+	$Line.points = [
+		rect.position,
+		Vector2(rect.position.x, rect.end.y),
+		rect.end,
+		Vector2(rect.end.x, rect.position.y),
+		rect.position
+	]
+	($Line.material as ShaderMaterial).set_shader_parameter("pos", rect.position);
+	($Line.material as ShaderMaterial).set_shader_parameter("end", rect.end);
+
 func reposition_elements():
 	if !editing_node:
 		vanish_elements()
@@ -90,15 +101,7 @@ func reposition_elements():
 	$Rotate.visible = editing_node.get("flipped") != null
 	$Copy.position = Vector2(rect.position.x, rect.end.y).clamp(min, max)
 	$Resize.position = rect.end.clamp(min, max)
-	$Line.points = [
-		rect.position,
-		Vector2(rect.position.x, rect.end.y),
-		rect.end,
-		Vector2(rect.end.x, rect.position.y),
-		rect.position
-	]
-	($Line.material as ShaderMaterial).set_shader_parameter("pos", rect.position);
-	($Line.material as ShaderMaterial).set_shader_parameter("end", rect.end);
+	set_line(rect)
 
 func vanish_elements():
 	$Trash.position = -Vector2.ONE * 69420
@@ -184,6 +187,9 @@ var mouse_pos = Vector2.ZERO
 var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
 
+var drag_start = Vector2.ZERO
+var dragging = false
+
 func set_mouse_pos(pos: Vector2):
 	mouse_pos = pos
 	og_size = Vector2(editing_node.width, editing_node.height)
@@ -193,6 +199,10 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
+			dragging = false
+			match current_action:
+				ActionEnum.SELECT:
+					$Line.points = []
 		elif button_pressed == ButtonEnum.NONE:
 			proceed_to_edit_node(null)
 			if !GameInfo.editing:
@@ -210,8 +220,18 @@ func _unhandled_input(event):
 						actually_proceed_to_edit_node(node)
 						button_pressed = ButtonEnum.NODE
 						set_mouse_pos(event.position)
+					ActionEnum.SELECT:
+						drag_start = event.position
+						dragging = true
 			f.call_deferred()
 	elif event is InputEventMouseMotion:
+		if dragging && current_action == ActionEnum.SELECT:
+			var a = drag_start
+			var b = event.position
+			var mi = Vector2(min(a.x, b.x), min(a.y, b.y))
+			var ma = Vector2(max(a.x, b.x), max(a.y, b.y))
+			set_line(Rect2(mi, ma - mi))
+			return
 		if button_pressed < 0:
 			return
 		if editing_node == null:

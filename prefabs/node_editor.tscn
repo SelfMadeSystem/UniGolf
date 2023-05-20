@@ -254,6 +254,7 @@ modulate = Color(0.2, 0.2, 0.2, 1)
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 mouse_default_cursor_shape = 2
+disabled = true
 icon = ExtResource("11_0yhnq")
 icon_alignment = 1
 expand_icon = true

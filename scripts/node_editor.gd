@@ -8,7 +8,10 @@ const MAX_SIZE = Vector2(1024, 1024)
 const MIN_POSITION = Vector2(0, 0)
 const MAX_POSITION = Vector2(1024, 1024)
 
-var grid_size = Vector2(64, 64)
+const GRID_BIG = Vector2(32, 32)
+const GRID_SMALL = Vector2(16, 16)
+
+var grid_size = GRID_BIG
 var grid_offset = Vector2(0, 0)
 
 func set_grid_size(size: Vector2):
@@ -30,6 +33,7 @@ var removing_node = false
 func _ready():
 	if Engine.is_editor_hint():
 		return
+	set_grid_size(GRID_BIG)
 	GameInfo.current_scene = preload("res://scenes/BlankPlaytest.tscn")
 	GameInfo.node_editor = self
 	get_parent().remove_child.call_deferred(self)
@@ -267,8 +271,8 @@ func _notification(what):
 
 func _on_grid_button_pressed():
 	if $Grid.visible:
-		if grid_size.x > 32:
-			set_grid_size(Vector2(32, 32))
+		if grid_size.x > GRID_SMALL.x:
+			set_grid_size(GRID_SMALL)
 			%GridButton.icon = preload("res://assets/icons/Grid_Small.png")
 		else:
 			$Grid.visible = false
@@ -276,7 +280,7 @@ func _on_grid_button_pressed():
 			%GridButton.modulate.v = 0.3
 	else:
 		$Grid.visible = true
-		set_grid_size(Vector2(64, 64))
+		set_grid_size(GRID_BIG)
 		%GridButton.modulate.v = 1
 
 

@@ -1,14 +1,24 @@
+@tool
 class_name MapPack
 
 extends Resource
 
-var name: String
-var maps: Array[Dictionary]
+@export var level_data: String
+@export var add_level: bool = false:
+	set(val):
+		if val:
+			maps.append(JSON.parse_string(level_data))
+			level_data = ''
+
+@export var name: String
+@export var maps: Array[Dictionary] = []
 var current_map: int = 0
 
-func _init(name: String, maps: Array[Dictionary]):
-	self.name = name
-	self.maps = maps
+static func create(name: String, maps: Array[Dictionary]):
+	var pack = MapPack.new()
+	pack.name = name
+	pack.maps = maps
+	return pack
 
 func next_map():
 	current_map += 1

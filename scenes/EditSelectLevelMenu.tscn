@@ -1,15 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://t85ceu4238n"]
+[gd_scene load_steps=2 format=3 uid="uid://dhkeqbsktsob"]
 
-[ext_resource type="Script" path="res://scripts/load_level_menu.gd" id="1_i7h38"]
+[ext_resource type="Script" path="res://scripts/edit_select_level_menu.gd" id="1_g3o53"]
 
-[node name="LoadLevelMenu" type="Control"]
+[node name="EditSelectLevelMenu" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_i7h38")
+script = ExtResource("1_g3o53")
 
 [node name="ListOfLevels" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -39,7 +39,7 @@ offset_top = -31.0
 offset_right = 32.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Play All"
+text = "Create New Level"
 
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
 [connection signal="pressed" from="BottomButton" to="." method="_on_bottom_button_pressed"]

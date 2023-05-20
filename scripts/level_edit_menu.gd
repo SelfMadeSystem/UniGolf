@@ -2,7 +2,7 @@ extends Control
 
 @export var level_name: String
 
-var json
+var json: JSON
 
 
 
@@ -22,3 +22,7 @@ func _on_delete_pressed():
 
 func _on_cancel_pressed():
 	queue_free()
+
+
+func _on_share_pressed():
+	DisplayServer.clipboard_set(JSON.stringify(json.data))

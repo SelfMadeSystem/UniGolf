@@ -8,7 +8,6 @@ func add_res_maps(dir: String, arr: Array[MapPack]):
 	for file in DirAccess.get_files_at(dir):
 		if file.ends_with(".tres"):
 			var res = load("res://mappacks/official/NewGame.tres")
-			print(res)
 			arr.append(res)
 
 func add_local_maps():

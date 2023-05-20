@@ -97,6 +97,8 @@ func reposition_elements():
 		Vector2(rect.end.x, rect.position.y),
 		rect.position
 	]
+	($Line.material as ShaderMaterial).set_shader_parameter("pos", rect.position);
+	($Line.material as ShaderMaterial).set_shader_parameter("end", rect.end);
 
 func vanish_elements():
 	$Trash.position = -Vector2.ONE * 69420

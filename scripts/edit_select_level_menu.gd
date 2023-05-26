@@ -17,7 +17,7 @@ func _on_back_pressed():
 	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
 
 func _on_button_pressed(json):
-	var level_edit_menu = preload("res://prefabs/LevelEditMenu.tscn")
+	var level_edit_menu = preload("res://prefabs/level_edit_menu.tscn")
 	var inst = level_edit_menu.instantiate()
 	inst.json = json
 	inst.level_name = json.data.name

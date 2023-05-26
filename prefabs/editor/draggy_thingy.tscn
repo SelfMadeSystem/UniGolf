@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://cy2tc0maj3f4c"]
+
+[ext_resource type="Script" path="res://scripts/editor/draggy_thingy.gd" id="1_1a4ha"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_mvlgk"]
+radius = 16.0
+
+[node name="DraggyThingy" type="Area2D"]
+monitoring = false
+monitorable = false
+script = ExtResource("1_1a4ha")
+
+[node name="hitball" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_mvlgk")
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

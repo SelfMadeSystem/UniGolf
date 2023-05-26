@@ -26,8 +26,12 @@ func set_grid_size(size: Vector2):
 #
 # And assume that setting width and height will automatically properly
 # scale the node's hitbox, sprite etc.
-var editing_node: Node2D
-var next_node: Node2D
+var editing_node: EditableNode
+var menu_edit_attributes: Array[EditableNode.EditAttribute] = []
+var visible_edit_attributes: Array[EditableNode.DragEditAttribute] = []
+var draggy_thingies: Array[DraggyThingy] = []
+
+var next_node: EditableNode
 var removing_node = false
 
 func _ready():
@@ -42,7 +46,7 @@ func _ready():
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 
 func get_editing_rect() -> Rect2:
-	return Rect2(editing_node.global_position, Vector2(editing_node.width, editing_node.height)).grow(4)
+	return Rect2(editing_node.global_position, editing_node.shape_size).grow(4)
 
 func proceed_to_edit_node(node: Node2D):
 	if button_pressed > -1:
@@ -59,11 +63,28 @@ func actually_proceed_to_edit_node(node: Node2D):
 	if editing_node:
 		editing_node.input_event.connect(_on_editing_node_input_event)
 		editing_node.tree_exited.connect(deyeet)
+		update_editing_node_attributes()
 	else:
 		next_node = null
 	reposition_elements()
 	button_pressed = ButtonEnum.NODE
 	mouse_pos = null
+
+func update_editing_node_attributes():
+	menu_edit_attributes = editing_node.get_menu_edit_attributes()
+	visible_edit_attributes = editing_node.get_visible_edit_attributes()
+	for thing in draggy_thingies:
+		thing.queue_free()
+	draggy_thingies = []
+	for attr in visible_edit_attributes:
+		var thing = preload("res://prefabs/editor/draggy_thingy.tscn").instantiate()
+		thing.attr = attr
+		draggy_thingies.append(thing)
+		add_child.call_deferred(thing)
+
+func reposition_draggy_thingies():
+	for thing in draggy_thingies:
+		thing.reposition()
 
 func deyeet():
 	editing_node = null
@@ -102,8 +123,12 @@ func reposition_elements():
 	$Copy.position = Vector2(rect.position.x, rect.end.y).clamp(min, max)
 	$Resize.position = rect.end.clamp(min, max)
 	set_line(rect)
+	reposition_draggy_thingies()
 
 func vanish_elements():
+	for thing in draggy_thingies:
+		thing.queue_free()
+	draggy_thingies = []
 	$Trash.position = -Vector2.ONE * 69420
 	$Rotate.position = -Vector2.ONE * 69420
 	$Copy.position = -Vector2.ONE * 69420
@@ -114,7 +139,7 @@ enum ActionEnum { DRAG, SELECT, PLACE }
 
 var current_action = ActionEnum.DRAG
 
-var current_object = preload("res://prefabs/wall.tscn")
+var current_object = preload("res://prefabs/nodes/wall.tscn")
 
 func set_action(action: ActionEnum):
 	current_action = action
@@ -192,7 +217,7 @@ var dragging = false
 
 func set_mouse_pos(pos: Vector2):
 	mouse_pos = pos
-	og_size = Vector2(editing_node.width, editing_node.height)
+	og_size = editing_node.shape_size
 	og_pos = editing_node.position
 
 func _unhandled_input(event):
@@ -213,8 +238,7 @@ func _unhandled_input(event):
 				match current_action:
 					ActionEnum.PLACE:
 						var node = current_object.instantiate()
-						node.width = 64
-						node.height = 64
+						node.shape_size = Vector2(64, 64)
 						node.position = event.position
 						get_tree().current_scene.add_child(node)
 						actually_proceed_to_edit_node(node)
@@ -248,8 +272,8 @@ func _unhandled_input(event):
 				var a = editing_node.position.posmodv(amnt)
 				p = ((p + grid_offset + a) / amnt).round() * amnt - grid_offset - a
 				p = p.clamp(MIN_SIZE, MAX_SIZE)
-				editing_node.width = p.x
-				editing_node.height = p.y
+				editing_node.shape_size = p
+				editing_node.var_updated()
 				reposition_elements()
 			ButtonEnum.NODE:
 				var p = og_pos + diff
@@ -317,34 +341,17 @@ func _on_place_button_pressed():
 	set_action(ActionEnum.PLACE)
 
 func _on_objects_button_pressed():
-	var selectScene = preload("res://prefabs/object_select.tscn")
+	var selectScene = preload("res://prefabs/editor/object_select.tscn")
 	var select = selectScene.instantiate()
 	$UI.add_child(select)
 	select.add_object({
-		"prefab": preload("res://prefabs/wall.tscn"),
+		"prefab": preload("res://prefabs/nodes/wall.tscn"),
 		"name": "Wall"
-	})
-	select.add_object({
-		"prefab": preload("res://prefabs/wall_angled.tscn"),
-		"name": "Wall"
-	})
-	select.add_object({
-		"prefab": preload("res://prefabs/water.tscn"),
-		"name": "Water"
-	})
-	select.add_object({
-		"prefab": preload("res://prefabs/water_angled.tscn"),
-		"name": "Water"
-	})
-	select.add_object({
-		"prefab": preload("res://prefabs/slope.tscn"),
-		"name": "Slope"
 	})
 	select.selected.connect(func(a):
 		%PlaceButton.get_child(0).queue_free()
 		var b = a.instantiate()
-		b.width = 48
-		b.height = 48
+		b.shape_size = Vector2(48, 48)
 		b.position = Vector2(8, 8)
 		%PlaceButton.add_child(b)
 		current_object = a

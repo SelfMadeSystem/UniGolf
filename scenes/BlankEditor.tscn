@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://yb0gbqnpgs2j"]
+[gd_scene load_steps=7 format=3]
 
-[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_qlto7"]
-[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="3_e7w6v"]
+[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_qlto7"]
+[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_e7w6v"]
 [ext_resource type="Script" path="res://scripts/wall.gd" id="4_6jle6"]
-[ext_resource type="PackedScene" uid="uid://bv28hrltpc6hc" path="res://prefabs/node_editor.tscn" id="5_fyi2k"]
+[ext_resource type="PackedScene" uid="uid://bv28hrltpc6hc" path="res://prefabs/editor/node_editor.tscn" id="5_fyi2k"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6521y"]
 friction = 0.0

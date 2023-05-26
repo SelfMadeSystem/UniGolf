@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://bbluajek8qxhm"]
+[gd_scene load_steps=8 format=3]
 
-[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_r3r2l"]
-[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="3_vh0xt"]
+[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_r3r2l"]
+[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_vh0xt"]
 [ext_resource type="Script" path="res://scripts/wall.gd" id="4_5erw0"]
 [ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="5_ieter"]
 [ext_resource type="Script" path="res://scripts/pause_button.gd" id="6_xt4ur"]

@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 
 GameInfo="*res://scripts/game_info.gd"
 LevelSaver="*res://scripts/level_saver.gd"
+ShapeUtils="*res://scripts/utils/shape_utils.gd"
 
 [display]
 

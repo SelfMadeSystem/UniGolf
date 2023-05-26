@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://c5en0x4fj2e76"]
+
+[ext_resource type="Script" path="res://scripts/nodes/wall.gd" id="1_npt8j"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_mksux"]
+points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
+
+[node name="Wall" type="StaticBody2D"]
+input_pickable = true
+script = ExtResource("1_npt8j")
+shape_shape = 3
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("ConvexPolygonShape2D_mksux")

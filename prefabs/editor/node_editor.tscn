@@ -16,7 +16,7 @@
 [ext_resource type="Texture2D" uid="uid://dm2k4v5xtr54a" path="res://assets/icons/Drag.png" id="10_tnt2h"]
 [ext_resource type="Texture2D" uid="uid://cvvdbxqsntce4" path="res://assets/icons/Select.png" id="11_0yhnq"]
 [ext_resource type="Texture2D" uid="uid://dcdgij4bgejfd" path="res://assets/icons/More.png" id="11_n740k"]
-[ext_resource type="PackedScene" uid="uid://drwdakie2e3yt" path="res://prefabs/wall.tscn" id="12_j00wc"]
+[ext_resource type="PackedScene" uid="uid://c5en0x4fj2e76" path="res://prefabs/nodes/wall.tscn" id="17_2g3a1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2w5jh"]
 shader = ExtResource("3_813i8")
@@ -267,10 +267,9 @@ layout_mode = 2
 size_flags_vertical = 0
 mouse_default_cursor_shape = 2
 
-[node name="Wall" parent="UI/Bottom/Right/PlaceButton" instance=ExtResource("12_j00wc")]
+[node name="Wall" parent="UI/Bottom/Right/PlaceButton" instance=ExtResource("17_2g3a1")]
 position = Vector2(8, 8)
-width = 48
-height = 48
+shape_size = Vector2(48, 48)
 
 [node name="ObjectsButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]
 custom_minimum_size = Vector2(32, 64)

@@ -806,7 +806,6 @@ grow_vertical = 2
 tab_alignment = 1
 
 [node name="Community" type="Control" parent="TabContainer"]
-visible = false
 layout_mode = 2
 
 [node name="Container" type="VBoxContainer" parent="TabContainer/Community"]
@@ -822,6 +821,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Official" type="Control" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Container" type="VBoxContainer" parent="TabContainer/Official"]

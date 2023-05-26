@@ -1,7 +1,7 @@
-[gd_scene load_steps=6 format=3 uid="uid://35dyw1bse727"]
+[gd_scene load_steps=6 format=3]
 
-[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/ball.tscn" id="2_lcpw1"]
-[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/goal.tscn" id="3_gtklc"]
+[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_lcpw1"]
+[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_gtklc"]
 [ext_resource type="Script" path="res://scripts/wall.gd" id="4_d0qpx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6521y"]

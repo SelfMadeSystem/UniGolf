@@ -13,11 +13,10 @@ func add_object(obj: Dictionary):
 # height: int
 	var prefabScene: PackedScene = obj.get("prefab")
 	var name: String = obj.get("name")
-	var templateScene = preload("res://prefabs/object_template.tscn")
+	var templateScene = preload("res://prefabs/editor/object_template.tscn")
 	var template = templateScene.instantiate()
 	var prefab = prefabScene.instantiate()
-	prefab.width = 48
-	prefab.height = 48
+	prefab.shape_size = Vector2(48, 48)
 	prefab.position = Vector2(8, 8)
 	template.add_child(prefab)
 	template.get_node("Label").text = name

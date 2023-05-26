@@ -1,10 +1,11 @@
-[gd_scene load_steps=26 format=3 uid="uid://bv28hrltpc6hc"]
+[gd_scene load_steps=27 format=3 uid="uid://dvgn31hw0pdtf"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
-[ext_resource type="Script" path="res://scripts/node_editor.gd" id="1_rivm0"]
+[ext_resource type="Script" path="res://scripts/editor/node_editor.gd" id="1_rivm0"]
 [ext_resource type="Texture2D" uid="uid://c0ipcd20y2552" path="res://assets/icons/Info.png" id="2_ujkkt"]
 [ext_resource type="Texture2D" uid="uid://c8l5mwpvsnsdj" path="res://assets/icons/Resize.png" id="3_0bbys"]
 [ext_resource type="Shader" path="res://assets/shaders/obj_select.gdshader" id="3_813i8"]
+[ext_resource type="Script" path="res://scripts/editor/node_button.gd" id="4_celo7"]
 [ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
 [ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
 [ext_resource type="Shader" path="res://assets/shaders/grid.gdshader" id="7_4p2lq"]
@@ -71,52 +72,64 @@ texture = ExtResource("2_ujkkt")
 [node name="Resize" type="Area2D" parent="."]
 z_index = 9
 position = Vector2(-128, 320)
+script = ExtResource("4_celo7")
+type = 1
 
 [node name="Resize" type="Sprite2D" parent="Resize"]
 scale = Vector2(0.701754, 0.701754)
 texture = ExtResource("3_0bbys")
 offset = Vector2(28, 28)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Resize"]
+[node name="HitBox" type="CollisionShape2D" parent="Resize"]
+visible = false
 position = Vector2(20, 20)
 shape = SubResource("RectangleShape2D_3sxyp")
 
 [node name="Rotate" type="Area2D" parent="."]
 z_index = 9
 position = Vector2(-128, 320)
+script = ExtResource("4_celo7")
+type = 2
 
 [node name="Rotate" type="Sprite2D" parent="Rotate"]
 scale = Vector2(0.769231, 0.769231)
 texture = ExtResource("6_lxbl4")
 offset = Vector2(26, -26)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Rotate"]
+[node name="HitBox" type="CollisionShape2D" parent="Rotate"]
+visible = false
 position = Vector2(20, -20)
 shape = SubResource("RectangleShape2D_d0m1h")
 
 [node name="Trash" type="Area2D" parent="."]
 z_index = 9
 position = Vector2(-128, 320)
+script = ExtResource("4_celo7")
+type = 4
 
 [node name="Trash" type="Sprite2D" parent="Trash"]
 scale = Vector2(0.8, 0.740741)
 texture = ExtResource("4_eqyul")
 offset = Vector2(-25, -27)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Trash"]
+[node name="HitBox" type="CollisionShape2D" parent="Trash"]
+visible = false
 position = Vector2(-20, -20)
 shape = SubResource("RectangleShape2D_uvrhl")
 
 [node name="Copy" type="Area2D" parent="."]
 z_index = 9
 position = Vector2(-128, 320)
+script = ExtResource("4_celo7")
+type = 5
 
 [node name="Copy" type="Sprite2D" parent="Copy"]
 scale = Vector2(0.701754, 0.701755)
 texture = ExtResource("1_kyu4h")
 offset = Vector2(-28, 28)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Copy"]
+[node name="HitBox" type="CollisionShape2D" parent="Copy"]
+visible = false
 position = Vector2(-20, 20)
 shape = SubResource("RectangleShape2D_lu42b")
 
@@ -322,10 +335,6 @@ grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Level Name"
 
-[connection signal="input_event" from="Resize" to="." method="_on_resize_input_event"]
-[connection signal="input_event" from="Rotate" to="." method="_on_rotate_input_event"]
-[connection signal="input_event" from="Trash" to="." method="_on_trash_input_event"]
-[connection signal="input_event" from="Copy" to="." method="_on_copy_input_event"]
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/SaveButton" to="." method="_on_save_button_pressed"]

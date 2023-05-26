@@ -34,7 +34,6 @@ var RIGHT_TRIANGLE_SHAPE: PackedVector2Array = [
 var INVERSE_QUARTER_CIRCLE_SHAPE: PackedVector2Array = _get_relative_inverse_quarter_circle_shape()
 
 func _get_relative_circle_shape() -> PackedVector2Array:
-	print("get relative circle shape")
 	var shape = PackedVector2Array()
 	for i in range(0, CIRCLE_SEGMENTS):
 		shape.append(
@@ -44,7 +43,6 @@ func _get_relative_circle_shape() -> PackedVector2Array:
 	return shape
 
 func _get_relative_inverse_quarter_circle_shape() -> PackedVector2Array:
-	print("get relative inverse quarter circle shape")
 	var shape: PackedVector2Array = [
 		Vector2(0, 0)
 	]

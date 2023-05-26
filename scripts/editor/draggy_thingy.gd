@@ -57,6 +57,8 @@ func _ready():
 func _input(event):
 	if !hitball.visible:
 		return
+	if GameInfo.node_editor.button_pressed != NodeEditor.ButtonEnum.NONE:
+		return
 
 	if event is InputEventMouseButton:
 		if event.button_mask == MOUSE_BUTTON_MASK_LEFT:
@@ -68,12 +70,10 @@ func _input(event):
 			reposition()
 
 func _on_mouse_entered():
-	print("Show")
 	hitball.show()
 
 
 func _on_mouse_exited():
-	print("Hide")
 	hitball.hide()
 
 func _draw():

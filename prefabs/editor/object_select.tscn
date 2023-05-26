@@ -1,6 +1,6 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvwhen8smh8bs"]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/object_select.gd" id="1_p6nmb"]
+[ext_resource type="Script" path="res://scripts/editor/object_select.gd" id="1_p6nmb"]
 
 [node name="ObjectSelect" type="Control"]
 z_index = 12

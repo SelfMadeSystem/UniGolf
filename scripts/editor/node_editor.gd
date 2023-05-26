@@ -49,13 +49,6 @@ func get_editing_rect() -> Rect2:
 	return Rect2(editing_node.global_position, editing_node.shape_size).grow(4)
 
 func proceed_to_edit_node(node: Node2D):
-	if button_pressed > -1:
-		return
-	next_node = node
-	if !node:
-		removing_node = true
-
-func actually_proceed_to_edit_node(node: Node2D):
 	if editing_node:
 		editing_node.input_event.disconnect(_on_editing_node_input_event)
 		editing_node.tree_exited.disconnect(deyeet)
@@ -67,7 +60,6 @@ func actually_proceed_to_edit_node(node: Node2D):
 	else:
 		next_node = null
 	reposition_elements()
-	button_pressed = ButtonEnum.NODE
 	mouse_pos = null
 
 func update_editing_node_attributes():
@@ -90,14 +82,6 @@ func deyeet():
 	editing_node = null
 	button_pressed = ButtonEnum.NONE
 	vanish_elements()
-
-func _process(_delta):
-	if (next_node || removing_node) && editing_node != next_node:
-		removing_node = false
-		if button_pressed == -1:
-			actually_proceed_to_edit_node(next_node)
-		else:
-			next_node = null
 
 func set_line(rect: Rect2):
 	$Line.points = [
@@ -154,53 +138,40 @@ func set_action(action: ActionEnum):
 		ActionEnum.PLACE:
 			%PlaceButton.modulate.v = 1
 
-enum ButtonEnum { NONE = -1, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
+enum ButtonEnum { NONE, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
 var button_pressed: ButtonEnum = ButtonEnum.NONE
 
-func _on_resize_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+func on_button_input(event: InputEvent, type: ButtonEnum):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
-			button_pressed = ButtonEnum.RESIZE
-			set_mouse_pos(event.position)
-
-func _on_rotate_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if editing_node.get("flipped") == null:
-		return
-	if event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			button_pressed = ButtonEnum.ROTATE
-			editing_node.flipped = (editing_node.flipped + 1) % 4
-		elif button_pressed == ButtonEnum.ROTATE:
-			button_pressed = ButtonEnum.NONE
-
-func _on_trash_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			button_pressed = ButtonEnum.TRASH
-#			if grid_size == Vector2(32, 32):
-#				set_grid_size(Vector2(64, 64))
-#			else:
-#				set_grid_size(Vector2(32, 32))
-			editing_node.queue_free()
-			editing_node = null
-			vanish_elements()
-		elif button_pressed == ButtonEnum.TRASH:
-			button_pressed = ButtonEnum.NONE
-
-func _on_copy_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			button_pressed = ButtonEnum.COPY
-			var clone = editing_node.duplicate()
-			if $Grid.visible:
-				clone.position += grid_size
-			else:
-				clone.position += Vector2(16, 16)
-			editing_node.add_sibling(clone)
-			actually_proceed_to_edit_node(clone)
-		elif button_pressed == ButtonEnum.COPY:
-			button_pressed = ButtonEnum.NONE
+			match type:
+				ButtonEnum.RESIZE:
+					button_pressed = ButtonEnum.RESIZE
+					set_mouse_pos(event.position)
+					get_viewport().set_input_as_handled()
+				ButtonEnum.ROTATE:
+					if editing_node.get("flipped") == null:
+						return
+					editing_node.flipped = (editing_node.flipped + 1) % 4
+					get_viewport().set_input_as_handled()
+				ButtonEnum.TRASH:
+					if event is InputEventMouseButton:
+						if event.button_index == 1 && event.pressed:
+							editing_node.queue_free()
+							editing_node = null
+							vanish_elements()
+							get_viewport().set_input_as_handled()
+				ButtonEnum.COPY:
+					var clone = editing_node.duplicate()
+					if $Grid.visible:
+						clone.position += grid_size
+					else:
+						clone.position += Vector2(16, 16)
+					editing_node.add_sibling(clone)
+					proceed_to_edit_node(clone)
+					get_viewport().set_input_as_handled()
+					button_pressed = ButtonEnum.NODE
 
 func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton:
@@ -232,22 +203,19 @@ func _unhandled_input(event):
 			proceed_to_edit_node(null)
 			if !GameInfo.editing:
 				return
-			var f = func():
-				if button_pressed != ButtonEnum.NONE:
-					return
-				match current_action:
-					ActionEnum.PLACE:
-						var node = current_object.instantiate()
-						node.shape_size = Vector2(64, 64)
-						node.position = event.position
-						get_tree().current_scene.add_child(node)
-						actually_proceed_to_edit_node(node)
-						button_pressed = ButtonEnum.NODE
-						set_mouse_pos(event.position)
-					ActionEnum.SELECT:
-						drag_start = event.position
-						dragging = true
-			f.call_deferred()
+			match current_action:
+				ActionEnum.PLACE:
+					print(2)
+					var node = current_object.instantiate()
+					node.shape_size = Vector2(64, 64)
+					node.position = event.position
+					get_tree().current_scene.add_child(node)
+					proceed_to_edit_node(node)
+					button_pressed = ButtonEnum.NODE
+					set_mouse_pos(event.position)
+				ActionEnum.SELECT:
+					drag_start = event.position
+					dragging = true
 	elif event is InputEventMouseMotion:
 		if dragging && current_action == ActionEnum.SELECT:
 			var a = drag_start
@@ -256,7 +224,7 @@ func _unhandled_input(event):
 			var ma = Vector2(max(a.x, b.x), max(a.y, b.y))
 			set_line(Rect2(mi, ma - mi))
 			return
-		if button_pressed < 0:
+		if button_pressed == ButtonEnum.NONE:
 			return
 		if editing_node == null:
 			return
@@ -333,7 +301,6 @@ func _on_grid_button_pressed():
 func _on_drag_button_pressed():
 	set_action(ActionEnum.DRAG)
 
-
 func _on_select_button_pressed():
 	set_action(ActionEnum.SELECT)
 
@@ -394,3 +361,4 @@ func _on_name_focus_entered():
 
 func _on_name_focus_exited():
 	%SavePanel.position.y = prev_height
+

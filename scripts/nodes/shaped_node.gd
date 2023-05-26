@@ -152,6 +152,8 @@ func get_visible_edit_attributes() -> Array[DragEditAttribute]:
 		update_hitbox()
 
 func update_hitbox():
+	if hitbox == null:
+		return
 	hitbox.shape = get_shape2d()
 	hitbox.position = get_shape2d_position()
 	queue_redraw()

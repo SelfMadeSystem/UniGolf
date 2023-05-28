@@ -91,6 +91,15 @@ offset_bottom = 608.0
 mouse_filter = 1
 script = ExtResource("6_yua7w")
 
+[node name="DraggyThingies" type="Control" parent="UI/SelectionBox"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = 456.0
+offset_top = -424.0
+offset_right = 496.0
+offset_bottom = -384.0
+
 [node name="Resize" type="Control" parent="UI/SelectionBox"]
 z_index = 9
 layout_mode = 1
@@ -337,13 +346,6 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Level Name"
-
-[node name="DraggyThingies" type="Control" parent="UI"]
-unique_name_in_owner = true
-layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
 
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]

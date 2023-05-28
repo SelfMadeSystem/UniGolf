@@ -13,7 +13,7 @@ func reposition():
 	if obj is ShapedNode:
 		pos *= obj.shape_size
 	pos += obj.position
-	position = pos
+	global_position = pos
 
 func roundThing(v: float, size: float, offset: float, roundTo: float) -> float:
 		return ((roundf((v * size + offset) / roundTo)) * roundTo - offset) / size
@@ -42,7 +42,6 @@ func calc_thing(pos: Vector2):
 	if abs(val.y) == INF:
 		val.y = 0 # they're inf if they have the same x or y
 	
-	### FIXME:: Doesn't work if not aligned to grid...
 	if min.x == max.x: # round to grid if line is vertical
 		var roundTo = GameInfo.node_editor.grid_size.y
 		var roundOffset = GameInfo.node_editor.grid_offset.y
@@ -77,15 +76,23 @@ func calc_thing(pos: Vector2):
 func _ready():
 	reposition()
 
+var dragging = false
+
+func _input(event):
+	if event is InputEventMouseButton:
+		if !event.pressed:
+			dragging = false
+
 func _gui_input(event):
 	if GameInfo.node_editor.button_pressed != NodeEditor.ButtonEnum.NONE:
 		return
 
 	if event is InputEventMouseButton:
-		if event.button_mask == MOUSE_BUTTON_MASK_LEFT:
+		if event.button_mask & MOUSE_BUTTON_MASK_LEFT != 0 && event.pressed:
+			dragging = true
 			accept_event()
 	elif event is InputEventMouseMotion:
-		if event.button_mask == MOUSE_BUTTON_MASK_LEFT:
+		if dragging:
 			accept_event()
 			attr.set_val(calc_thing(event.global_position))
 			reposition()

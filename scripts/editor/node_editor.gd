@@ -49,6 +49,11 @@ func proceed_to_edit_node(node: Node2D):
 		update_editing_node_attributes()
 	reposition_elements()
 	mouse_pos = null
+	
+	
+	%SelectionBox.selected_nodes.clear()
+	%SelectionBox.selected_nodes.append(editing_node)
+	%SelectionBox.activate()
 
 func update_editing_node_attributes():
 	menu_edit_attributes = editing_node.get_menu_edit_attributes()
@@ -94,8 +99,6 @@ func reposition_elements():
 	var end = rect.end.clamp(min, max)
 	%SelectionBox.position = pos
 	%SelectionBox.size = end - pos
-	%SelectionBox.selected_nodes.clear()
-	%SelectionBox.selected_nodes.append(editing_node)
 	%Rotate.visible = editing_node.get("flipped") != null
 	set_line(rect)
 	reposition_draggy_thingies()
@@ -153,7 +156,6 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 					var clone = editing_node.duplicate()
 					editing_node.add_sibling(clone)
 					proceed_to_edit_node(clone)
-					button_pressed = ButtonEnum.NODE
 					return true
 	return false
 
@@ -207,7 +209,6 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 					node.position = event.position
 					get_tree().current_scene.add_child(node)
 					proceed_to_edit_node(node)
-					button_pressed = ButtonEnum.NODE
 					set_mouse_pos(event.position)
 				ActionEnum.SELECT:
 					drag_start = event.position
@@ -237,9 +238,10 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 				editing_node.var_updated()
 				reposition_elements()
 			ButtonEnum.NODE:
-				var p = og_pos + diff
-				editing_node.position = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
-				reposition_elements()
+				push_error("This shouldn't happen!!! (ButtonEnum.NODE)")
+#				var p = og_pos + diff
+#				editing_node.position = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
+#				reposition_elements()
 
 var grid_was_visible = false
 

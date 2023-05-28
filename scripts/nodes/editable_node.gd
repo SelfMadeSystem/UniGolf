@@ -128,3 +128,7 @@ func get_visible_edit_attributes() -> Array[DragEditAttribute]:
 func var_updated():
 	pass
 
+# Returns true if this node contains a point. The point is relative
+func contains_point(point: Vector2):
+	return false
+

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dvgn31hw0pdtf"]
+[gd_scene load_steps=24 format=3 uid="uid://dvgn31hw0pdtf"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/editor/node_editor.gd" id="1_rivm0"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/editor/node_button.gd" id="4_celo7"]
 [ext_resource type="Texture2D" uid="uid://cxtubwqkn2fhk" path="res://assets/icons/Trash.png" id="4_eqyul"]
 [ext_resource type="Texture2D" uid="uid://cyx8ag10fbdem" path="res://assets/icons/Rotate.png" id="6_lxbl4"]
+[ext_resource type="Script" path="res://scripts/editor/selection_box.gd" id="6_yua7w"]
 [ext_resource type="Shader" path="res://assets/shaders/grid.gdshader" id="7_4p2lq"]
 [ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="8_0aihf"]
 [ext_resource type="Texture2D" uid="uid://bjbp0x88g2fge" path="res://assets/icons/Grid.png" id="8_7dv7m"]
@@ -87,7 +88,8 @@ offset_left = -456.0
 offset_top = 424.0
 offset_right = -304.0
 offset_bottom = 608.0
-mouse_filter = 2
+mouse_filter = 1
+script = ExtResource("6_yua7w")
 
 [node name="Resize" type="Control" parent="UI/SelectionBox"]
 z_index = 9
@@ -335,6 +337,13 @@ offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
 placeholder_text = "Level Name"
+
+[node name="DraggyThingies" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]

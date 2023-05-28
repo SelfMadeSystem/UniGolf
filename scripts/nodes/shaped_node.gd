@@ -145,7 +145,7 @@ func get_visible_edit_attributes() -> Array[DragEditAttribute]:
 		]
 	return []
 
-@onready var hitbox: Node2D = $HitBox # Must be present on all inherited dudes
+@onready var hitbox: CollisionShape2D = $HitBox # Must be present on all inherited dudes
 
 @export var update_hitbox_: bool = false:
 	set(_v):
@@ -160,6 +160,10 @@ func update_hitbox():
 
 func var_updated():
 	update_hitbox()
+
+func contains_point(point: Vector2):
+	var shape = get_shape()
+	return Geometry2D.is_point_in_polygon(point, shape)
 
 func _ready():
 	update_hitbox()

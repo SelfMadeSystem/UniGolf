@@ -8,7 +8,7 @@ const MAX_SIZE = Vector2(1024, 1024)
 const MIN_POSITION = Vector2(0, 0)
 const MAX_POSITION = Vector2(1024, 1024)
 
-const GRID_BIG = Vector2.ONE * 64
+const GRID_BIG = Vector2.ONE * 32
 const GRID_SMALL = Vector2.ONE * 16
 const GRID_NONE = Vector2.ONE
 
@@ -19,21 +19,10 @@ func set_grid_size(size: Vector2):
 	grid_size = size
 	($Grid.material as ShaderMaterial).set_shader_parameter("cell_size", size)
 
-# Assume properties on node:
-# width: int
-# height: int
-# position: Vector2
-# flipped?: int from 0 to 3
-#
-# And assume that setting width and height will automatically properly
-# scale the node's hitbox, sprite etc.
-var editing_node: EditableNode
+var editing_node: EditableNode # TODO: Make this an array of "selected_nodes"
 var menu_edit_attributes: Array[EditableNode.EditAttribute] = []
 var visible_edit_attributes: Array[EditableNode.DragEditAttribute] = []
 var draggy_thingies: Array[DraggyThingy] = []
-
-var next_node: EditableNode
-var removing_node = false
 
 func _ready():
 	if Engine.is_editor_hint():
@@ -51,15 +40,13 @@ func get_editing_rect() -> Rect2:
 
 func proceed_to_edit_node(node: Node2D):
 	if editing_node:
-		editing_node.input_event.disconnect(_on_editing_node_input_event)
+#		editing_node.input_event.disconnect(_on_editing_node_input_event)
 		editing_node.tree_exited.disconnect(deyeet)
 	editing_node = node
 	if editing_node:
-		editing_node.input_event.connect(_on_editing_node_input_event)
+#		editing_node.input_event.connect(_on_editing_node_input_event)
 		editing_node.tree_exited.connect(deyeet)
 		update_editing_node_attributes()
-	else:
-		next_node = null
 	reposition_elements()
 	mouse_pos = null
 
@@ -72,8 +59,8 @@ func update_editing_node_attributes():
 	for attr in visible_edit_attributes:
 		var thing = preload("res://prefabs/editor/draggy_thingy.tscn").instantiate()
 		thing.attr = attr
+		%DraggyThingies.add_child.call_deferred(thing)
 		draggy_thingies.append(thing)
-		add_child.call_deferred(thing)
 
 func reposition_draggy_thingies():
 	for thing in draggy_thingies:
@@ -107,6 +94,8 @@ func reposition_elements():
 	var end = rect.end.clamp(min, max)
 	%SelectionBox.position = pos
 	%SelectionBox.size = end - pos
+	%SelectionBox.selected_nodes.clear()
+	%SelectionBox.selected_nodes.append(editing_node)
 	%Rotate.visible = editing_node.get("flipped") != null
 	set_line(rect)
 	reposition_draggy_thingies()
@@ -116,6 +105,7 @@ func vanish_elements():
 		thing.queue_free()
 	draggy_thingies = []
 	%SelectionBox.position = Vector2.ONE * 69420
+	%SelectionBox.selected_nodes.clear()
 	$Line.points = []
 
 enum ActionEnum { DRAG, SELECT, PLACE }
@@ -167,11 +157,24 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 					return true
 	return false
 
-func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+func _on_selection_input(event: InputEvent):
+	var mpos = get_viewport().get_mouse_position()
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
-			button_pressed = ButtonEnum.NODE
-			set_mouse_pos(event.position)
+			set_mouse_pos(mpos)
+			return true
+	elif event is InputEventMouseMotion:
+		if event.button_mask & MOUSE_BUTTON_MASK_LEFT == 0:
+			return false
+		if editing_node == null:
+			return false
+		if mouse_pos == null:
+			set_mouse_pos(mpos)
+		var diff = mpos - mouse_pos
+		var p = og_pos + diff
+		editing_node.position = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
+		reposition_elements()
+		return true
 
 var mouse_pos = Vector2.ZERO
 var og_size = Vector2.ZERO
@@ -185,8 +188,8 @@ func set_mouse_pos(pos: Vector2):
 	og_size = editing_node.shape_size
 	og_pos = editing_node.position
 
-func _unhandled_input(event):
-	if event is InputEventMouseButton: # TODO: Account for mobile input too
+func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi-select and place
+	if event is InputEventMouseButton:
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
 			dragging = false
@@ -199,7 +202,6 @@ func _unhandled_input(event):
 				return
 			match current_action:
 				ActionEnum.PLACE:
-					print(2)
 					var node = current_object.instantiate()
 					node.shape_size = Vector2(64, 64)
 					node.position = event.position

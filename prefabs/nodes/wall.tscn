@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/nodes/wall.gd" id="1_npt8j"]
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_r601w"]
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_30w5v"]
 points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
 
 [node name="Wall" type="StaticBody2D"]
@@ -12,4 +12,4 @@ shape_shape = 3
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource("ConvexPolygonShape2D_r601w")
+shape = SubResource("ConvexPolygonShape2D_30w5v")

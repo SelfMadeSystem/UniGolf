@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dvgn31hw0pdtf"]
+[gd_scene load_steps=23 format=3 uid="uid://dvgn31hw0pdtf"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/editor/node_editor.gd" id="1_rivm0"]
@@ -26,18 +26,6 @@ shader_parameter/dash_speed = 32.0
 shader_parameter/line_width = 4.0
 shader_parameter/pos = Vector2(0, 0)
 shader_parameter/end = Vector2(200, 200)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3sxyp"]
-size = Vector2(40, 40)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_d0m1h"]
-size = Vector2(40, 40)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uvrhl"]
-size = Vector2(40, 40)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lu42b"]
-size = Vector2(40, 40)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mltie"]
 shader = ExtResource("7_4p2lq")
@@ -69,70 +57,6 @@ position = Vector2(-192, 232)
 scale = Vector2(0.597015, 0.597015)
 texture = ExtResource("2_ujkkt")
 
-[node name="Resize" type="Area2D" parent="."]
-z_index = 9
-position = Vector2(-128, 320)
-script = ExtResource("4_celo7")
-type = 1
-
-[node name="Resize" type="Sprite2D" parent="Resize"]
-scale = Vector2(0.701754, 0.701754)
-texture = ExtResource("3_0bbys")
-offset = Vector2(28, 28)
-
-[node name="HitBox" type="CollisionShape2D" parent="Resize"]
-visible = false
-position = Vector2(20, 20)
-shape = SubResource("RectangleShape2D_3sxyp")
-
-[node name="Rotate" type="Area2D" parent="."]
-z_index = 9
-position = Vector2(-128, 320)
-script = ExtResource("4_celo7")
-type = 2
-
-[node name="Rotate" type="Sprite2D" parent="Rotate"]
-scale = Vector2(0.769231, 0.769231)
-texture = ExtResource("6_lxbl4")
-offset = Vector2(26, -26)
-
-[node name="HitBox" type="CollisionShape2D" parent="Rotate"]
-visible = false
-position = Vector2(20, -20)
-shape = SubResource("RectangleShape2D_d0m1h")
-
-[node name="Trash" type="Area2D" parent="."]
-z_index = 9
-position = Vector2(-128, 320)
-script = ExtResource("4_celo7")
-type = 4
-
-[node name="Trash" type="Sprite2D" parent="Trash"]
-scale = Vector2(0.8, 0.740741)
-texture = ExtResource("4_eqyul")
-offset = Vector2(-25, -27)
-
-[node name="HitBox" type="CollisionShape2D" parent="Trash"]
-visible = false
-position = Vector2(-20, -20)
-shape = SubResource("RectangleShape2D_uvrhl")
-
-[node name="Copy" type="Area2D" parent="."]
-z_index = 9
-position = Vector2(-128, 320)
-script = ExtResource("4_celo7")
-type = 5
-
-[node name="Copy" type="Sprite2D" parent="Copy"]
-scale = Vector2(0.701754, 0.701755)
-texture = ExtResource("1_kyu4h")
-offset = Vector2(-28, 28)
-
-[node name="HitBox" type="CollisionShape2D" parent="Copy"]
-visible = false
-position = Vector2(-20, 20)
-shape = SubResource("RectangleShape2D_lu42b")
-
 [node name="Grid" type="Sprite2D" parent="."]
 z_index = 1
 material = SubResource("ShaderMaterial_mltie")
@@ -141,7 +65,6 @@ texture = SubResource("GradientTexture2D_2q3qt")
 offset = Vector2(32, 32)
 
 [node name="UI" type="CanvasLayer" parent="."]
-layer = 0
 
 [node name="PauseButton" type="Button" parent="UI" groups=["EditorHide"]]
 visible = false
@@ -155,6 +78,84 @@ grow_horizontal = 0
 icon = ExtResource("8_0aihf")
 icon_alignment = 1
 expand_icon = true
+
+[node name="SelectionBox" type="Control" parent="UI"]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = -456.0
+offset_top = 424.0
+offset_right = -304.0
+offset_bottom = 608.0
+mouse_filter = 2
+
+[node name="Resize" type="Control" parent="UI/SelectionBox"]
+z_index = 9
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 52.0
+offset_bottom = 52.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 1
+mouse_default_cursor_shape = 12
+script = ExtResource("4_celo7")
+type = 1
+
+[node name="Resize" type="Sprite2D" parent="UI/SelectionBox/Resize"]
+texture = ExtResource("3_0bbys")
+offset = Vector2(26, 26)
+
+[node name="Rotate" type="Control" parent="UI/SelectionBox"]
+unique_name_in_owner = true
+z_index = 9
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_top = -52.0
+offset_right = 52.0
+grow_horizontal = 0
+script = ExtResource("4_celo7")
+type = 2
+
+[node name="Rotate" type="Sprite2D" parent="UI/SelectionBox/Rotate"]
+texture = ExtResource("6_lxbl4")
+offset = Vector2(26, 26)
+
+[node name="Trash" type="Control" parent="UI/SelectionBox"]
+z_index = 9
+layout_mode = 1
+anchors_preset = 0
+offset_left = -52.0
+offset_top = -52.0
+script = ExtResource("4_celo7")
+type = 4
+
+[node name="Trash" type="Sprite2D" parent="UI/SelectionBox/Trash"]
+texture = ExtResource("4_eqyul")
+offset = Vector2(26, 26)
+
+[node name="Copy" type="Control" parent="UI/SelectionBox"]
+z_index = 9
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -52.0
+offset_bottom = 52.0
+grow_vertical = 0
+mouse_filter = 1
+script = ExtResource("4_celo7")
+type = 5
+
+[node name="Copy" type="Sprite2D" parent="UI/SelectionBox/Copy"]
+texture = ExtResource("1_kyu4h")
+offset = Vector2(26, 26)
 
 [node name="Bottom" type="Control" parent="UI"]
 custom_minimum_size = Vector2(0, 68)

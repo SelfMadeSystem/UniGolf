@@ -8,11 +8,12 @@ const MAX_SIZE = Vector2(1024, 1024)
 const MIN_POSITION = Vector2(0, 0)
 const MAX_POSITION = Vector2(1024, 1024)
 
-const GRID_BIG = Vector2(32, 32)
-const GRID_SMALL = Vector2(16, 16)
+const GRID_BIG = Vector2.ONE * 64
+const GRID_SMALL = Vector2.ONE * 16
+const GRID_NONE = Vector2.ONE
 
 var grid_size = GRID_BIG
-var grid_offset = Vector2(0, 0)
+var grid_offset = Vector2.ZERO
 
 func set_grid_size(size: Vector2):
 	grid_size = size
@@ -101,11 +102,12 @@ func reposition_elements():
 	var rect = get_editing_rect()
 	var min = Vector2.ONE * 48
 	var max = get_viewport_rect().size - min - Vector2.DOWN * 64
-	$Trash.position = rect.position.clamp(min, max)
-	$Rotate.position = Vector2(rect.end.x, rect.position.y).clamp(min, max)
-	$Rotate.visible = editing_node.get("flipped") != null
-	$Copy.position = Vector2(rect.position.x, rect.end.y).clamp(min, max)
-	$Resize.position = rect.end.clamp(min, max)
+	
+	var pos = rect.position.clamp(min, max)
+	var end = rect.end.clamp(min, max)
+	%SelectionBox.position = pos
+	%SelectionBox.size = end - pos
+	%Rotate.visible = editing_node.get("flipped") != null
 	set_line(rect)
 	reposition_draggy_thingies()
 
@@ -113,10 +115,7 @@ func vanish_elements():
 	for thing in draggy_thingies:
 		thing.queue_free()
 	draggy_thingies = []
-	$Trash.position = -Vector2.ONE * 69420
-	$Rotate.position = -Vector2.ONE * 69420
-	$Copy.position = -Vector2.ONE * 69420
-	$Resize.position = -Vector2.ONE * 69420
+	%SelectionBox.position = Vector2.ONE * 69420
 	$Line.points = []
 
 enum ActionEnum { DRAG, SELECT, PLACE }
@@ -142,36 +141,31 @@ enum ButtonEnum { NONE, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
 var button_pressed: ButtonEnum = ButtonEnum.NONE
 
-func on_button_input(event: InputEvent, type: ButtonEnum):
+func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			match type:
 				ButtonEnum.RESIZE:
 					button_pressed = ButtonEnum.RESIZE
-					set_mouse_pos(event.position)
-					get_viewport().set_input_as_handled()
+					set_mouse_pos(get_viewport().get_mouse_position())
+					return true
 				ButtonEnum.ROTATE:
 					if editing_node.get("flipped") == null:
-						return
+						return false
 					editing_node.flipped = (editing_node.flipped + 1) % 4
-					get_viewport().set_input_as_handled()
+					return true
 				ButtonEnum.TRASH:
-					if event is InputEventMouseButton:
-						if event.button_index == 1 && event.pressed:
-							editing_node.queue_free()
-							editing_node = null
-							vanish_elements()
-							get_viewport().set_input_as_handled()
+					editing_node.queue_free()
+					editing_node = null
+					vanish_elements()
+					return true
 				ButtonEnum.COPY:
 					var clone = editing_node.duplicate()
-					if $Grid.visible:
-						clone.position += grid_size
-					else:
-						clone.position += Vector2(16, 16)
 					editing_node.add_sibling(clone)
 					proceed_to_edit_node(clone)
-					get_viewport().set_input_as_handled()
 					button_pressed = ButtonEnum.NODE
+					return true
+	return false
 
 func _on_editing_node_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton:
@@ -192,7 +186,7 @@ func set_mouse_pos(pos: Vector2):
 	og_pos = editing_node.position
 
 func _unhandled_input(event):
-	if event is InputEventMouseButton:
+	if event is InputEventMouseButton: # TODO: Account for mobile input too
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
 			dragging = false
@@ -230,22 +224,19 @@ func _unhandled_input(event):
 			return
 		if mouse_pos == null:
 			set_mouse_pos(event.position)
-		var amnt = Vector2(8, 8)
-		if $Grid.visible:
-			amnt = grid_size
 		var diff = event.position - mouse_pos
 		match button_pressed:
 			ButtonEnum.RESIZE:
 				var p = og_size + diff
-				var a = editing_node.position.posmodv(amnt)
-				p = ((p + grid_offset + a) / amnt).round() * amnt - grid_offset - a
+				var a = editing_node.position.posmodv(grid_size)
+				p = ((p + grid_offset + a) / grid_size).round() * grid_size - grid_offset - a
 				p = p.clamp(MIN_SIZE, MAX_SIZE)
 				editing_node.shape_size = p
 				editing_node.var_updated()
 				reposition_elements()
 			ButtonEnum.NODE:
 				var p = og_pos + diff
-				editing_node.position = ((p + grid_offset) / amnt).round() * amnt - grid_offset
+				editing_node.position = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
 				reposition_elements()
 
 var grid_was_visible = false
@@ -290,6 +281,7 @@ func _on_grid_button_pressed():
 			%GridButton.icon = preload("res://assets/icons/Grid_Small.png")
 		else:
 			$Grid.visible = false
+			set_grid_size(GRID_NONE)
 			%GridButton.icon = preload("res://assets/icons/Grid.png")
 			%GridButton.modulate.v = 0.3
 	else:

@@ -1,7 +1,5 @@
 extends Control
 
-var selected_nodes: Array[EditableNode] = [] # TODO: Replace this with GameInfo.node_editor.selected_nodes when it exists
-
 var active = false
 
 func activate():
@@ -12,18 +10,22 @@ func deactivate():
 	active = false
 	$DraggyThingies.visible = true
 
-func _has_point(point): # TODO: Figure out how to solve conflict between this and draggy thingy
+func _has_point(point):
 	return active || Rect2(Vector2(), size).has_point(get_local_mouse_position())
 #	var global_point = point + global_position
-#	for node in selected_nodes:
+#	for node in GameInfo.node_editor.selected_nodes:
 #		if node.contains_point(node.to_local(global_point)):
 #			return true
 #	return false
 
 func _input(event):
+	if !GameInfo.editing:
+		deactivate()
+		return
 	if event is InputEventMouseButton:
 		if !event.pressed:
 			deactivate()
+			return
 	if active && GameInfo.node_editor._on_selection_input(event):
 		accept_event()
 
@@ -32,3 +34,4 @@ func _gui_input(event):
 		if event is InputEventMouseButton:
 			if event.pressed:
 				activate()
+				accept_event()

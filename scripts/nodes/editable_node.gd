@@ -132,3 +132,6 @@ func var_updated():
 func contains_point(point: Vector2):
 	return false
 
+# Returns true if this node is within a rect. The rect is absolute
+func within_rect(rect: Rect2):
+	return rect.has_point(global_position)

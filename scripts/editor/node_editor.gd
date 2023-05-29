@@ -19,7 +19,7 @@ func set_grid_size(size: Vector2):
 	grid_size = size
 	($Grid.material as ShaderMaterial).set_shader_parameter("cell_size", size)
 
-var editing_node: EditableNode # TODO: Make this an array of "selected_nodes"
+var selected_nodes: Array[EditableNode] = []
 var menu_edit_attributes: Array[EditableNode.EditAttribute] = []
 var visible_edit_attributes: Array[EditableNode.DragEditAttribute] = []
 var draggy_thingies: Array[DraggyThingy] = []
@@ -30,37 +30,50 @@ func _ready():
 	set_grid_size(GRID_BIG)
 	GameInfo.current_scene = preload("res://scenes/BlankPlaytest.tscn")
 	GameInfo.node_editor = self
+	set_current_object(preload("res://prefabs/nodes/wall.tscn"))
 	get_parent().remove_child.call_deferred(self)
 	GameInfo.add_child.call_deferred(self)
 	%Name.text = GameInfo.level_name
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 
 func get_editing_rect() -> Rect2:
-	return Rect2(editing_node.global_position, editing_node.shape_size).grow(4)
+	var min = Vector2.INF
+	var max = -Vector2.INF
+	
+	for node in selected_nodes:
+		min = min.clamp(-Vector2.INF, node.position)
+		max = max.clamp(node.position + node.shape_size, Vector2.INF)
+	return Rect2(min, max - min)
 
-func proceed_to_edit_node(node: Node2D):
-	if editing_node:
-#		editing_node.input_event.disconnect(_on_editing_node_input_event)
-		editing_node.tree_exited.disconnect(deyeet)
-	editing_node = node
-	if editing_node:
-#		editing_node.input_event.connect(_on_editing_node_input_event)
-		editing_node.tree_exited.connect(deyeet)
+func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
+	for node in selected_nodes:
+#		node.input_event.disconnect(_on_editing_node_input_event)
+		node.tree_exited.disconnect(deyeet)
+	selected_nodes.clear()
+	selected_nodes.append_array(nodes)
+	for node in selected_nodes:
+#		node.input_event.connect(_on_editing_node_input_event)
+		node.tree_exited.connect(deyeet)
 		update_editing_node_attributes()
 	reposition_elements()
-	mouse_pos = null
+	mouse_pos = Vector2.INF
 	
-	
-	%SelectionBox.selected_nodes.clear()
-	%SelectionBox.selected_nodes.append(editing_node)
-	%SelectionBox.activate()
+	if edit:
+		%SelectionBox.activate()
 
 func update_editing_node_attributes():
-	menu_edit_attributes = editing_node.get_menu_edit_attributes()
-	visible_edit_attributes = editing_node.get_visible_edit_attributes()
 	for thing in draggy_thingies:
 		thing.queue_free()
-	draggy_thingies = []
+	draggy_thingies.clear()
+	menu_edit_attributes.clear()
+	visible_edit_attributes.clear()
+	
+	if selected_nodes.size() > 1:
+		return
+	
+	for node in selected_nodes:
+		menu_edit_attributes.append_array(node.get_menu_edit_attributes())
+		visible_edit_attributes.append_array(node.get_visible_edit_attributes())
 	for attr in visible_edit_attributes:
 		var thing = preload("res://prefabs/editor/draggy_thingy.tscn").instantiate()
 		thing.attr = attr
@@ -72,7 +85,7 @@ func reposition_draggy_thingies():
 		thing.reposition()
 
 func deyeet():
-	editing_node = null
+	proceed_to_edit_nodes([])
 	button_pressed = ButtonEnum.NONE
 	vanish_elements()
 
@@ -88,10 +101,10 @@ func set_line(rect: Rect2):
 	($Line.material as ShaderMaterial).set_shader_parameter("end", rect.end);
 
 func reposition_elements():
-	if !editing_node:
+	if selected_nodes.size() == 0:
 		vanish_elements()
 		return
-	var rect = get_editing_rect()
+	var rect = get_editing_rect().grow(4)
 	var min = Vector2.ONE * 48
 	var max = get_viewport_rect().size - min - Vector2.DOWN * 64
 	
@@ -99,7 +112,7 @@ func reposition_elements():
 	var end = rect.end.clamp(min, max)
 	%SelectionBox.position = pos
 	%SelectionBox.size = end - pos
-	%Rotate.visible = editing_node.get("flipped") != null
+	# %Rotate.visible = editing_node.get("flipped") != null # TODO: Replace me
 	set_line(rect)
 	reposition_draggy_thingies()
 
@@ -108,7 +121,6 @@ func vanish_elements():
 		thing.queue_free()
 	draggy_thingies = []
 	%SelectionBox.position = Vector2.ONE * 69420
-	%SelectionBox.selected_nodes.clear()
 	$Line.points = []
 
 enum ActionEnum { DRAG, SELECT, PLACE }
@@ -142,43 +154,60 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 					button_pressed = ButtonEnum.RESIZE
 					set_mouse_pos(get_viewport().get_mouse_position())
 					return true
-				ButtonEnum.ROTATE:
-					if editing_node.get("flipped") == null:
-						return false
-					editing_node.flipped = (editing_node.flipped + 1) % 4
+				ButtonEnum.ROTATE: # TODO: Replace me
+					# if editing_node.get("flipped") == null:
+					#	return false
+					# editing_node.flipped = (editing_node.flipped + 1) % 4
 					return true
 				ButtonEnum.TRASH:
-					editing_node.queue_free()
-					editing_node = null
+					for node in selected_nodes:
+						node.queue_free()
+					proceed_to_edit_nodes([])
 					vanish_elements()
 					return true
 				ButtonEnum.COPY:
-					var clone = editing_node.duplicate()
-					editing_node.add_sibling(clone)
-					proceed_to_edit_node(clone)
+					var clones: Array[EditableNode] = []
+					for node in selected_nodes:
+						var clone = node.duplicate()
+						node.add_sibling(clone)
+						clones.append(clone)
+					proceed_to_edit_nodes(clones)
 					return true
 	return false
 
 func _on_selection_input(event: InputEvent):
-	var mpos = get_viewport().get_mouse_position()
-	if event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			set_mouse_pos(mpos)
-			return true
-	elif event is InputEventMouseMotion:
+	if event is InputEventMouseMotion:
 		if event.button_mask & MOUSE_BUTTON_MASK_LEFT == 0:
 			return false
-		if editing_node == null:
+		if selected_nodes.size() == 0:
 			return false
-		if mouse_pos == null:
+		var mpos = get_viewport().get_mouse_position()
+		if mouse_pos == Vector2.INF:
 			set_mouse_pos(mpos)
 		var diff = mpos - mouse_pos
 		var p = og_pos + diff
-		editing_node.position = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
+		
+		var top_left = get_editing_rect().position
+		
+		var new_pos = ((p + grid_offset) / grid_size).round() * grid_size - grid_offset
+		
+		var pos_diff = new_pos - top_left
+		
+		for node in selected_nodes:
+			node.position += pos_diff
+		
 		reposition_elements()
 		return true
 
-var mouse_pos = Vector2.ZERO
+
+func handle_object_input(object: EditableNode, event: InputEvent):
+	if GameInfo.editing && current_action == ActionEnum.DRAG && event is InputEventMouseButton:
+		if event.button_index == 1 && event.pressed:
+			if object.get_parent() is Control:
+				return
+			proceed_to_edit_nodes([object])
+
+var mouse_pos = Vector2.INF
 var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
 
@@ -187,19 +216,41 @@ var dragging = false
 
 func set_mouse_pos(pos: Vector2):
 	mouse_pos = pos
-	og_size = editing_node.shape_size
-	og_pos = editing_node.position
+	var og_rect = get_editing_rect()
+	og_size = og_rect.size
+	og_pos = og_rect.position
 
-func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi-select and place
+func _input(event):
 	if event is InputEventMouseButton:
 		if !event.pressed:
 			button_pressed = ButtonEnum.NONE
 			dragging = false
+			mouse_pos = Vector2.INF
 			match current_action:
 				ActionEnum.SELECT:
+					if selected_nodes.size() > 0:
+						return
 					$Line.points = []
-		elif button_pressed == ButtonEnum.NONE:
-			proceed_to_edit_node(null)
+					var a = drag_start
+					var b = event.position
+					var mi = Vector2(min(a.x, b.x), min(a.y, b.y))
+					var ma = Vector2(max(a.x, b.x), max(a.y, b.y))
+					var rect = Rect2(mi, ma - mi)
+					
+					var persist_nodes = get_tree().get_nodes_in_group("Persist")
+					
+					var nodes: Array[EditableNode] = []
+					
+					for node in persist_nodes:
+						if node.within_rect(rect):
+							nodes.append(node)
+					
+					proceed_to_edit_nodes(nodes, false)
+
+func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi-select and place
+	if event is InputEventMouseButton:
+		if event.pressed && button_pressed == ButtonEnum.NONE:
+			proceed_to_edit_nodes([])
 			if !GameInfo.editing:
 				return
 			match current_action:
@@ -208,7 +259,7 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 					node.shape_size = Vector2(64, 64)
 					node.position = event.position
 					get_tree().current_scene.add_child(node)
-					proceed_to_edit_node(node)
+					proceed_to_edit_nodes([node])
 					set_mouse_pos(event.position)
 				ActionEnum.SELECT:
 					drag_start = event.position
@@ -223,19 +274,27 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 			return
 		if button_pressed == ButtonEnum.NONE:
 			return
-		if editing_node == null:
+		if selected_nodes.size() == 0:
 			return
-		if mouse_pos == null:
+		if mouse_pos == Vector2.INF:
 			set_mouse_pos(event.position)
 		var diff = event.position - mouse_pos
 		match button_pressed:
 			ButtonEnum.RESIZE:
+				var rect = get_editing_rect()
 				var p = og_size + diff
-				var a = editing_node.position.posmodv(grid_size)
+				var a = rect.position.posmodv(grid_size)
 				p = ((p + grid_offset + a) / grid_size).round() * grid_size - grid_offset - a
 				p = p.clamp(MIN_SIZE, MAX_SIZE)
-				editing_node.shape_size = p
-				editing_node.var_updated()
+				
+				var size_ratio = p / rect.size
+				for node in selected_nodes:
+					node.shape_size *= size_ratio
+					var pos = node.position
+					pos -= rect.position
+					pos *= size_ratio
+					node.position = pos + rect.position
+					node.var_updated()
 				reposition_elements()
 			ButtonEnum.NODE:
 				push_error("This shouldn't happen!!! (ButtonEnum.NODE)")
@@ -303,6 +362,17 @@ func _on_select_button_pressed():
 func _on_place_button_pressed():
 	set_action(ActionEnum.PLACE)
 
+func set_current_object(a):
+	for child in %PlaceButton.get_children():
+		child.queue_free()
+	var b = a.instantiate()
+	b.remove_from_group("Persist")
+	b.shape_size = Vector2(48, 48)
+	b.position = Vector2(8, 8)
+	%PlaceButton.add_child(b)
+	current_object = a
+	set_action(ActionEnum.PLACE)
+
 func _on_objects_button_pressed():
 	var selectScene = preload("res://prefabs/editor/object_select.tscn")
 	var select = selectScene.instantiate()
@@ -311,15 +381,7 @@ func _on_objects_button_pressed():
 		"prefab": preload("res://prefabs/nodes/wall.tscn"),
 		"name": "Wall"
 	})
-	select.selected.connect(func(a):
-		%PlaceButton.get_child(0).queue_free()
-		var b = a.instantiate()
-		b.shape_size = Vector2(48, 48)
-		b.position = Vector2(8, 8)
-		%PlaceButton.add_child(b)
-		current_object = a
-		set_action(ActionEnum.PLACE)
-	)
+	select.selected.connect(set_current_object)
 
 
 func _on_leave_button_pressed():

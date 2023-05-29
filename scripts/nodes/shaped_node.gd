@@ -165,6 +165,9 @@ func contains_point(point: Vector2):
 	var shape = get_shape()
 	return Geometry2D.is_point_in_polygon(point, shape)
 
+func within_rect(rect: Rect2):
+	return rect.has_point(global_position + shape_size / 2)
+
 func _ready():
 	update_hitbox()
 	hitbox.visible = false
@@ -173,7 +176,7 @@ func _ready():
 
 func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if hitbox.visible:
-		GameInfo.handle_object_input(self, event)
+		GameInfo.node_editor.handle_object_input(self, event)
 
 
 func _on_mouse_entered():

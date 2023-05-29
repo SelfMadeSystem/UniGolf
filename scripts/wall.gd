@@ -34,7 +34,8 @@ func _draw():
 
 
 func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	GameInfo.handle_object_input(self, event)
+	pass
+#	GameInfo.handle_object_input(self, event)
 
 
 

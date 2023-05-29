@@ -5,7 +5,7 @@
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_2g8q7"]
 points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
 
-[node name="Wall" type="StaticBody2D"]
+[node name="Wall" type="StaticBody2D" groups=["Persist"]]
 input_pickable = true
 script = ExtResource("1_npt8j")
 shape_shape = 3

@@ -86,12 +86,6 @@ func reload_scene():
 		LevelSaver.deserialize_level(current_level)
 	a.call_deferred()
 
-func handle_object_input(object: Node, event: InputEvent):
-	if GameInfo.editing && event is InputEventMouseButton:
-		if event.button_index == 1 && event.pressed:
-			node_editor.proceed_to_edit_node(object)
-			
-
 func to_main_menu():
 	get_tree().change_scene_to_packed(preload("res://scenes/MainMenu.tscn"))
 	for child in get_children():

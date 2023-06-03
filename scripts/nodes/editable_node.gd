@@ -13,6 +13,17 @@ class BaseEditAttribute:
 	
 	func get_val():
 		return obj.get(self.var_name)
+	
+	static func create_base(
+		var_name: String,
+		obj: EditableNode,
+		name: String
+	):
+		var attr = BaseEditAttribute.new()
+		attr.var_name = var_name
+		attr.obj = obj
+		attr.name = name
+		return attr
 
 
 
@@ -20,8 +31,10 @@ class EditAttribute:
 	extends BaseEditAttribute
 	
 	func add_control_node(parent: Control):
-		var label = Label.new()
-		label.text = self.name
+		if self.name.length() > 0:
+			var label = Label.new()
+			label.text = self.name + ": "
+			parent.add_child(label)
 
 class FloatAttribute:
 	extends EditAttribute
@@ -76,7 +89,15 @@ class EnumAttribute:
 		
 		options.selected = self.get_val()
 		
-		options.connect("item_selected", self.set_val)
+		options.connect("item_selected", func(v):
+			self.set_val(v)
+		)
+		
+		parent.add_child(options)
+	
+	func set_val(v):
+		super.set_val(v)
+		self.obj.should_update_stuff.emit()
 	
 	static func create(
 		var_name: String,
@@ -116,13 +137,19 @@ class DragEditAttribute: # TODO: Have a base for this
 		attr.color = color
 		return attr
 
+signal should_update_stuff
 
-
-func get_menu_edit_attributes() -> Array[EditAttribute]:
+func get_menu_edit_attributes() -> Array:
 	return []
 
-func get_visible_edit_attributes() -> Array[DragEditAttribute]:
+func get_visible_edit_attributes() -> Array:
 	return []
+
+func get_savable_attributes() -> Array:
+	var attrs: Array = get_menu_edit_attributes()
+	attrs.append_array(get_visible_edit_attributes())
+	attrs.append(BaseEditAttribute.create_base("position", self, "position"))
+	return attrs
 
 # Return true to have the node editor update the stuffs ^^^
 func var_updated():

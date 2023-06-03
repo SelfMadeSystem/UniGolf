@@ -7,7 +7,7 @@ extends Resource
 @export var add_level: bool = false:
 	set(val):
 		if val:
-			maps.append(JSON.parse_string(level_data))
+			maps.append(Marshalls.base64_to_variant(level_data))
 			level_data = ''
 
 @export var name: String

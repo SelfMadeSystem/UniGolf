@@ -6,11 +6,8 @@ extends Control
 
 func add_local_maps():
 	var maps: Array[Dictionary] = []
-	for file in DirAccess.get_files_at(LevelSaver.SAVE_DIR):
-		if file.ends_with(".json"):
-			var json = JSON.new()
-			json.parse(FileAccess.get_file_as_string(LevelSaver.SAVE_DIR + "/" + file))
-			maps.append(json.data)
+	for val in LevelSaver.get_saved_levels().values():
+		maps.append(val)
 	if maps.size() > 0:
 		community_packs.insert(0, MapPack.create("Your Levels", maps))
 

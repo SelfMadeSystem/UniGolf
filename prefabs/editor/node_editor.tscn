@@ -122,7 +122,6 @@ offset = Vector2(26, 26)
 
 [node name="Rotate" type="Control" parent="UI/SelectionBox"]
 unique_name_in_owner = true
-visible = false
 z_index = 9
 layout_mode = 1
 anchors_preset = 1

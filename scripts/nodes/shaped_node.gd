@@ -87,6 +87,10 @@ func get_shape2d() -> Shape2D:
 			var shape = RectangleShape2D.new()
 			shape.extents = shape_size / 2
 			return shape
+		Shape.INVERSE_QUARTER_CIRCLE:
+			var shape = ConcavePolygonShape2D.new()
+			shape.segmentsctc = get_shape()
+			return shape
 		_: # CircleShape2D isn't an ellipse, so we can't use it for the CIRCLE shape
 			var shape = ConvexPolygonShape2D.new()
 			shape.points = get_shape()
@@ -100,18 +104,30 @@ func get_shape2d_position() -> Vector2:
 			return Vector2(0, 0)
 
 
-func get_menu_edit_attributes() -> Array[EditAttribute]:
-	var stuff: Array[EditAttribute] = [
-		EnumAttribute.create(
+func get_menu_edit_attributes() -> Array:
+	var base = EnumAttribute.create(
 			"shape_shape",
 			self,
 			"Shape",
 			Shape.keys()
 		)
-	]
-	return stuff
+	match shape_shape:
+		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
+			return [
+				base,
+				EnumAttribute.create(
+					"shape_rotation",
+					self,
+					"Rotation",
+					Rotation.keys()
+				)
+			]
+		_:
+			return [
+				base
+			]
 
-func get_visible_edit_attributes() -> Array[DragEditAttribute]:
+func get_visible_edit_attributes() -> Array:
 	if shape_shape == Shape.QUADRILATERAL:
 		return [
 			DragEditAttribute.create(
@@ -144,6 +160,13 @@ func get_visible_edit_attributes() -> Array[DragEditAttribute]:
 			),
 		]
 	return []
+
+func get_savable_attributes() -> Array:
+	var attrs = super.get_savable_attributes()
+	attrs.append_array([
+		BaseEditAttribute.create_base("shape_size", self, "shape_size")
+	])
+	return attrs
 
 @onready var hitbox: CollisionShape2D = $HitBox # Must be present on all inherited dudes
 

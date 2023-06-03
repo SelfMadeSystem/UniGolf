@@ -49,11 +49,13 @@ func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
 	for node in selected_nodes:
 #		node.input_event.disconnect(_on_editing_node_input_event)
 		node.tree_exited.disconnect(deyeet)
+		node.should_update_stuff.disconnect(reposition_elements)
 	selected_nodes.clear()
 	selected_nodes.append_array(nodes)
 	for node in selected_nodes:
 #		node.input_event.connect(_on_editing_node_input_event)
 		node.tree_exited.connect(deyeet)
+		node.should_update_stuff.connect(reposition_elements)
 		update_editing_node_attributes()
 	reposition_elements()
 	mouse_pos = Vector2.INF
@@ -112,7 +114,7 @@ func reposition_elements():
 	var end = rect.end.clamp(min, max)
 	%SelectionBox.position = pos
 	%SelectionBox.size = end - pos
-	# %Rotate.visible = editing_node.get("flipped") != null # TODO: Replace me
+	%Rotate.visible = selected_nodes.size() == 1
 	set_line(rect)
 	reposition_draggy_thingies()
 
@@ -158,6 +160,10 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 					# if editing_node.get("flipped") == null:
 					#	return false
 					# editing_node.flipped = (editing_node.flipped + 1) % 4
+					var editor_scene = preload("res://prefabs/editor/node_values_editor.tscn")
+					var editor = editor_scene.instantiate()
+					$UI.add_child(editor)
+					editor.set_edit_node(selected_nodes[0])
 					return true
 				ButtonEnum.TRASH:
 					for node in selected_nodes:
@@ -285,7 +291,7 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 				var p = og_size + diff
 				var a = rect.position.posmodv(grid_size)
 				p = ((p + grid_offset + a) / grid_size).round() * grid_size - grid_offset - a
-				p = p.clamp(MIN_SIZE, MAX_SIZE)
+				p = p.clamp(MIN_SIZE, MAX_SIZE).clamp(grid_size, MAX_SIZE)
 				
 				var size_ratio = p / rect.size
 				for node in selected_nodes:

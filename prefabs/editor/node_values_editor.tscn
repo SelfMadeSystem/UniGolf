@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://b77u8q4tibvfu"]
+[gd_scene load_steps=2 format=3 uid="uid://dwxvoydwqygdu"]
 
-[ext_resource type="Script" path="res://scripts/editor/object_select.gd" id="1_p6nmb"]
+[ext_resource type="Script" path="res://scripts/editor/node_values_editor.gd" id="1_x0s2a"]
 
-[node name="ObjectSelect" type="Control"]
+[node name="NodeValuesEditor" type="Control"]
 z_index = 12
 layout_mode = 3
 anchors_preset = 15
@@ -10,7 +10,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_p6nmb")
+script = ExtResource("1_x0s2a")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -43,16 +43,24 @@ alignment = 1
 [node name="Label" type="Label" parent="Control/VBoxContainer/Header"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 42
-text = "Objects"
+text = "Edit Value"
 
 [node name="HSeparator" type="HSeparator" parent="Control/VBoxContainer"]
 layout_mode = 2
 
-[node name="Objects" type="GridContainer" parent="Control/VBoxContainer"]
-unique_name_in_owner = true
+[node name="Control" type="Control" parent="Control/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-columns = 8
+
+[node name="Objects" type="VBoxContainer" parent="Control/VBoxContainer/Control"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.05
+anchor_right = 0.9
+anchor_bottom = 0.95
+size_flags_vertical = 3
 
 [node name="ExitButton" type="Button" parent="Control"]
 custom_minimum_size = Vector2(64, 64)

@@ -1,6 +1,7 @@
 extends Node
 
 const SAVE_DIR = "user://levels/"
+const FILE_EXT = ".ulvl"
 
 func _ready():
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
@@ -8,8 +9,7 @@ func _ready():
 func deserialize_level(stuff: Dictionary):
 	var nodes: Array = stuff.get("nodes", [])
 	var end = Vector2(
-		stuff.get("end_x", 0),
-		stuff.get("end_y", 0),
+		stuff.get("end_pos", Vector2.ZERO),
 	)
 	
 	GameInfo.goal.position = end
@@ -22,20 +22,11 @@ func deserialize_node(stuff: Dictionary):
 	var scene: PackedScene = load(stuff["name"])
 	var node = scene.instantiate()
 	
-	if stuff.has("pos_x"):
-		node.position.x = stuff["pos_x"]
-	if stuff.has("pos_y"):
-		node.position.y = stuff["pos_y"]
-	if stuff.has("width"):
-		node.width = stuff["width"]
-	if stuff.has("height"):
-		node.height = stuff["height"]
-	if stuff.has("flipped"):
-		# JSON doesn't support integers or enums.
-		# Convert JSON float to integer so it can be used as an enum.
-		node.flipped = int(stuff["flipped"])
-	if stuff.has("serialized"):
-		node.deserialize(stuff["serialized"])
+	if stuff.has("pos"):
+		node.position = stuff["pos"]
+	
+	for key in stuff.keys():
+		node.set(key, stuff.get(key))
 	
 	return node
 
@@ -51,34 +42,19 @@ func serialize_level():
 	return {
 		"name": GameInfo.level_name,
 		"nodes": save_arr,
-		"end_x": GameInfo.goal.position.x,
-		"end_y": GameInfo.goal.position.y
+		"end_pos": GameInfo.goal.position
 	}
 
-func get_saved_dict(node: Node2D):
+func get_saved_dict(node: EditableNode):
 	var save_dict: Dictionary = {
 		"name": node.scene_file_path,
-		"pos_x": node.position.x,
-		"pos_y": node.position.y,
+		"pos": node.position
 	}
 	
-	var width = node.get("width")
+	var attrs := node.get_savable_attributes()
 	
-	if width != null:
-		save_dict["width"] = width
-	
-	var height = node.get("height")
-	
-	if height != null:
-		save_dict["height"] = height
-	
-	var flipped = node.get("flipped")
-	
-	if flipped != null:
-		save_dict["flipped"] = flipped
-	
-	if node.has_method("serialize"):
-		save_dict["serialized"] = node.serialize()
+	for attr in attrs:
+		save_dict[attr.var_name] = attr.get_val()
 	
 	return save_dict
 
@@ -95,14 +71,13 @@ func sanitize_file_name(file_name: String) -> String:
 			sanitized += String.chr(c)
 		else:
 			sanitized += "_"
-
 	
-	return sanitized + ".json"
+	return sanitized + String.num(file_name.hash()) + FILE_EXT
 
 func save_to_file(file_name: String, data: Dictionary):
 	file_name = sanitize_file_name(file_name)
 	var save_game = FileAccess.open(SAVE_DIR + file_name, FileAccess.WRITE)
-	save_game.store_line(JSON.stringify(data))
+	save_game.store_var(data)
 	save_game.close()
 
 func load_from_file(file_name: String):
@@ -110,10 +85,19 @@ func load_from_file(file_name: String):
 	if not FileAccess.file_exists(SAVE_DIR + file_name):
 		return null
 	var save_game = FileAccess.open(SAVE_DIR + file_name, FileAccess.READ)
-	var json = JSON.new()
-
-	json.parse(save_game.get_as_text())
-
+	
+	var variant = save_game.get_var()
+	
 	save_game.close()
 
-	return json.data
+	return variant
+
+func get_saved_levels() -> Dictionary:
+	var lvls: Dictionary = {}
+	var dir = DirAccess.open(LevelSaver.SAVE_DIR)
+	for file_name in dir.get_files():
+		if file_name.ends_with(FILE_EXT):
+			var file = FileAccess.open(LevelSaver.SAVE_DIR + "/" + file_name, FileAccess.READ)
+			var variant = file.get_var()
+			lvls[file] = variant
+	return lvls

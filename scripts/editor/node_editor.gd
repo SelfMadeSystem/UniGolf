@@ -49,19 +49,28 @@ func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
 	for node in selected_nodes:
 #		node.input_event.disconnect(_on_editing_node_input_event)
 		node.tree_exited.disconnect(deyeet)
-		node.should_update_stuff.disconnect(reposition_elements)
+		node.should_update_stuff.disconnect(update_the_stuffs)
 	selected_nodes.clear()
 	selected_nodes.append_array(nodes)
 	for node in selected_nodes:
 #		node.input_event.connect(_on_editing_node_input_event)
 		node.tree_exited.connect(deyeet)
-		node.should_update_stuff.connect(reposition_elements)
-		update_editing_node_attributes()
-	reposition_elements()
+		node.should_update_stuff.connect(update_the_stuffs)
 	mouse_pos = Vector2.INF
+	
+	if nodes.size() == 0:
+		vanish_elements()
+		return
+	
+	update_editing_node_attributes()
+	reposition_elements()
 	
 	if edit:
 		%SelectionBox.activate()
+
+func update_the_stuffs():
+	update_editing_node_attributes()
+	reposition_elements()
 
 func update_editing_node_attributes():
 	for thing in draggy_thingies:
@@ -114,7 +123,7 @@ func reposition_elements():
 	var end = rect.end.clamp(min, max)
 	%SelectionBox.position = pos
 	%SelectionBox.size = end - pos
-	%Rotate.visible = selected_nodes.size() == 1
+	%EditButton.disabled = selected_nodes.size() != 1
 	set_line(rect)
 	reposition_draggy_thingies()
 
@@ -123,6 +132,7 @@ func vanish_elements():
 		thing.queue_free()
 	draggy_thingies = []
 	%SelectionBox.position = Vector2.ONE * 69420
+	%EditButton.disabled = true
 	$Line.points = []
 
 enum ActionEnum { DRAG, SELECT, PLACE }
@@ -156,20 +166,16 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 					button_pressed = ButtonEnum.RESIZE
 					set_mouse_pos(get_viewport().get_mouse_position())
 					return true
-				ButtonEnum.ROTATE: # TODO: Replace me
-					# if editing_node.get("flipped") == null:
-					#	return false
-					# editing_node.flipped = (editing_node.flipped + 1) % 4
-					var editor_scene = preload("res://prefabs/editor/node_values_editor.tscn")
-					var editor = editor_scene.instantiate()
-					$UI.add_child(editor)
-					editor.set_edit_node(selected_nodes[0])
+				ButtonEnum.ROTATE:
+					var rect = get_editing_rect()
+					for node in selected_nodes:
+						if node.has_method("rotate_ccw"):
+							node.rotate_ccw(rect)
 					return true
 				ButtonEnum.TRASH:
 					for node in selected_nodes:
 						node.queue_free()
 					proceed_to_edit_nodes([])
-					vanish_elements()
 					return true
 				ButtonEnum.COPY:
 					var clones: Array[EditableNode] = []
@@ -213,6 +219,27 @@ func handle_object_input(object: EditableNode, event: InputEvent):
 				return
 			proceed_to_edit_nodes([object])
 
+func remove_out_of_bounds():
+	var rect = get_viewport_rect().grow(-2)
+	rect.size.y -= 64
+	var nodes_not_removed: Array[EditableNode] = []
+	for node in selected_nodes:
+		if node is ShapedNode:
+			if !rect.has_point(node.position) && \
+				!rect.has_point(node.position + Vector2(node.shape_size.x, 0)) && \
+				!rect.has_point(node.position + Vector2(0, node.shape_size.y)) && \
+				!rect.has_point(node.position + node.shape_size):
+				node.queue_free()
+			else:
+				nodes_not_removed.append(node)
+		else:
+			if !rect.has_point(node.position):
+				node.queue_free()
+			else:
+				nodes_not_removed.append(node)
+	if nodes_not_removed.size() != selected_nodes.size():
+		proceed_to_edit_nodes(nodes_not_removed)
+
 var mouse_pos = Vector2.INF
 var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
@@ -232,9 +259,12 @@ func _input(event):
 			button_pressed = ButtonEnum.NONE
 			dragging = false
 			mouse_pos = Vector2.INF
+			if !GameInfo.editing:
+				return
 			match current_action:
 				ActionEnum.SELECT:
 					if selected_nodes.size() > 0:
+						remove_out_of_bounds()
 						return
 					$Line.points = []
 					var a = drag_start
@@ -252,6 +282,8 @@ func _input(event):
 							nodes.append(node)
 					
 					proceed_to_edit_nodes(nodes, false)
+				_:
+					remove_out_of_bounds()
 
 func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi-select and place
 	if event is InputEventMouseButton:
@@ -259,16 +291,19 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 			proceed_to_edit_nodes([])
 			if !GameInfo.editing:
 				return
+			var pos = event.position
 			match current_action:
 				ActionEnum.PLACE:
+					if !get_viewport_rect().has_point(pos):
+						return
 					var node = current_object.instantiate()
 					node.shape_size = Vector2(64, 64)
-					node.position = event.position
+					node.position = pos
 					get_tree().current_scene.add_child(node)
 					proceed_to_edit_nodes([node])
-					set_mouse_pos(event.position)
+					set_mouse_pos(pos)
 				ActionEnum.SELECT:
-					drag_start = event.position
+					drag_start = pos
 					dragging = true
 	elif event is InputEventMouseMotion:
 		if dragging && current_action == ActionEnum.SELECT:
@@ -358,6 +393,12 @@ func _on_grid_button_pressed():
 		set_grid_size(GRID_BIG)
 		%GridButton.modulate.v = 1
 
+func _on_edit_button_pressed():
+	var editor_scene = preload("res://prefabs/editor/node_values_editor.tscn")
+	var editor = editor_scene.instantiate()
+	$UI.add_child(editor)
+	editor.set_edit_node(selected_nodes[0])
+
 
 func _on_drag_button_pressed():
 	set_action(ActionEnum.DRAG)
@@ -425,4 +466,5 @@ func _on_name_focus_entered():
 
 func _on_name_focus_exited():
 	%SavePanel.position.y = prev_height
+
 

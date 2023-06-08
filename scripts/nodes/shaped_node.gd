@@ -88,8 +88,16 @@ func get_shape2d() -> Shape2D:
 			shape.extents = shape_size / 2
 			return shape
 		Shape.INVERSE_QUARTER_CIRCLE:
+			if GameInfo.editing:
+				# only apply for editing because inverted quarter circles are concave and are thus whack
+				# Right triangles are close enough
+				shape_shape = Shape.RIGHT_TRIANGLE
+				var shape = ConvexPolygonShape2D.new()
+				shape.points = get_shape()
+				shape_shape = Shape.INVERSE_QUARTER_CIRCLE
+				return shape
 			var shape = ConcavePolygonShape2D.new()
-			shape.segmentsctc = get_shape()
+			shape.segments = get_shape()
 			return shape
 		_: # CircleShape2D isn't an ellipse, so we can't use it for the CIRCLE shape
 			var shape = ConvexPolygonShape2D.new()
@@ -208,4 +216,36 @@ func _on_mouse_entered():
 func _on_mouse_exited():
 	hitbox.visible = false
 
+
+func rotate_ccw(rect: Rect2):
+	match shape_shape:
+		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
+			shape_rotation = (shape_rotation + 1) % Rotation.size()
+		Shape.QUADRILATERAL:
+			var temp = quadrilateral_vertex_bottom
+			quadrilateral_vertex_bottom = quadrilateral_vertex_left
+			quadrilateral_vertex_left = quadrilateral_vertex_top
+			quadrilateral_vertex_top = quadrilateral_vertex_right
+			quadrilateral_vertex_right = temp
+	var prev_size = shape_size
+	shape_size = Vector2(prev_size.y, prev_size.x)
+	
+	var pos_tl = position + Vector2(prev_size.x, 0)
+	var rect_tl = rect.position + Vector2(rect.size.x, 0)
+	
+	var diff = pos_tl - rect_tl
+	
+	position = rect.position + Vector2(diff.y, -diff.x)
+	
+	var_updated()
+	should_update_stuff.emit()
+
+# Rotating clockwise is just rotating counter-clockwise 3 times.
+# But we need to make sure that the rect we pass in the second time is also
+# rotated.
+func rotate_cw(rect: Rect2):
+	rotate_ccw(rect) # first, normal rotation
+	var rotated_rect = Rect2(rect.position, Vector2(rect.size.y, rect.size.x))
+	rotate_ccw(rotated_rect) # second, rotated rotation
+	rotate_ccw(rect) # third, normal rotation
 

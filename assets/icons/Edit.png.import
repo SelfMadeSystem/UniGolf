@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://blaetnobp0mmu"
-path="res://.godot/imported/Place.png-dc65ec79b93f88192f2ce17eaee4e28d.ctex"
+path="res://.godot/imported/Edit.png-77ef67c3df7cd212ed7d131dd140819a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/Place.png"
-dest_files=["res://.godot/imported/Place.png-dc65ec79b93f88192f2ce17eaee4e28d.ctex"]
+source_file="res://assets/icons/Edit.png"
+dest_files=["res://.godot/imported/Edit.png-77ef67c3df7cd212ed7d131dd140819a.ctex"]
 
 [params]
 

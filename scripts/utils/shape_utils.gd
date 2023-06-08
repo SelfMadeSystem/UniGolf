@@ -48,4 +48,6 @@ func _get_relative_inverse_quarter_circle_shape() -> PackedVector2Array:
 	]
 	for i in range(0, floor(CIRCLE_SEGMENTS / 4.0 + 1)):
 		shape.append(Vector2(1 - cos(i * 2 * PI / CIRCLE_SEGMENTS), 1 - sin(i * 2 * PI / CIRCLE_SEGMENTS)))
+		shape.append(Vector2(1 - cos(i * 2 * PI / CIRCLE_SEGMENTS), 1 - sin(i * 2 * PI / CIRCLE_SEGMENTS)))
+	shape.append(Vector2(0, 0))
 	return shape

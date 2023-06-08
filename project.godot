@@ -49,7 +49,7 @@ pause={
 
 [physics]
 
-common/physics_ticks_per_second=240
+common/physics_ticks_per_second=512
 2d/default_gravity_vector=Vector2(0, 0)
 2d/default_linear_damp=0.0
 2d/default_angular_damp=0.0

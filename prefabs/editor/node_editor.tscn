@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://dvgn31hw0pdtf"]
+[gd_scene load_steps=24 format=3 uid="uid://dvgn31hw0pdtf"]
 
 [ext_resource type="Texture2D" uid="uid://mx7uqftr273i" path="res://assets/icons/Copy.png" id="1_kyu4h"]
 [ext_resource type="Script" path="res://scripts/editor/node_editor.gd" id="1_rivm0"]
@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://dm2k4v5xtr54a" path="res://assets/icons/Drag.png" id="10_tnt2h"]
 [ext_resource type="Texture2D" uid="uid://cvvdbxqsntce4" path="res://assets/icons/Select.png" id="11_0yhnq"]
 [ext_resource type="Texture2D" uid="uid://dcdgij4bgejfd" path="res://assets/icons/More.png" id="11_n740k"]
+[ext_resource type="Texture2D" uid="uid://blaetnobp0mmu" path="res://assets/icons/Edit.png" id="15_s77gr"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_2w5jh"]
 shader = ExtResource("3_813i8")
@@ -207,12 +208,6 @@ icon = ExtResource("8_d1q4l")
 icon_alignment = 1
 expand_icon = true
 
-[node name="SaveButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 2
-icon = ExtResource("10_rwrf8")
-expand_icon = true
-
 [node name="MoreButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
 custom_minimum_size = Vector2(32, 64)
 layout_mode = 2
@@ -225,6 +220,15 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 icon = ExtResource("8_7dv7m")
+expand_icon = true
+
+[node name="EditButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+disabled = true
+icon = ExtResource("15_s77gr")
+icon_alignment = 1
 expand_icon = true
 
 [node name="Center" type="VFlowContainer" parent="UI/Bottom"]
@@ -327,32 +331,39 @@ offset_right = 416.0
 offset_bottom = -96.0
 grow_vertical = 0
 
-[node name="Name" type="LineEdit" parent="UI/SaveDialogue/SavePanel"]
-unique_name_in_owner = true
+[node name="HFlowContainer" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel"]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = 8.0
-offset_right = -8.0
-offset_bottom = -8.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="SaveButton" type="Button" parent="UI/SaveDialogue/SavePanel/HFlowContainer" groups=["EditorHide"]]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+icon = ExtResource("10_rwrf8")
+expand_icon = true
+
+[node name="Name" type="LineEdit" parent="UI/SaveDialogue/SavePanel/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
 placeholder_text = "Level Name"
 
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
-[connection signal="pressed" from="UI/Bottom/Left/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/MoreButton" to="." method="_on_more_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/GridButton" to="." method="_on_grid_button_pressed"]
+[connection signal="pressed" from="UI/Bottom/Left/EditButton" to="." method="_on_edit_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Center/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/DragButton" to="." method="_on_drag_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/SelectButton" to="." method="_on_select_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/ObjectsButton" to="." method="_on_objects_button_pressed"]
 [connection signal="gui_input" from="UI/SaveDialogue/SaveDialogueExit" to="." method="_on_save_dialogue_exit_gui_input"]
-[connection signal="focus_entered" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_focus_entered"]
-[connection signal="focus_exited" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_focus_exited"]
-[connection signal="text_changed" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_text_changed"]
-[connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/Name" to="." method="_on_name_text_submitted"]
+[connection signal="pressed" from="UI/SaveDialogue/SavePanel/HFlowContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="focus_entered" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_focus_entered"]
+[connection signal="focus_exited" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_focus_exited"]
+[connection signal="text_changed" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_changed"]
+[connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_submitted"]

@@ -50,7 +50,7 @@ load_path = "res://.godot/imported/slope.svg-6830176834a627b2241882bd108eae23.s3
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_f61j2"]
 shader = SubResource("Shader_tmad0")
 shader_parameter/rotation = 0
-shader_parameter/sprite_size = 32.0
+shader_parameter/sprite_size = 64.0
 shader_parameter/sprite = SubResource("CompressedTexture2D_dsxcq")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p3mtv"]

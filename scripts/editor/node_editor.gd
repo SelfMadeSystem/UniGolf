@@ -437,6 +437,10 @@ func _on_objects_button_pressed():
 		"prefab": preload("res://prefabs/nodes/bouncy.tscn"),
 		"name": "Bouncy"
 	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/boost.tscn"),
+		"name": "Boost"
+	})
 	select.selected.connect(set_current_object)
 
 

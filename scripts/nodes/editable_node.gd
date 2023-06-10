@@ -96,14 +96,16 @@ class EnumAttribute:
 		parent.add_child(options)
 	
 	func set_val(v):
+		print(self.var_name, " before: ", self.get_val())
 		super.set_val(v)
+		print(self.var_name, " after: ", self.get_val())
 		self.obj.should_update_stuff.emit()
 	
 	static func create(
 		var_name: String,
 		obj: EditableNode,
 		name: String,
-		values: PackedStringArray):
+		values: PackedStringArray) -> EnumAttribute:
 		var attr = EnumAttribute.new()
 		attr.var_name = var_name
 		attr.obj = obj

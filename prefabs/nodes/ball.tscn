@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://1u4j0gj6s8r7"]
 
-[ext_resource type="Script" path="res://scripts/ball.gd" id="1_ps3hi"]
+[ext_resource type="Script" path="res://scripts/nodes/ball.gd" id="1_ps3hi"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qx6mg"]
 friction = 0.0
@@ -16,10 +16,13 @@ point_count = 2
 radius = 4.0
 
 [node name="Ball" type="RigidBody2D"]
-z_index = 4
+z_index = 11
 collision_layer = 129
 collision_mask = 129
 physics_material_override = SubResource("PhysicsMaterial_qx6mg")
+max_contacts_reported = 5
+contact_monitor = true
+can_sleep = false
 lock_rotation = true
 linear_damp = 1.2
 script = ExtResource("1_ps3hi")

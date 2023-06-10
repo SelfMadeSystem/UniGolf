@@ -1,11 +1,11 @@
 [gd_scene load_steps=3 format=3 uid="uid://dbjbnyddt56rj"]
 
-[ext_resource type="Script" path="res://scripts/goal.gd" id="1_qyaml"]
+[ext_resource type="Script" path="res://scripts/nodes/goal.gd" id="1_qyaml"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kueul"]
 
 [node name="Goal" type="Area2D"]
-z_index = 2
+z_index = 10
 scale = Vector2(4, 4)
 collision_layer = 128
 collision_mask = 128

@@ -11,14 +11,14 @@ const CIRCLE_SEGMENTS = 32
 
 @export var shape_shape: Shape = Shape.RECT
 # Only visible if shape == Shape.INVERSE_QUARTER_CIRCLE or Shape.RIGHT_TRIANGLE
-@export var shape_rotation: Rotation = Rotation.ANGLE_90
-# Only visible if shape == INVERSE_QUARTER_CIRCLE
+@export var shape_rotation: Rotation = Rotation.ANGLE_0
+# Only visible if shape == QUADRILATERAL
 @export var quadrilateral_vertex_top = 0.5
-# Only visible if shape == INVERSE_QUARTER_CIRCLE
+# Only visible if shape == QUADRILATERAL
 @export var quadrilateral_vertex_right = 0.5
-# Only visible if shape == INVERSE_QUARTER_CIRCLE
+# Only visible if shape == QUADRILATERAL
 @export var quadrilateral_vertex_bottom = 0.5
-# Only visible if shape == INVERSE_QUARTER_CIRCLE
+# Only visible if shape == QUADRILATERAL
 @export var quadrilateral_vertex_left = 0.5
 
 # Gets the shape of the node with points between 0 and 1.
@@ -113,12 +113,14 @@ func get_shape2d_position() -> Vector2:
 
 
 func get_menu_edit_attributes() -> Array:
-	var base = EnumAttribute.create(
+	var base := EnumAttribute.create(
 			"shape_shape",
 			self,
 			"Shape",
 			Shape.keys()
 		)
+	if !allow_inverse_quarter_circle:
+		base.values.remove_at(Shape.INVERSE_QUARTER_CIRCLE)
 	match shape_shape:
 		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
 			return [
@@ -176,6 +178,8 @@ func get_savable_attributes() -> Array:
 	])
 	return attrs
 
+@export var allow_inverse_quarter_circle := false
+
 @onready var hitbox: CollisionShape2D = $HitBox # Must be present on all inherited dudes
 
 @export var update_hitbox_: bool = false:
@@ -217,7 +221,7 @@ func _on_mouse_exited():
 	hitbox.visible = false
 
 
-func rotate_ccw(rect: Rect2):
+func rotate_ccw(rect: Rect2): # !!! IMPORTANT: CALL super. *AFTER* BECAUSE OVERRODE CHANGES WON'T UPDATE OTHERWISE
 	match shape_shape:
 		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
 			shape_rotation = (shape_rotation + 1) % Rotation.size()

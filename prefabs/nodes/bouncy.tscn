@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://c5en0x4fj2e76"]
+[gd_scene load_steps=4 format=3 uid="uid://cdtudynggvbve"]
 
-[ext_resource type="Script" path="res://scripts/nodes/wall.gd" id="1_lb3g4"]
+[ext_resource type="Script" path="res://scripts/nodes/bouncy.gd" id="1_n466v"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d6k7a"]
 friction = 0.0
@@ -9,11 +9,12 @@ bounce = 1.0
 [sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_4eoxa"]
 points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
 
-[node name="Wall" type="StaticBody2D" groups=["Persist"]]
+[node name="Bouncy" type="StaticBody2D" groups=["Persist"]]
 z_index = 6
 input_pickable = true
 physics_material_override = SubResource("PhysicsMaterial_d6k7a")
-script = ExtResource("1_lb3g4")
+script = ExtResource("1_n466v")
+color = Color(1, 0, 0, 1)
 allow_inverse_quarter_circle = true
 
 [node name="HitBox" type="CollisionShape2D" parent="."]

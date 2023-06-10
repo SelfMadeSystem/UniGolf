@@ -1,39 +1,17 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=5 format=3 uid="uid://b1qdmdotjfaw"]
 
 [ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_r3r2l"]
 [ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_vh0xt"]
-[ext_resource type="Script" path="res://scripts/wall.gd" id="4_5erw0"]
 [ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="5_ieter"]
 [ext_resource type="Script" path="res://scripts/pause_button.gd" id="6_xt4ur"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6521y"]
-friction = 0.0
-bounce = 1.0
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nv2uc"]
-size = Vector2(1, 1)
 
 [node name="World" type="Node2D"]
 
 [node name="Ball" parent="." instance=ExtResource("2_r3r2l")]
 position = Vector2(320, 896)
-can_sleep = false
 
 [node name="Goal" parent="." instance=ExtResource("3_vh0xt")]
 position = Vector2(320, 128)
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(0, 1024)
-physics_material_override = SubResource("PhysicsMaterial_6521y")
-script = ExtResource("4_5erw0")
-width = 640
-height = 96
-
-[node name="HitBox" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2(320, 48)
-scale = Vector2(640, 96)
-shape = SubResource("RectangleShape2D_nv2uc")
-debug_color = Color(1, 0, 0.0862745, 0.419608)
 
 [node name="PauseButton" type="Button" parent="." groups=["EditorHide"]]
 z_index = 99

@@ -225,10 +225,7 @@ func remove_out_of_bounds():
 	var nodes_not_removed: Array[EditableNode] = []
 	for node in selected_nodes:
 		if node is ShapedNode:
-			if !rect.has_point(node.position) && \
-				!rect.has_point(node.position + Vector2(node.shape_size.x, 0)) && \
-				!rect.has_point(node.position + Vector2(0, node.shape_size.y)) && \
-				!rect.has_point(node.position + node.shape_size):
+			if !rect.intersects(Rect2(node.position, node.shape_size)):
 				node.queue_free()
 			else:
 				nodes_not_removed.append(node)
@@ -427,6 +424,18 @@ func _on_objects_button_pressed():
 	select.add_object({
 		"prefab": preload("res://prefabs/nodes/wall.tscn"),
 		"name": "Wall"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/water.tscn"),
+		"name": "Water"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/slope.tscn"),
+		"name": "Slope"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/bouncy.tscn"),
+		"name": "Bouncy"
 	})
 	select.selected.connect(set_current_object)
 

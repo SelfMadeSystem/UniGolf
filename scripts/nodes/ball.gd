@@ -89,6 +89,12 @@ func unfreeze():
 	$WaterDetector.collision_layer = 2
 	$WaterDetector.collision_mask = 2
 
+signal contact_stuffs(state: PhysicsDirectBodyState2D)
+
+func _integrate_forces(state):
+	if state.get_contact_count() > 0:
+		contact_stuffs.emit(state)
+
 func _physics_process(_delta):
 	if limited:
 		var diff = global_position - limit_origin

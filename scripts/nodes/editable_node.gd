@@ -96,9 +96,7 @@ class EnumAttribute:
 		parent.add_child(options)
 	
 	func set_val(v):
-		print(self.var_name, " before: ", self.get_val())
 		super.set_val(v)
-		print(self.var_name, " after: ", self.get_val())
 		self.obj.should_update_stuff.emit()
 	
 	static func create(

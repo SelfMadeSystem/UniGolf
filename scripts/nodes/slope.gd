@@ -35,14 +35,21 @@ func get_menu_edit_attributes() -> Array:
 				))
 	return base
 
+func get_shader_offset():
+	return position + shape_size.posmod(64.0) * 0.5
+
 func var_updated():
 	super.var_updated()
 	(material as ShaderMaterial).set_shader_parameter("rotation", gravity_direction)
+	(material as ShaderMaterial).set_shader_parameter("offset", get_shader_offset())
 
 func _ready():
 	super._ready()
+	if Engine.is_editor_hint():
+		return
 	material = material.duplicate(true)
 	(material as ShaderMaterial).set_shader_parameter("rotation", gravity_direction)
+	(material as ShaderMaterial).set_shader_parameter("offset", get_shader_offset())
 
 func _physics_process(delta):
 	for body in self.call("get_overlapping_bodies"):

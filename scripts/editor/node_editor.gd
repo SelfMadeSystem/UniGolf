@@ -207,6 +207,7 @@ func _on_selection_input(event: InputEvent):
 		
 		for node in selected_nodes:
 			node.position += pos_diff
+			node.var_updated()
 		
 		reposition_elements()
 		return true

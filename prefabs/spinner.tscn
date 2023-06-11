@@ -1,0 +1,70 @@
+[gd_scene load_steps=5 format=3 uid="uid://mg8wlrx1nylv"]
+
+[sub_resource type="Shader" id="Shader_q4bhm"]
+code = "shader_type canvas_item;
+
+uniform float inner = 0.7;
+uniform float rotation_speed = 3.0;
+uniform float expand_speed = 3.0;
+uniform float max_distance = 0.75;
+
+float angle_dist(float a, float b) {
+	float dist = b - a;
+	if (dist < 0.0) {
+		dist += PI * 2.0;
+	}
+	return dist;
+}
+
+bool is_between_angles(float angle, float angle1, float angle2) {
+	float diff1 = angle_dist(angle, angle1);
+	float diff2 = angle_dist(angle, angle2);
+	return diff1 >= diff2;
+}
+
+float aaa(float x) {
+	return sin(x) * (1.0 + floor(min(0, cos(x)))) + floor(x / PI + 0.5);
+}
+
+float bbb(float x) {
+	return sin(x) * floor(min(0, cos(x))) + floor(x / PI + 0.5);
+}
+
+void fragment() {
+	vec2 diff = UV - vec2(0.5, 0.5);
+	float dist = length(diff) * 2.0;
+	
+	if (dist > 1.0 || dist < inner) {
+		COLOR = vec4(0, 0, 0, 0);
+	} else {
+		float angle = atan(diff.y, diff.x);
+		float t = TIME * expand_speed;
+		float min_angle = mod(TIME * rotation_speed + aaa(t) * PI * max_distance, PI * 2.0) - PI;
+		float max_angle = mod(TIME * rotation_speed + (bbb(t) + 1.0) * PI * max_distance + 0.01, PI * 2.0) - PI;
+		if (!is_between_angles(angle, min_angle, max_angle)) {
+		COLOR = vec4(0, 0, 0, 0);
+		}
+	}
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_f2rl6"]
+shader = SubResource("Shader_q4bhm")
+shader_parameter/inner = 0.7
+shader_parameter/rotation_speed = 3.0
+shader_parameter/expand_speed = 3.0
+shader_parameter/max_distance = 0.75
+
+[sub_resource type="Gradient" id="Gradient_1pmlm"]
+offsets = PackedFloat32Array(1)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_sthsu"]
+gradient = SubResource("Gradient_1pmlm")
+
+[node name="Spinner" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_f2rl6")
+texture = SubResource("GradientTexture2D_sthsu")
+centered = false

@@ -1,5 +1,7 @@
 extends Control
 
+@export var default_map: MapPack
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var lvls = LevelSaver.get_saved_levels()
@@ -23,6 +25,9 @@ func _on_button_pressed(lvl):
 	GameInfo.get_tree().root.add_child(inst)
 
 func _on_bottom_button_pressed():
+	var lvl = default_map.get_map()
 	GameInfo.editing = true
-	GameInfo.current_level = {}
-	get_tree().change_scene_to_file("res://scenes/BlankEditor.tscn")
+	GameInfo.current_scene = preload("res://scenes/BlankEditor.tscn")
+	GameInfo.level_name = lvl.get("name")
+	GameInfo.change_scene(lvl, true)
+	queue_free()

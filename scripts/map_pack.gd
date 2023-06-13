@@ -12,7 +12,7 @@ extends Resource
 
 @export var name: String
 @export var maps: Array[Dictionary] = []
-var current_map: int = 0
+var current_index: int = 0
 
 static func create(name: String, maps: Array[Dictionary]):
 	var pack = MapPack.new()
@@ -21,13 +21,13 @@ static func create(name: String, maps: Array[Dictionary]):
 	return pack
 
 func next_map():
-	current_map += 1
-	if current_map >= maps.size():
+	current_index += 1
+	if current_index >= maps.size():
 		return null
-	return maps[current_map]
+	return maps[current_index]
 
 func get_map():
-	return maps[current_map]
+	return maps[current_index]
 
 func reset():
-	current_map = 0
+	current_index = 0

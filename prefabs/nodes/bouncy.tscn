@@ -6,8 +6,8 @@
 friction = 0.0
 bounce = 1.0
 
-[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_4eoxa"]
-points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y1o4r"]
+size = Vector2(64, 64)
 
 [node name="Bouncy" type="StaticBody2D" groups=["Persist"]]
 z_index = 6
@@ -19,4 +19,5 @@ allow_inverse_quarter_circle = true
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
-shape = SubResource("ConvexPolygonShape2D_4eoxa")
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_y1o4r")

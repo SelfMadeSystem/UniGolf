@@ -20,6 +20,10 @@ const CIRCLE_SEGMENTS = 32
 @export var quadrilateral_vertex_bottom = 0.5
 # Only visible if shape == QUADRILATERAL
 @export var quadrilateral_vertex_left = 0.5
+# Only visible if shape == QUARTER_ARC
+@export var quarter_arc_inner_x = 0.5
+# Only visible if shape == QUARTER_ARC
+@export var quarter_arc_inner_y = 0.5
 
 # Gets the shape of the node with points between 0 and 1.
 # Ignores size and rotation.
@@ -29,6 +33,8 @@ func get_relative_shape() -> PackedVector2Array:
 			return ShapeUtils.RECT_SHAPE
 		Shape.CIRCLE:
 			return ShapeUtils.CIRCLE_SHAPE
+		Shape.QUARTER_CIRCLE:
+			return ShapeUtils.QUARTER_CIRCLE_SHAPE
 		Shape.RIGHT_TRIANGLE:
 			return ShapeUtils.RIGHT_TRIANGLE_SHAPE
 		Shape.QUADRILATERAL:
@@ -38,6 +44,17 @@ func get_relative_shape() -> PackedVector2Array:
 				Vector2(1 - quadrilateral_vertex_bottom, 1),
 				Vector2(0, 1 - quadrilateral_vertex_left),
 			]
+		Shape.QUARTER_ARC:
+			var a = ShapeUtils.ARC_SHAPE.duplicate()
+			a.append(Vector2(0, 1))
+			a.append(Vector2(0, quarter_arc_inner_y))
+			var b: PackedVector2Array = ShapeUtils.ARC_SHAPE.duplicate()
+			b.reverse()
+			b *= Transform2D.IDENTITY.scaled(Vector2(quarter_arc_inner_x, quarter_arc_inner_y))
+			a.append_array(b)
+			a.append(Vector2(quarter_arc_inner_x, 0))
+			a.append(Vector2(1, 0))
+			return a
 		Shape.INVERSE_QUARTER_CIRCLE:
 			return ShapeUtils.INVERSE_QUARTER_CIRCLE_SHAPE
 	push_error("Invalid shape")
@@ -69,10 +86,14 @@ func get_rotated_shape() -> PackedVector2Array:
 func get_shape() -> PackedVector2Array:
 	var shape: PackedVector2Array = []
 
-	if shape_shape == Shape.RIGHT_TRIANGLE or shape_shape == Shape.INVERSE_QUARTER_CIRCLE:
-		shape = get_rotated_shape()
-	else:
-		shape = get_relative_shape()
+	match shape_shape:
+		Shape.RIGHT_TRIANGLE, \
+		Shape.INVERSE_QUARTER_CIRCLE, \
+		Shape.QUARTER_CIRCLE, \
+		Shape.QUARTER_ARC:
+			shape = get_rotated_shape()
+		_:
+			shape = get_relative_shape()
 	
 	var new_shape = PackedVector2Array()
 	
@@ -91,10 +112,24 @@ func get_shape2d() -> Shape2D:
 			if GameInfo.editing:
 				# only apply for editing because inverted quarter circles are concave and are thus whack
 				# Right triangles are close enough
+				var prev = shape_shape
 				shape_shape = Shape.RIGHT_TRIANGLE
 				var shape = ConvexPolygonShape2D.new()
 				shape.points = get_shape()
-				shape_shape = Shape.INVERSE_QUARTER_CIRCLE
+				shape_shape = prev
+				return shape
+			var shape = ConcavePolygonShape2D.new()
+			shape.segments = get_shape()
+			return shape
+		Shape.QUARTER_ARC:
+			if GameInfo.editing:
+				# only apply for editing because inverted quarter circles are concave and are thus whack
+				# Right triangles are close enough
+				var prev = shape_shape
+				shape_shape = Shape.QUARTER_CIRCLE
+				var shape = ConvexPolygonShape2D.new()
+				shape.points = get_shape()
+				shape_shape = prev
 				return shape
 			var shape = ConcavePolygonShape2D.new()
 			shape.segments = get_shape()
@@ -119,10 +154,14 @@ func get_menu_edit_attributes() -> Array:
 			"Shape",
 			Shape.keys()
 		)
-	if !allow_inverse_quarter_circle:
+	if !allow_concave_shapes:
 		base.values.remove_at(Shape.INVERSE_QUARTER_CIRCLE)
+		base.values.remove_at(Shape.QUARTER_ARC)
 	match shape_shape:
-		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
+		Shape.INVERSE_QUARTER_CIRCLE, \
+		Shape.QUARTER_CIRCLE, \
+		Shape.QUARTER_ARC, \
+		Shape.RIGHT_TRIANGLE:
 			return [
 				base,
 				EnumAttribute.create(
@@ -138,37 +177,108 @@ func get_menu_edit_attributes() -> Array:
 			]
 
 func get_visible_edit_attributes() -> Array:
-	if shape_shape == Shape.QUADRILATERAL:
-		return [
-			DragEditAttribute.create(
-				"quadrilateral_vertex_top",
-				self,
-				"quadrilateral_vertex_top",
-				Vector2(0, 0),
-				Vector2(1, 0),
-			),
-			DragEditAttribute.create(
-				"quadrilateral_vertex_right",
-				self,
-				"quadrilateral_vertex_right",
-				Vector2(1, 0),
-				Vector2(1, 1),
-			),
-			DragEditAttribute.create(
-				"quadrilateral_vertex_bottom",
-				self,
-				"quadrilateral_vertex_bottom",
-				Vector2(1, 1),
-				Vector2(0, 1),
-			),
-			DragEditAttribute.create(
-				"quadrilateral_vertex_left",
-				self,
-				"quadrilateral_vertex_left",
-				Vector2(0, 1),
-				Vector2(0, 0),
-			),
-		]
+	match shape_shape:
+		Shape.QUADRILATERAL:
+			return [
+				DragEditAttribute.create(
+					"quadrilateral_vertex_top",
+					self,
+					"quadrilateral_vertex_top",
+					Vector2(0, 0),
+					Vector2(1, 0),
+				),
+				DragEditAttribute.create(
+					"quadrilateral_vertex_right",
+					self,
+					"quadrilateral_vertex_right",
+					Vector2(1, 0),
+					Vector2(1, 1),
+				),
+				DragEditAttribute.create(
+					"quadrilateral_vertex_bottom",
+					self,
+					"quadrilateral_vertex_bottom",
+					Vector2(1, 1),
+					Vector2(0, 1),
+				),
+				DragEditAttribute.create(
+					"quadrilateral_vertex_left",
+					self,
+					"quadrilateral_vertex_left",
+					Vector2(0, 1),
+					Vector2(0, 0),
+				),
+			]
+		Shape.QUARTER_ARC:
+			match shape_rotation:
+				Rotation.ANGLE_0:
+					return [
+						DragEditAttribute.create(
+							"quarter_arc_inner_x",
+							self,
+							"quarter_arc_inner_x",
+							Vector2(0, 0),
+							Vector2(1, 0),
+						),
+						DragEditAttribute.create(
+							"quarter_arc_inner_y",
+							self,
+							"quarter_arc_inner_y",
+							Vector2(0, 0),
+							Vector2(0, 1),
+						),
+					]
+				Rotation.ANGLE_90:
+					return [
+						DragEditAttribute.create(
+							"quarter_arc_inner_x",
+							self,
+							"quarter_arc_inner_x",
+							Vector2(0, 1),
+							Vector2(0, 0),
+						),
+						DragEditAttribute.create(
+							"quarter_arc_inner_y",
+							self,
+							"quarter_arc_inner_y",
+							Vector2(0, 1),
+							Vector2(1, 1),
+						),
+					]
+				Rotation.ANGLE_180:
+					return [
+						DragEditAttribute.create(
+							"quarter_arc_inner_x",
+							self,
+							"quarter_arc_inner_x",
+							Vector2(1, 1),
+							Vector2(0, 1),
+						),
+						DragEditAttribute.create(
+							"quarter_arc_inner_y",
+							self,
+							"quarter_arc_inner_y",
+							Vector2(1, 1),
+							Vector2(1, 0),
+						),
+					]
+				Rotation.ANGLE_270:
+					return [
+						DragEditAttribute.create(
+							"quarter_arc_inner_x",
+							self,
+							"quarter_arc_inner_x",
+							Vector2(1, 0),
+							Vector2(1, 1),
+						),
+						DragEditAttribute.create(
+							"quarter_arc_inner_y",
+							self,
+							"quarter_arc_inner_y",
+							Vector2(1, 0),
+							Vector2(0, 0),
+						),
+					]
 	return []
 
 func get_savable_attributes() -> Array:
@@ -178,7 +288,7 @@ func get_savable_attributes() -> Array:
 	])
 	return attrs
 
-@export var allow_inverse_quarter_circle := false
+@export var allow_concave_shapes := true
 
 @onready var hitbox: CollisionShape2D = $HitBox # Must be present on all inherited dudes
 
@@ -223,7 +333,10 @@ func _on_mouse_exited():
 
 func rotate_ccw(rect: Rect2): # !!! IMPORTANT: CALL super. *AFTER* BECAUSE OVERRODE CHANGES WON'T UPDATE OTHERWISE
 	match shape_shape:
-		Shape.INVERSE_QUARTER_CIRCLE, Shape.RIGHT_TRIANGLE:
+		Shape.INVERSE_QUARTER_CIRCLE, \
+		Shape.QUARTER_CIRCLE, \
+		Shape.QUARTER_ARC, \
+		Shape.RIGHT_TRIANGLE:
 			shape_rotation = (shape_rotation + 1) % Rotation.size()
 		Shape.QUADRILATERAL:
 			var temp = quadrilateral_vertex_bottom

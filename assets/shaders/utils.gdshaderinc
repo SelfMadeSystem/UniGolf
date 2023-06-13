@@ -1,7 +1,7 @@
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 
 vec4 clr_at(vec2 uv) {
-	vec4 c = textureLod(screen_texture, uv, 0.0);
+	vec4 c = texture(screen_texture, uv);
 	
 	if (c.a > 0.0001) {
 		c.rgb /= c.a;

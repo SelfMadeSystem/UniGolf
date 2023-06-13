@@ -1,6 +1,42 @@
-[gd_scene load_steps=2 format=3 uid="uid://dhkeqbsktsob"]
+[gd_scene load_steps=4 format=3 uid="uid://dhkeqbsktsob"]
 
 [ext_resource type="Script" path="res://scripts/edit_select_level_menu.gd" id="1_g3o53"]
+[ext_resource type="Script" path="res://scripts/map_pack.gd" id="2_7kr3r"]
+
+[sub_resource type="Resource" id="Resource_4sy5h"]
+script = ExtResource("2_7kr3r")
+level_data = ""
+add_level = false
+name = ""
+maps = Array[Dictionary]([{
+"end_pos": Vector2(320, 128),
+"name": "Unnamed Level ",
+"nodes": [{
+"name": "res://prefabs/nodes/wall.tscn",
+"pos": Vector2(0, 1024),
+"position": Vector2(0, 1024),
+"shape_shape": 0,
+"shape_size": Vector2(640, 96)
+}, {
+"name": "res://prefabs/nodes/wall.tscn",
+"pos": Vector2(0, 0),
+"position": Vector2(0, 0),
+"shape_shape": 0,
+"shape_size": Vector2(32, 1024)
+}, {
+"name": "res://prefabs/nodes/wall.tscn",
+"pos": Vector2(32, 0),
+"position": Vector2(32, 0),
+"shape_shape": 0,
+"shape_size": Vector2(576, 32)
+}, {
+"name": "res://prefabs/nodes/wall.tscn",
+"pos": Vector2(608, 0),
+"position": Vector2(608, 0),
+"shape_shape": 0,
+"shape_size": Vector2(32, 1024)
+}]
+}])
 
 [node name="EditSelectLevelMenu" type="Control"]
 layout_mode = 3
@@ -10,6 +46,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_g3o53")
+default_map = SubResource("Resource_4sy5h")
 
 [node name="ListOfLevels" type="VBoxContainer" parent="."]
 layout_mode = 2

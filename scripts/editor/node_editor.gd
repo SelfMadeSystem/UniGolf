@@ -242,7 +242,7 @@ var mouse_pos = Vector2.INF
 var og_size = Vector2.ZERO
 var og_pos = Vector2.ZERO
 
-var drag_start = Vector2.ZERO
+var drag_start = Vector2.INF
 var dragging = false
 
 func set_mouse_pos(pos: Vector2):
@@ -263,6 +263,9 @@ func _input(event):
 				ActionEnum.SELECT:
 					if selected_nodes.size() > 0:
 						remove_out_of_bounds()
+						drag_start = Vector2.INF
+						return
+					if drag_start == Vector2.INF:
 						return
 					$Line.points = []
 					var a = drag_start
@@ -282,6 +285,7 @@ func _input(event):
 					proceed_to_edit_nodes(nodes, false)
 				_:
 					remove_out_of_bounds()
+			drag_start = Vector2.INF
 
 func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi-select and place
 	if event is InputEventMouseButton:
@@ -295,8 +299,10 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 					if !get_viewport_rect().has_point(pos):
 						return
 					var node = current_object.instantiate()
-					node.shape_size = Vector2(64, 64)
 					node.position = pos
+					if "shape_size" in node:
+						node.shape_size = Vector2(64, 64)
+						node.position -= Vector2(32, 32)
 					get_tree().current_scene.add_child(node)
 					proceed_to_edit_nodes([node])
 					set_mouse_pos(pos)

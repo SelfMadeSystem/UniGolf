@@ -2,18 +2,16 @@
 
 [ext_resource type="Shader" path="res://assets/shaders/slope.gdshader" id="1_je4rr"]
 [ext_resource type="Script" path="res://scripts/nodes/slope.gd" id="1_nn4nn"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_x7t6a"]
-load_path = "res://.godot/imported/slope.svg-6830176834a627b2241882bd108eae23.s3tc.ctex"
+[ext_resource type="Texture2D" uid="uid://bms5s3na3ow4w" path="res://assets/slope.svg" id="2_t6cco"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_xwhrl"]
 shader = ExtResource("1_je4rr")
 shader_parameter/rotation = 0
 shader_parameter/offset = Vector2(0, 0)
 shader_parameter/sprite_size = 64.0
-shader_parameter/sprite = SubResource("CompressedTexture2D_x7t6a")
+shader_parameter/sprite = ExtResource("2_t6cco")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_h1iil"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0kfp8"]
 size = Vector2(64, 64)
 
 [node name="Slope" type="Area2D" groups=["Persist"]]
@@ -25,4 +23,4 @@ allow_inverse_quarter_circle = true
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_h1iil")
+shape = SubResource("RectangleShape2D_0kfp8")

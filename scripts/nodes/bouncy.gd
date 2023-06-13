@@ -1,3 +1,4 @@
+@tool
 extends ShapedNode
 
 @export var color: Color = Color.from_hsv(0, 1, 1)
@@ -10,6 +11,8 @@ func _draw():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	super._ready()
+	if Engine.is_editor_hint():
+		return
 	GameInfo.ball.contact_stuffs.connect(_on_ball_contact_stuffs)
 
 func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D):

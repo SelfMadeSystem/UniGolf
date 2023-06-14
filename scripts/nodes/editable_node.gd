@@ -2,6 +2,8 @@ class_name EditableNode
 
 extends Node2D
 
+const DEFAULT_SIZE = Vector2(16, 16)
+
 class BaseEditAttribute:
 	var var_name = ""
 	var obj: EditableNode = null
@@ -151,14 +153,28 @@ func get_savable_attributes() -> Array:
 	attrs.append(BaseEditAttribute.create_base("position", self, "position"))
 	return attrs
 
-# Return true to have the node editor update the stuffs ^^^
+## Prepares the node to be displayed in the editor as a sample object
+func prepare_as_sample(size: Vector2):
+	position = size * 0.5
+
+## Return true to have the node editor update the stuffs ^^^
 func var_updated():
 	pass
 
-# Returns true if this node contains a point. The point is relative
-func contains_point(point: Vector2):
-	return false
+func resize(ratio: Vector2):
+	pass
 
-# Returns true if this node is within a rect. The rect is absolute
+## Reloads the node to its initial state (may not apply if node has persistent attributes; for node to decide)
+func reload():
+	pass
+
+## Returns true if this node contains a point. The point is relative
+func contains_point(point: Vector2):
+	return Rect2(-DEFAULT_SIZE, DEFAULT_SIZE * 2).has_point(point)
+
+func get_bounding_rect() -> Rect2:
+	return Rect2(position - DEFAULT_SIZE, DEFAULT_SIZE * 2)
+
+## Returns true if this node is within a rect. The rect is absolute
 func within_rect(rect: Rect2):
 	return rect.has_point(global_position)

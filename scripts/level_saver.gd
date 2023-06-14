@@ -12,8 +12,6 @@ func deserialize_level(stuff: Dictionary):
 		stuff.get("end_pos", Vector2.ZERO),
 	)
 	
-	GameInfo.goal.position = end
-	
 	for a in nodes:
 		var node = deserialize_node(a)
 		get_tree().current_scene.add_child(node)
@@ -42,7 +40,6 @@ func serialize_level():
 	return {
 		"name": GameInfo.level_name,
 		"nodes": save_arr,
-		"end_pos": GameInfo.goal.position
 	}
 
 func get_saved_dict(node: EditableNode):

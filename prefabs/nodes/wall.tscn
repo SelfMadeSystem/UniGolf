@@ -14,7 +14,6 @@ z_index = 6
 input_pickable = true
 physics_material_override = SubResource("PhysicsMaterial_d6k7a")
 script = ExtResource("1_lb3g4")
-allow_inverse_quarter_circle = true
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false

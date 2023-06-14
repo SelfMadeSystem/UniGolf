@@ -11,7 +11,6 @@ func _ready():
 		button.text = val.get("name")
 		button.connect("pressed", _on_button_pressed.bind(val))
 		$ListOfLevels.add_child(button)
-	
 
 
 func _on_back_pressed():

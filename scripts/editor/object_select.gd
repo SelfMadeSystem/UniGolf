@@ -16,8 +16,7 @@ func add_object(obj: Dictionary):
 	var templateScene = preload("res://prefabs/editor/object_template.tscn")
 	var template = templateScene.instantiate()
 	var prefab = prefabScene.instantiate()
-	prefab.shape_size = Vector2(48, 48)
-	prefab.position = Vector2(8, 8)
+	prefab.prepare_as_sample(Vector2(64, 64))
 	template.add_child(prefab)
 	template.get_node("Label").text = name
 	template.pressed.connect(func(): 

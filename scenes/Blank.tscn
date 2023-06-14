@@ -1,17 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://b1qdmdotjfaw"]
+[gd_scene load_steps=3 format=3 uid="uid://b1qdmdotjfaw"]
 
-[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_r3r2l"]
-[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_vh0xt"]
 [ext_resource type="Texture2D" uid="uid://bibqq0086tmwu" path="res://assets/icons/Pause.png" id="5_ieter"]
 [ext_resource type="Script" path="res://scripts/pause_button.gd" id="6_xt4ur"]
 
 [node name="World" type="Node2D"]
-
-[node name="Ball" parent="." instance=ExtResource("2_r3r2l")]
-position = Vector2(320, 896)
-
-[node name="Goal" parent="." instance=ExtResource("3_vh0xt")]
-position = Vector2(320, 128)
 
 [node name="PauseButton" type="Button" parent="." groups=["EditorHide"]]
 z_index = 99

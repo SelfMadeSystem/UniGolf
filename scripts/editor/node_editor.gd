@@ -41,8 +41,9 @@ func get_editing_rect() -> Rect2:
 	var max = -Vector2.INF
 	
 	for node in selected_nodes:
-		min = min.clamp(-Vector2.INF, node.position)
-		max = max.clamp(node.position + node.shape_size, Vector2.INF)
+		var rect = node.get_bounding_rect()
+		min = min.clamp(-Vector2.INF, rect.position)
+		max = max.clamp(rect.position + rect.size, Vector2.INF)
 	return Rect2(min, max - min)
 
 func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
@@ -221,20 +222,14 @@ func handle_object_input(object: EditableNode, event: InputEvent):
 			proceed_to_edit_nodes([object])
 
 func remove_out_of_bounds():
-	var rect = get_viewport_rect().grow(-2)
+	var rect = get_viewport_rect().grow(-1)
 	rect.size.y -= 64
 	var nodes_not_removed: Array[EditableNode] = []
 	for node in selected_nodes:
-		if node is ShapedNode:
-			if !rect.intersects(Rect2(node.position, node.shape_size)):
-				node.queue_free()
-			else:
-				nodes_not_removed.append(node)
+		if !rect.intersects(node.get_bounding_rect()):
+			node.queue_free()
 		else:
-			if !rect.has_point(node.position):
-				node.queue_free()
-			else:
-				nodes_not_removed.append(node)
+			nodes_not_removed.append(node)
 	if nodes_not_removed.size() != selected_nodes.size():
 		proceed_to_edit_nodes(nodes_not_removed)
 
@@ -333,12 +328,14 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 				p = p.clamp(MIN_SIZE, MAX_SIZE).clamp(grid_size, MAX_SIZE)
 				
 				var size_ratio = p / rect.size
-				for node in selected_nodes:
-					node.shape_size *= size_ratio
-					var pos = node.position
+				for node in selected_nodes: # FIXME: IT'S CALCULATED STUFF WRONG!!!!
+					node.resize(size_ratio)
+					var r = node.get_bounding_rect()
+					var pos = r.position
+					var d = node.position - pos
 					pos -= rect.position
 					pos *= size_ratio
-					node.position = pos + rect.position
+					node.position = pos + rect.position + d
 					node.var_updated()
 				reposition_elements()
 			ButtonEnum.NODE:
@@ -354,7 +351,6 @@ func toggle_editor_hide():
 		node.visible = !node.visible
 
 func _on_play_button_pressed():
-	GameInfo.ball_prev_shoot = Vector2()
 	if GameInfo.editing:
 		play()
 	else:
@@ -418,8 +414,7 @@ func set_current_object(a):
 		child.queue_free()
 	var b = a.instantiate()
 	b.remove_from_group("Persist")
-	b.shape_size = Vector2(48, 48)
-	b.position = Vector2(8, 8)
+	b.prepare_as_sample(Vector2(64, 64))
 	%PlaceButton.add_child(b)
 	current_object = a
 	set_action(ActionEnum.PLACE)
@@ -428,6 +423,14 @@ func _on_objects_button_pressed():
 	var selectScene = preload("res://prefabs/editor/object_select.tscn")
 	var select = selectScene.instantiate()
 	$UI.add_child(select)
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/ball.tscn"),
+		"name": "Ball"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/goal.tscn"),
+		"name": "Goal"
+	})
 	select.add_object({
 		"prefab": preload("res://prefabs/nodes/wall.tscn"),
 		"name": "Wall"

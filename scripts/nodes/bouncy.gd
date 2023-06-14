@@ -13,9 +13,9 @@ func _ready():
 	super._ready()
 	if Engine.is_editor_hint():
 		return
-	GameInfo.ball.contact_stuffs.connect(_on_ball_contact_stuffs)
+	GameInfo.contact_stuffs.connect(_on_ball_contact_stuffs)
 
-func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D):
+func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball):
 	for i in range(0, stuff.get_contact_count()):
 		var obj = stuff.get_contact_collider_object(i)
 		if obj == self:

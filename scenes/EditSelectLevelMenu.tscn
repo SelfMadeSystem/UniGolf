@@ -9,9 +9,17 @@ level_data = ""
 add_level = false
 name = ""
 maps = Array[Dictionary]([{
-"end_pos": Vector2(320, 128),
 "name": "Unnamed Level ",
 "nodes": [{
+"name": "res://prefabs/nodes/ball.tscn",
+"pos": Vector2(320, 896),
+"position": Vector2(320, 896)
+}, {
+"col_shape_radius": 32.0,
+"name": "res://prefabs/nodes/goal.tscn",
+"pos": Vector2(320, 128),
+"position": Vector2(320, 128)
+}, {
 "name": "res://prefabs/nodes/wall.tscn",
 "pos": Vector2(0, 1024),
 "position": Vector2(0, 1024),

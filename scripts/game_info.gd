@@ -8,11 +8,7 @@ extends Node
 
 @export var changing_scene: bool
 
-var ball: Ball
-var goal: Goal
 var pause_button: PauseButton
-
-var ball_prev_shoot: Vector2 = Vector2()
 
 var map_pack: MapPack
 
@@ -36,11 +32,10 @@ func end_scene():
 			to_main_menu()
 		else:
 			change_scene(next)
-	else:
-		reload_scene()
+#	else:
+#		reload_scene()
 
 func change_scene(to: Dictionary, instant = false):
-	ball_prev_shoot = Vector2()
 	changing_scene = true
 	if instant:
 		__into_scene(to, true)
@@ -51,7 +46,6 @@ func change_scene(to: Dictionary, instant = false):
 		tween.tween_callback(__into_scene.bind(to))
 
 func __into_scene(to: Dictionary, instant = false):
-	ball_prev_shoot = Vector2()
 	get_tree().change_scene_to_packed(current_scene)
 	current_level = to
 	
@@ -67,19 +61,21 @@ func __into_scene(to: Dictionary, instant = false):
 			tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
 			tween.tween_callback(func():
 				changing_scene = false
-				if !editing && ball != null:
-					ball.unfreeze()
 			)
 		else:
 			changing_scene = false
-			if !editing && ball != null:
-				ball.unfreeze()
 		
 		if current_editor != null:
 			current.add_child(current_editor)
 			node_editor = current_editor
 	a.call_deferred()
 
+## Just calls the reload function on all the nodes so that persistent nodes stay.
+func reload_level():
+	for node in get_tree().get_nodes_in_group("Persist"):
+		node.reload()
+
+## completely resets the level
 func reload_scene():
 	get_tree().change_scene_to_packed(current_scene)
 	var a = func():
@@ -91,12 +87,11 @@ func to_main_menu():
 	for child in get_children():
 		child.queue_free()
 	
-	ball = null
-	goal = null
 	pause_button = null
 	changing_scene = false
 	current_level = {}
 	editing = false
 	node_editor = null
 	map_pack = null
-	ball_prev_shoot = Vector2()
+
+signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)

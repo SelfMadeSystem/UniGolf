@@ -1,12 +1,3 @@
-[gd_scene load_steps=3 format=3 uid="uid://c4b70fcb2t0nt"]
-
-[ext_resource type="PackedScene" uid="uid://1u4j0gj6s8r7" path="res://prefabs/nodes/ball.tscn" id="2_lcpw1"]
-[ext_resource type="PackedScene" uid="uid://dbjbnyddt56rj" path="res://prefabs/nodes/goal.tscn" id="3_gtklc"]
+[gd_scene format=3 uid="uid://c4b70fcb2t0nt"]
 
 [node name="World" type="Node2D"]
-
-[node name="Ball" parent="." instance=ExtResource("2_lcpw1")]
-position = Vector2(320, 896)
-
-[node name="Goal" parent="." instance=ExtResource("3_gtklc")]
-position = Vector2(320, 128)

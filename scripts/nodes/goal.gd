@@ -1,44 +1,84 @@
 @tool
 class_name Goal
 
-extends Area2D
+extends EditableNode
 
-@export var outline = 0.1
+@export var outline = 0.4
 @export var outline_color = Color.ORANGE
 @export var inner_color = Color.BLACK
 
-@onready var radius = ($CollisionShape2D.shape as CircleShape2D).radius * (1 + outline)
+var col_shape: CircleShape2D
 
-var ball: Ball
+func get_radius() -> float:
+	return col_shape.radius * (1 + outline)
+
+var balls: Array[Ball]
+
+var col_shape_radius_temp_for_saving
+
+var col_shape_radius:
+	get:
+		if col_shape == null:
+			return null
+		return col_shape.radius
+	set(value):
+		if col_shape == null:
+			col_shape_radius_temp_for_saving = value
+		else:
+			col_shape.radius = value
 
 func _ready():
-	if Engine.is_editor_hint():
-		return
-	get_parent().remove_child.call_deferred(self)
-	if GameInfo.goal:
-		GameInfo.goal.get_parent().remove_child.call_deferred(GameInfo.goal)
-	GameInfo.goal = self
-	GameInfo.add_child.call_deferred(self)
+	if !Engine.is_editor_hint():
+		$CollisionShape2D.shape = $CollisionShape2D.shape.duplicate()
+	col_shape = $CollisionShape2D.shape as CircleShape2D
+	if col_shape_radius_temp_for_saving != null:
+		col_shape.radius = col_shape_radius_temp_for_saving
 
 func _draw():
-	draw_circle(Vector2.ZERO, radius, outline_color)
-	draw_circle(Vector2.ZERO, radius / (1 + outline), inner_color)
+	draw_circle(Vector2.ZERO, get_radius(), outline_color)
+	draw_circle(Vector2.ZERO, get_radius() / (1 + outline), inner_color)
+
+
+func get_savable_attributes() -> Array:
+	var attrs = super.get_savable_attributes()
+	attrs.append_array([
+		BaseEditAttribute.create_base("col_shape_radius", self, "col_shape_radius")
+	])
+	return attrs
+
 
 func _process(_delta):
 	queue_redraw()
-	if ball:
+	for ball in balls:
 		var diff = ball.global_position - global_position
-		if diff.length_squared() < ball.limit_radius * ball.limit_radius:
-			ball.set_limited()
+		if diff.length_squared() < col_shape.radius * col_shape.radius:
+			ball.set_limited(global_position, col_shape.radius)
 			ball = null
 			await get_tree().create_timer(0.5).timeout
 			GameInfo.end_scene()
 
 func _on_body_entered(body):
 	if body is Ball:
-		ball = body
-		ball.calculate_limited(global_position, radius / (1 + outline) * global_scale.x)
+		balls.append(body)
 
 func _on_body_exited(body):
 	if body is Ball:
-		ball = null
+		balls.erase(body)
+
+
+func prepare_as_sample(size: Vector2):
+	super.prepare_as_sample(size)
+	var a = func():
+		col_shape.radius *= (0.5 *min(size.x, size.y) - 8) / col_shape.radius
+	a.call_deferred()
+
+func resize(ratio: Vector2):
+	var r = min(ratio.x, ratio.y)
+	var p = col_shape.radius
+	col_shape.radius *= r
+	var d = col_shape.radius - p
+	position += Vector2(d, d)
+
+func get_bounding_rect() -> Rect2:
+	return Rect2(position - Vector2(col_shape.radius, col_shape.radius),
+		Vector2(col_shape.radius, col_shape.radius) * 2)

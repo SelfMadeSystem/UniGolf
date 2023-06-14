@@ -320,7 +320,7 @@ func _ready():
 	connect("mouse_exited", _on_mouse_exited)
 
 func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if hitbox.visible:
+	if hitbox.visible && GameInfo.editing && GameInfo.node_editor:
 		GameInfo.node_editor.handle_object_input(self, event)
 
 
@@ -329,6 +329,18 @@ func _on_mouse_entered():
 
 func _on_mouse_exited():
 	hitbox.visible = false
+
+
+func get_bounding_rect() -> Rect2:
+	return Rect2(position, shape_size)
+
+func prepare_as_sample(size: Vector2):
+	position = Vector2(8, 8)
+	shape_size = size - position * 2
+
+
+func resize(ratio: Vector2):
+	shape_size *= ratio
 
 
 func rotate_ccw(rect: Rect2): # !!! IMPORTANT: CALL super. *AFTER* BECAUSE OVERRODE CHANGES WON'T UPDATE OTHERWISE
@@ -354,7 +366,7 @@ func rotate_ccw(rect: Rect2): # !!! IMPORTANT: CALL super. *AFTER* BECAUSE OVERR
 	
 	position = rect.position + Vector2(diff.y, -diff.x)
 	
-	var_updated()
+	var_updated() # This is why
 	should_update_stuff.emit()
 
 # Rotating clockwise is just rotating counter-clockwise 3 times.

@@ -41,10 +41,12 @@ func set_limited(origin: Vector2, rad: float):
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "modulate", Color.from_hsv(0, 0, 0.5), 0.1)
 
+var tween: Tween
+
 func vanish():
+	tween = get_tree().create_tween()
 	me.collision_layer = 0
 	me.collision_mask = 0
-	var tween = get_tree().create_tween()
 	var speed = 100 / (me.linear_velocity.length() + 500)
 	tween.tween_property(self, "scale", Vector2.ZERO, speed).from_current()
 	tween.parallel().tween_property(self, "linear_velocity", Vector2.ZERO, speed).from_current()
@@ -94,6 +96,9 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		if diff.length_squared() > limit_radius * limit_radius:
 			state.transform.origin = limit_origin + diff.normalized() * limit_radius
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
+			state.linear_velocity *= 0.9
+		state.linear_velocity -= diff * 0.05
+		state.linear_velocity *= 0.998
 	
 	if mouse_down && pos != starting_position && (!limited || GameInfo.node_editor != null):
 		GameInfo.reload_level()
@@ -102,6 +107,19 @@ func reload():
 	limited = false
 	reloading = true
 	self.modulate = Color(1, 1, 1, 1)
+	
+	me.collision_layer = layer
+	me.collision_mask = layer
+	
+	
+	if tween != null:
+		tween.stop()
+	scale = Vector2.ONE
+	visible = true
+	
+	set_deferred("freeze", true)
+	set_deferred("global_position", starting_position)
+	
 	%PrevLine.clear_points()
 	%PrevLine.add_point(prev_shoot * line_length)
 	%PrevLine.add_point(Vector2.ZERO)

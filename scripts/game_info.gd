@@ -25,6 +25,15 @@ func pause():
 		preload("res://scenes/PauseMenu.tscn").instantiate()
 	)
 
+var ending_scene = false
+
+func start_end_scene():
+	if ending_scene:
+		return
+	
+	await get_tree().create_timer(0.5).timeout
+	end_scene()
+
 func end_scene():
 	if map_pack:
 		var next = map_pack.next_map()

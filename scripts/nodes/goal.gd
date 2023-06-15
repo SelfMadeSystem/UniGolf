@@ -46,16 +46,14 @@ func get_savable_attributes() -> Array:
 	])
 	return attrs
 
-
 func _process(_delta):
 	queue_redraw()
-	for ball in balls:
+	for ball in balls.duplicate():
 		var diff = ball.global_position - global_position
 		if diff.length_squared() < col_shape.radius * col_shape.radius:
 			ball.set_limited(global_position, col_shape.radius)
-			ball = null
-			await get_tree().create_timer(0.5).timeout
-			GameInfo.end_scene()
+			balls.erase(ball)
+			GameInfo.start_end_scene()
 
 func _on_body_entered(body):
 	if body is Ball:

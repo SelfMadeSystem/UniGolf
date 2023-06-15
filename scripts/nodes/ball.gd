@@ -97,7 +97,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 			state.transform.origin = limit_origin + diff.normalized() * limit_radius
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
 			state.linear_velocity *= 0.9
-		state.linear_velocity -= diff * 0.075
+		state.linear_velocity -= diff * 0.05
 		state.linear_velocity *= 0.998
 	
 	if mouse_down && pos != starting_position && (!limited || GameInfo.node_editor != null):

@@ -73,6 +73,10 @@ func _ready():
 	layer = me.collision_layer
 	me.collision_layer = 0
 	me.collision_mask = 0
+	
+	%PrevLine.clear_points()
+	%PrevLine.add_point(prev_shoot * line_length)
+	%PrevLine.add_point(Vector2.ZERO)
 
 func unfreeze():
 	me.freeze = false
@@ -84,6 +88,7 @@ var reloading = false
 func _integrate_forces(state: PhysicsDirectBodyState2D):
 	if reloading:
 		state.transform.origin = starting_position
+		state.linear_velocity = Vector2.ZERO
 		reloading = false
 
 	if state.get_contact_count() > 0:
@@ -101,33 +106,21 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		state.linear_velocity *= 0.998
 	
 	if mouse_down && pos != starting_position && (!limited || GameInfo.node_editor != null):
-		GameInfo.reload_level()
+		GameInfo.queue_reload_level()
 
 func reload():
-	limited = false
-	reloading = true
-	self.modulate = Color(1, 1, 1, 1)
-	
-	me.collision_layer = layer
-	me.collision_mask = layer
-	
-	
-	if tween != null:
-		tween.stop()
-	scale = Vector2.ONE
-	visible = true
-	
-	set_deferred("freeze", true)
-	set_deferred("global_position", starting_position)
-	
-	%PrevLine.clear_points()
-	%PrevLine.add_point(prev_shoot * line_length)
-	%PrevLine.add_point(Vector2.ZERO)
+	var new_me = remake_myself()
+	new_me.prev_shoot = prev_shoot
+	new_me.mouse_down = true
+	new_me.mouse_timer = get_tree().create_timer(0.1)
+	get_parent().add_child(new_me)
+	get_parent().remove_child(self)
+	queue_free()
 
 func _process(_delta):
 	%ShootLine.clear_points()
-	if !Input.is_mouse_button_pressed(1):
-			mouse_down = false
+#	if !Input.is_mouse_button_pressed(1):
+#			mouse_down = false
 	if mouse_down && !limited:
 		%ShootLine.add_point(get_mouse_strength() * line_length)
 		%ShootLine.add_point(Vector2.ZERO)
@@ -138,7 +131,6 @@ func _unhandled_input(event):
 			if event.button_index == 1:
 				if !limited:
 					if event.pressed:
-						me.linear_velocity = Vector2.ZERO
 						mouse_timer = get_tree().create_timer(0.1)
 					else:
 						if mouse_down && mouse_timer.time_left <= 0:

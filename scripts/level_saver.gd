@@ -26,6 +26,8 @@ func deserialize_node(stuff: Dictionary):
 	for key in stuff.keys():
 		node.set(key, stuff.get(key))
 	
+	node.saved_values = stuff
+	
 	return node
 
 func serialize_level():

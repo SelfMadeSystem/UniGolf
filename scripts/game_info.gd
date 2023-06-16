@@ -79,6 +79,14 @@ func __into_scene(to: Dictionary, instant = false):
 			node_editor = current_editor
 	a.call_deferred()
 
+var reload_level_queued = false
+
+func queue_reload_level():
+	if reload_level_queued:
+		return
+	reload_level_queued = true
+	reload_level.call_deferred()
+
 ## Just calls the reload function on all the nodes so that persistent nodes stay.
 func reload_level():
 	for node in get_tree().get_nodes_in_group("Persist"):

@@ -139,7 +139,14 @@ class DragEditAttribute: # TODO: Have a base for this
 		attr.color = color
 		return attr
 
+# Values saved for this node
+var saved_values: Dictionary
+
 signal should_update_stuff
+
+func remake_myself():
+	var new_me = LevelSaver.deserialize_node(saved_values)
+	return new_me
 
 func get_menu_edit_attributes() -> Array:
 	return []

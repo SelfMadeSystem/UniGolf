@@ -91,6 +91,7 @@ func queue_reload_level():
 func reload_level():
 	for node in get_tree().get_nodes_in_group("Persist"):
 		node.reload()
+	reload_level_queued = false
 
 ## completely resets the level
 func reload_scene():

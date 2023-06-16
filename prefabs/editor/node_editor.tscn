@@ -104,11 +104,12 @@ offset_bottom = -384.0
 anchors_preset = 0
 offset_right = 352.0
 offset_bottom = 249.0
-mouse_filter = 1
+mouse_filter = 2
 
 [node name="Resize" type="Control" parent="UI/SelectionBox/ButtonThingies"]
 z_index = 9
 layout_mode = 1
+anchors_preset = 3
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -130,6 +131,7 @@ offset = Vector2(26, 26)
 unique_name_in_owner = true
 z_index = 9
 layout_mode = 1
+anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_top = -52.0
@@ -145,6 +147,7 @@ offset = Vector2(26, 26)
 [node name="Trash" type="Control" parent="UI/SelectionBox/ButtonThingies"]
 z_index = 9
 layout_mode = 1
+anchors_preset = 0
 offset_left = -52.0
 offset_top = -52.0
 script = ExtResource("4_celo7")
@@ -157,6 +160,7 @@ offset = Vector2(26, 26)
 [node name="Copy" type="Control" parent="UI/SelectionBox/ButtonThingies"]
 z_index = 9
 layout_mode = 1
+anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 offset_left = -52.0

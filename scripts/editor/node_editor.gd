@@ -116,16 +116,10 @@ func reposition_elements():
 	if selected_nodes.size() == 0:
 		vanish_elements()
 		return
-	var rect = get_editing_rect().grow(4)
-	var min = Vector2.ONE * 48
-	var max = get_viewport_rect().size - min - Vector2.DOWN * 64
-	
-	var pos = rect.position.clamp(min, max)
-	var end = rect.end.clamp(min, max)
-	%SelectionBox.position = pos
-	%SelectionBox.size = end - pos
+	var rect = get_editing_rect()
+	%SelectionBox.set_selection_box(rect)
 	%EditButton.disabled = selected_nodes.size() != 1
-	set_line(rect)
+	set_line(rect.grow(2))
 	reposition_draggy_thingies()
 
 func vanish_elements():

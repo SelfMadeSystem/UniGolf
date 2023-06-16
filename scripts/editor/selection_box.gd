@@ -10,6 +10,18 @@ func deactivate():
 	active = false
 	$DraggyThingies.visible = true
 
+func set_selection_box(rect: Rect2):
+	position = rect.position
+	size = rect.size
+	var min = Vector2.ONE * 48
+	var max = get_viewport_rect().size - min - Vector2.DOWN * 64
+	
+	var pos = rect.position.clamp(min, max)
+	var end = rect.end.clamp(min, max)
+	
+	$ButtonThingies.global_position = pos
+	$ButtonThingies.size = end - pos
+
 func _has_point(point):
 	return active || Rect2(Vector2(), size).has_point(get_local_mouse_position())
 #	var global_point = point + global_position

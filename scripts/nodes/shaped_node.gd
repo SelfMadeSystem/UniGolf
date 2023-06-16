@@ -13,17 +13,75 @@ const CIRCLE_SEGMENTS = 32
 # Only visible if shape == Shape.INVERSE_QUARTER_CIRCLE or Shape.RIGHT_TRIANGLE
 @export var shape_rotation: Rotation = Rotation.ANGLE_0
 # Only visible if shape == QUADRILATERAL
-@export var quadrilateral_vertex_top = 0.5
+var _quadrilateral_vertex_top = 0.5
+@export var quadrilateral_vertex_top: float:
+	get:
+		return _quadrilateral_vertex_top
+	set(value):
+		if value == 0 && _quadrilateral_vertex_left == 1 && \
+			_quadrilateral_vertex_bottom == 0 && _quadrilateral_vertex_right == 1:
+				return
+		if value == 1 && _quadrilateral_vertex_left == 0 && \
+			_quadrilateral_vertex_bottom == 1 && _quadrilateral_vertex_right == 0:
+				return
+		_quadrilateral_vertex_top = value
 # Only visible if shape == QUADRILATERAL
-@export var quadrilateral_vertex_right = 0.5
+var _quadrilateral_vertex_right = 0.5
+@export var quadrilateral_vertex_right: float:
+	get:
+		return _quadrilateral_vertex_right
+	set(value):
+		if quadrilateral_vertex_top == 0 && _quadrilateral_vertex_left == 1 && \
+			_quadrilateral_vertex_bottom == 0 && value == 1:
+				return
+		if quadrilateral_vertex_top == 1 && _quadrilateral_vertex_left == 0 && \
+			_quadrilateral_vertex_bottom == 1 && value == 0:
+				return
+		_quadrilateral_vertex_right = value
 # Only visible if shape == QUADRILATERAL
-@export var quadrilateral_vertex_bottom = 0.5
+var _quadrilateral_vertex_bottom = 0.5
+@export var quadrilateral_vertex_bottom: float:
+	get:
+		return _quadrilateral_vertex_bottom
+	set(value):
+		if quadrilateral_vertex_top == 0 && _quadrilateral_vertex_left == 1 && \
+			value == 0 && _quadrilateral_vertex_right == 1:
+				return
+		if quadrilateral_vertex_top == 1 && _quadrilateral_vertex_left == 0 && \
+			value == 1 && _quadrilateral_vertex_right == 0:
+				return
+		_quadrilateral_vertex_bottom = value
 # Only visible if shape == QUADRILATERAL
-@export var quadrilateral_vertex_left = 0.5
+var _quadrilateral_vertex_left = 0.5
+@export var quadrilateral_vertex_left: float:
+	get:
+		return _quadrilateral_vertex_left
+	set(value):
+		if quadrilateral_vertex_top == 0 && value == 1 && \
+			_quadrilateral_vertex_bottom == 0 && _quadrilateral_vertex_right == 1:
+				return
+		if quadrilateral_vertex_top == 1 && value == 0 && \
+			_quadrilateral_vertex_bottom == 1 && _quadrilateral_vertex_right == 0:
+				return
+		_quadrilateral_vertex_left = value
 # Only visible if shape == QUARTER_ARC
-@export var quarter_arc_inner_x = 0.5
+var _quarter_arc_inner_x = 0.5
+@export var quarter_arc_inner_x: float:
+	get:
+		return _quarter_arc_inner_x
+	set(value):
+		if value == 1 && _quarter_arc_inner_y == 1:
+			return
+		_quarter_arc_inner_x = value
 # Only visible if shape == QUARTER_ARC
-@export var quarter_arc_inner_y = 0.5
+var _quarter_arc_inner_y = 0.5
+@export var quarter_arc_inner_y: float:
+	get:
+		return _quarter_arc_inner_y
+	set(value):
+		if value == 1 && _quarter_arc_inner_x == 1:
+			return
+		_quarter_arc_inner_y = value
 
 # Gets the shape of the node with points between 0 and 1.
 # Ignores size and rotation.
@@ -60,8 +118,7 @@ func get_relative_shape() -> PackedVector2Array:
 	push_error("Invalid shape")
 	return []
 
-func get_rotated_shape() -> PackedVector2Array:
-	var shape = get_relative_shape()
+func get_rotated_shape(shape: PackedVector2Array) -> PackedVector2Array:
 	match shape_rotation:
 		Rotation.ANGLE_0:
 			return shape
@@ -91,7 +148,7 @@ func get_shape() -> PackedVector2Array:
 		Shape.INVERSE_QUARTER_CIRCLE, \
 		Shape.QUARTER_CIRCLE, \
 		Shape.QUARTER_ARC:
-			shape = get_rotated_shape()
+			shape = get_rotated_shape(get_relative_shape())
 		_:
 			shape = get_relative_shape()
 	
@@ -108,28 +165,10 @@ func get_shape2d() -> Shape2D:
 			var shape = RectangleShape2D.new()
 			shape.extents = shape_size / 2
 			return shape
-		Shape.INVERSE_QUARTER_CIRCLE:
+		Shape.INVERSE_QUARTER_CIRCLE, Shape.QUARTER_ARC:
 			if GameInfo.editing:
-				# only apply for editing because inverted quarter circles are concave and are thus whack
-				# Right triangles are close enough
-				var prev = shape_shape
-				shape_shape = Shape.RIGHT_TRIANGLE
 				var shape = ConvexPolygonShape2D.new()
-				shape.points = get_shape()
-				shape_shape = prev
-				return shape
-			var shape = ConcavePolygonShape2D.new()
-			shape.segments = get_shape()
-			return shape
-		Shape.QUARTER_ARC:
-			if GameInfo.editing:
-				# only apply for editing because inverted quarter circles are concave and are thus whack
-				# Right triangles are close enough
-				var prev = shape_shape
-				shape_shape = Shape.QUARTER_CIRCLE
-				var shape = ConvexPolygonShape2D.new()
-				shape.points = get_shape()
-				shape_shape = prev
+				shape.set_point_cloud(get_shape())
 				return shape
 			var shape = ConcavePolygonShape2D.new()
 			shape.segments = get_shape()

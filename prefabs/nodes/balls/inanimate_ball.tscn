@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://1u4j0gj6s8r7"]
+[gd_scene load_steps=6 format=3 uid="uid://c84gjvwdhw32"]
 
-[ext_resource type="Script" path="res://scripts/nodes/ball.gd" id="1_ps3hi"]
+[ext_resource type="Script" path="res://scripts/nodes/balls/ball.gd" id="1_ys2hx"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_qx6mg"]
 friction = 0.0
@@ -16,7 +16,7 @@ point_count = 2
 [sub_resource type="CircleShape2D" id="CircleShape2D_6xikl"]
 radius = 4.0
 
-[node name="Ball" type="RigidBody2D" groups=["Persist"]]
+[node name="InanimateBall" type="RigidBody2D" groups=["Persist"]]
 z_index = 11
 collision_layer = 129
 collision_mask = 129
@@ -26,7 +26,8 @@ contact_monitor = true
 can_sleep = false
 lock_rotation = true
 linear_damp = 1.2
-script = ExtResource("1_ps3hi")
+script = ExtResource("1_ys2hx")
+inner_color = Color(1, 0.784314, 0, 1)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_qdpj5")
@@ -34,12 +35,6 @@ shape = SubResource("CircleShape2D_qdpj5")
 [node name="ShootLine" type="Line2D" parent="."]
 unique_name_in_owner = true
 width_curve = SubResource("Curve_u0lu2")
-
-[node name="PrevLine" type="Line2D" parent="."]
-unique_name_in_owner = true
-width = 2.0
-width_curve = SubResource("Curve_u0lu2")
-default_color = Color(1, 1, 1, 0.45098)
 
 [node name="WaterDetector" type="Area2D" parent="."]
 collision_layer = 2

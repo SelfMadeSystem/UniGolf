@@ -48,15 +48,26 @@ class FloatAttribute:
 	func add_control_node(parent: Control):
 		super.add_control_node(parent)
 		
+		var label = Label.new()
+		
+		label.text = str("%.3f" % self.get_val())
+		
 		var range = HSlider.new()
 		range.value = self.get_val()
 		range.min_value = self.min
 		range.max_value = self.max
 		range.step = self.step
 		
-		range.connect("value_changed", self.set_val)
+		range.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		
+		range.connect("value_changed", func(v):
+			print(v, " ????")
+			self.set_val(v)
+			label.text = str("%.3f" % self.get_val())
+		)
 		
 		parent.add_child(range)
+		parent.add_child(label)
 	
 	static func create(
 		var_name: String,

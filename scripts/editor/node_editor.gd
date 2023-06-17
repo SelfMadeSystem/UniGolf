@@ -355,16 +355,19 @@ func play():
 	toggle_editor_hide()
 	grid_was_visible = $Grid.visible
 	$Grid.visible = false
+	for child in %PlaceButton.get_children():
+		child.queue_free()
 	var stuff = LevelSaver.serialize_level()
 	GameInfo.current_level = stuff
 	get_tree().change_scene_to_packed(preload("res://scenes/BlankPlaytest.tscn"))
-	LevelSaver.deserialize_level.bind(stuff).call_deferred()
+	LevelSaver.deserialize_level.call_deferred(stuff)
 
 func pause():
 	GameInfo.editing = true
 	toggle_editor_hide()
 	$Grid.visible = grid_was_visible
 	GameInfo.reload_scene()
+	set_current_object(current_object)
 
 
 func _notification(what):
@@ -418,8 +421,16 @@ func _on_objects_button_pressed():
 	var select = selectScene.instantiate()
 	$UI.add_child(select)
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/ball.tscn"),
+		"prefab": preload("res://prefabs/nodes/balls/ball.tscn"),
 		"name": "Ball"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/balls/reverse_ball.tscn"),
+		"name": "Reverse Ball"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/balls/inanimate_ball.tscn"),
+		"name": "Inanimate Ball"
 	})
 	select.add_object({
 		"prefab": preload("res://prefabs/nodes/goal.tscn"),

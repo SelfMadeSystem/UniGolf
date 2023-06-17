@@ -11,7 +11,7 @@ name = ""
 maps = Array[Dictionary]([{
 "name": "Unnamed Level ",
 "nodes": [{
-"name": "res://prefabs/nodes/ball.tscn",
+"name": "res://prefabs/nodes/balls/ball.tscn",
 "pos": Vector2(320, 896),
 "position": Vector2(320, 896)
 }, {

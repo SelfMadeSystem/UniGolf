@@ -8,9 +8,6 @@ func _ready():
 
 func deserialize_level(stuff: Dictionary):
 	var nodes: Array = stuff.get("nodes", [])
-	var end = Vector2(
-		stuff.get("end_pos", Vector2.ZERO),
-	)
 	
 	for a in nodes:
 		var node = deserialize_node(a)

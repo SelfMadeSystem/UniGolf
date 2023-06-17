@@ -353,21 +353,8 @@ func within_rect(rect: Rect2):
 	return rect.has_point(global_position + shape_size / 2)
 
 func _ready():
+	super._ready()
 	update_hitbox()
-	hitbox.visible = false
-	connect("mouse_entered", _on_mouse_entered)
-	connect("mouse_exited", _on_mouse_exited)
-
-func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
-	if hitbox.visible && GameInfo.editing && GameInfo.node_editor:
-		GameInfo.node_editor.handle_object_input(self, event)
-
-
-func _on_mouse_entered():
-	hitbox.visible = true
-
-func _on_mouse_exited():
-	hitbox.visible = false
 
 
 func get_bounding_rect() -> Rect2:

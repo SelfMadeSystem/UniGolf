@@ -28,6 +28,7 @@ var col_shape_radius:
 			col_shape.radius = value
 
 func _ready():
+	super._ready()
 	if !Engine.is_editor_hint():
 		$CollisionShape2D.shape = $CollisionShape2D.shape.duplicate()
 	col_shape = $CollisionShape2D.shape as CircleShape2D
@@ -56,7 +57,7 @@ func _process(_delta):
 
 func _on_body_entered(body):
 	if body is Ball:
-		if body.get_radius() >= get_radius():
+		if get_radius() - body.get_radius() < 6:
 			return
 		balls.append(body)
 

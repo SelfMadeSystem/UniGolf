@@ -191,3 +191,20 @@ func get_bounding_rect() -> Rect2:
 ## Returns true if this node is within a rect. The rect is absolute
 func within_rect(rect: Rect2):
 	return rect.has_point(global_position)
+
+func _ready():
+	connect("mouse_entered", _on_mouse_entered)
+	connect("mouse_exited", _on_mouse_exited)
+
+var hovering = false
+
+func _on_mouse_entered():
+	hovering = true
+
+func _on_mouse_exited():
+	hovering = false
+
+# Default :)
+func _input_event(_viewport: Node, event: InputEvent, _shape_idx: int):
+	if hovering && GameInfo.editing && GameInfo.node_editor:
+		GameInfo.node_editor.handle_object_input(self, event)

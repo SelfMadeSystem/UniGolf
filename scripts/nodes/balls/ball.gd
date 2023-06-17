@@ -39,9 +39,9 @@ var me: RigidBody2D
 
 # Draw the ball
 func _draw():
-	draw_circle(Vector2(0, col_shape.radius * shadow), get_radius() * (1 + outline), outline_color)
-	draw_circle(Vector2.ZERO, get_radius() * (1 + outline), outline_color)
-	draw_circle(Vector2.ZERO, get_radius(), inner_color)
+	draw_circle(Vector2(0, col_shape.radius * shadow), get_radius(), outline_color)
+	draw_circle(Vector2.ZERO, get_radius(), outline_color)
+	draw_circle(Vector2.ZERO, get_radius() * (1 - outline), inner_color)
 
 @onready var starting_position = global_position
 
@@ -72,6 +72,7 @@ func vanish():
 	tween.tween_callback(func(): visible = false)
 
 func _ready():
+	super._ready()
 	me = (self as Node) as RigidBody2D
 	if Engine.is_editor_hint():
 		col_shape = $CollisionShape2D.shape as CircleShape2D
@@ -81,6 +82,9 @@ func _ready():
 		
 	me.freeze = true
 	damp = me.linear_damp
+	
+	if col_shape_radius_temp_for_saving != null:
+		col_shape.radius = col_shape_radius_temp_for_saving
 	
 	GameInfo.reload.connect(reload)
 	GameInfo.start.connect(start)

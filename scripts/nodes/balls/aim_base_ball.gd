@@ -26,8 +26,9 @@ func _ready():
 		$WaterDetector.collision_mask = 0
 	
 	layer = me.collision_layer
-	me.collision_layer = 0
-	me.collision_mask = 0
+	if !GameInfo.editing:
+		me.collision_layer = 0
+		me.collision_mask = 0
 	
 	%PrevLine.clear_points()
 	%PrevLine.add_point(prev_shoot * line_length)
@@ -73,3 +74,7 @@ func _process(_delta):
 	if mouse_down && !limited:
 		%ShootLine.add_point(get_mouse_strength() * line_length)
 		%ShootLine.add_point(Vector2.ZERO)
+
+func get_bounding_rect() -> Rect2:
+	var v = Vector2(16, 16)
+	return Rect2(position - v, v * 2)

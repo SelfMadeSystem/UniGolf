@@ -1,6 +1,18 @@
 @tool
 extends Node
 
+## Reloads the node to its initial state (may not apply if node has persistent attributes; for node to decide)
+signal reload
+
+## Called when the user presses on the screen to start the level.
+## This is where things like moving platforms should start moving
+## Always emitted after reload()
+signal start
+
+## Called when the user unpresses from the screen to yeet the ball(s)
+signal unpress(pos: Vector2)
+
+
 @export var wall_color = Color.from_hsv(0, 1, 0.65)
 @export var water_color = Color.from_hsv(0.63, 0.82, 0.89)
 
@@ -89,8 +101,7 @@ func queue_reload_level():
 
 ## Just calls the reload function on all the nodes so that persistent nodes stay.
 func reload_level():
-	for node in get_tree().get_nodes_in_group("Persist"):
-		node.reload()
+	reload.emit()
 	reload_level_queued = false
 
 ## completely resets the level
@@ -111,5 +122,22 @@ func to_main_menu():
 	editing = false
 	node_editor = null
 	map_pack = null
+
+@onready var timer = get_tree().create_timer(0.1)
+
+func _unhandled_input(event):
+	if current_level.is_empty():
+		return
+	if editing:
+		return
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.pressed:
+				reload.emit()
+				start.emit()
+				timer = get_tree().create_timer(0.1)
+			elif timer.time_left <= 0:
+				unpress.emit(event.global_position)
+		
 
 signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)

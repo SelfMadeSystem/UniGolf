@@ -77,6 +77,10 @@ func _ready():
 	%PrevLine.clear_points()
 	%PrevLine.add_point(prev_shoot * line_length)
 	%PrevLine.add_point(Vector2.ZERO)
+	
+	GameInfo.reload.connect(reload)
+	GameInfo.start.connect(start)
+	GameInfo.unpress.connect(unpress)
 
 func unfreeze():
 	me.freeze = false
@@ -105,8 +109,8 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		state.linear_velocity -= diff * 0.05
 		state.linear_velocity *= 0.998
 	
-	if mouse_down && pos != starting_position && (!limited || GameInfo.node_editor != null):
-		GameInfo.queue_reload_level()
+#	if mouse_down && pos != starting_position && (!limited || GameInfo.node_editor != null):
+#		GameInfo.queue_reload_level()
 
 func reload():
 	var new_me = remake_myself()
@@ -117,6 +121,20 @@ func reload():
 	get_parent().remove_child(self)
 	queue_free()
 
+func start():
+	mouse_down = true
+
+func unpress(pos: Vector2):
+	mouse_down = false
+	me.freeze = false
+	var mouse_strength = get_mouse_strength()
+	%PrevLine.clear_points()
+	prev_shoot = mouse_strength
+	me.collision_layer = layer
+	me.collision_mask = layer
+	if mouse_strength.length_squared() >= 15 * 15:
+		me.linear_velocity = get_mouse_strength() * ball_speed
+
 func _process(_delta):
 	%ShootLine.clear_points()
 #	if !Input.is_mouse_button_pressed(1):
@@ -124,22 +142,3 @@ func _process(_delta):
 	if mouse_down && !limited:
 		%ShootLine.add_point(get_mouse_strength() * line_length)
 		%ShootLine.add_point(Vector2.ZERO)
-
-func _unhandled_input(event):
-	if !GameInfo.editing && !GameInfo.changing_scene:
-		if event is InputEventMouseButton:
-			if event.button_index == 1:
-				if !limited:
-					if event.pressed:
-						mouse_timer = get_tree().create_timer(0.1)
-					else:
-						if mouse_down && mouse_timer.time_left <= 0:
-							me.freeze = false
-							var mouse_strength = get_mouse_strength()
-							%PrevLine.clear_points()
-							prev_shoot = mouse_strength
-							me.collision_layer = layer
-							me.collision_mask = layer
-							if mouse_strength.length_squared() >= 15 * 15:
-								me.linear_velocity = get_mouse_strength() * ball_speed
-				mouse_down = event.pressed

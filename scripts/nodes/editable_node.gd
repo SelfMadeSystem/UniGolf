@@ -171,10 +171,6 @@ func var_updated():
 func resize(ratio: Vector2):
 	pass
 
-## Reloads the node to its initial state (may not apply if node has persistent attributes; for node to decide)
-func reload():
-	pass
-
 ## Returns true if this node contains a point. The point is relative
 func contains_point(point: Vector2):
 	return Rect2(-DEFAULT_SIZE, DEFAULT_SIZE * 2).has_point(point)

@@ -13,6 +13,10 @@ signal start
 signal unpress(pos: Vector2)
 
 
+## Called when the user unpresses too quickly to yeet the ball(s)
+signal quick_unpress
+
+
 @export var wall_color = Color.from_hsv(0, 1, 0.65)
 @export var water_color = Color.from_hsv(0.63, 0.82, 0.89)
 
@@ -138,6 +142,7 @@ func _unhandled_input(event):
 				timer = get_tree().create_timer(0.1)
 			elif timer.time_left <= 0:
 				unpress.emit(event.global_position)
-		
+			else:
+				quick_unpress.emit()
 
 signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)

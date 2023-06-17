@@ -81,6 +81,7 @@ func _ready():
 	GameInfo.reload.connect(reload)
 	GameInfo.start.connect(start)
 	GameInfo.unpress.connect(unpress)
+	GameInfo.quick_unpress.connect(quick_unpress)
 
 func unfreeze():
 	me.freeze = false
@@ -134,6 +135,10 @@ func unpress(pos: Vector2):
 	me.collision_mask = layer
 	if mouse_strength.length_squared() >= 15 * 15:
 		me.linear_velocity = get_mouse_strength() * ball_speed
+
+func quick_unpress():
+	mouse_down = false
+	%PrevLine.clear_points()
 
 func _process(_delta):
 	%ShootLine.clear_points()

@@ -43,7 +43,8 @@ maps = Array[Dictionary]([{
 "position": Vector2(608, 0),
 "shape_shape": 0,
 "shape_size": Vector2(32, 1024)
-}]
+}],
+"version": 1
 }])
 
 [node name="EditSelectLevelMenu" type="Control"]

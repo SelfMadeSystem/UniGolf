@@ -7,6 +7,7 @@ func _ready():
 	DirAccess.make_dir_recursive_absolute(SAVE_DIR)
 
 func deserialize_level(stuff: Dictionary):
+	stuff = LevelUpdater.update_level(stuff)
 	var nodes: Array = stuff.get("nodes", [])
 	
 	for a in nodes:
@@ -37,6 +38,7 @@ func serialize_level():
 		save_arr.append(get_saved_dict(node))
 	
 	return {
+		"version": LevelUpdater.CURRENT_VERSION,
 		"name": GameInfo.level_name,
 		"nodes": save_arr,
 	}

@@ -322,7 +322,7 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 				p = p.clamp(MIN_SIZE, MAX_SIZE).clamp(grid_size, MAX_SIZE)
 				
 				var size_ratio = p / rect.size
-				for node in selected_nodes: # FIXME: IT'S CALCULATED STUFF WRONG!!!!
+				for node in selected_nodes:
 					node.resize(size_ratio)
 					var r = node.get_bounding_rect()
 					var pos = r.position

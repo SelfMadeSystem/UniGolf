@@ -50,7 +50,7 @@ class FloatAttribute:
 		
 		var label = Label.new()
 		
-		label.text = str("%.3f" % self.get_val())
+		label.text = str("%.2f" % self.get_val())
 		
 		var range = HSlider.new()
 		range.value = self.get_val()
@@ -61,9 +61,8 @@ class FloatAttribute:
 		range.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
 		range.connect("value_changed", func(v):
-			print(v, " ????")
 			self.set_val(v)
-			label.text = str("%.3f" % self.get_val())
+			label.text = str("%.2f" % self.get_val())
 		)
 		
 		parent.add_child(range)

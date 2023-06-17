@@ -47,6 +47,10 @@ func reload():
 func start():
 	mouse_down = true
 
+
+func resize(ratio: Vector2):
+	pass # no resize
+
 func unpress(pos: Vector2):
 	mouse_down = false
 	me.freeze = false

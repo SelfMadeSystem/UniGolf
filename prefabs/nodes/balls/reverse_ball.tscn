@@ -35,10 +35,12 @@ shape = SubResource("CircleShape2D_qdpj5")
 
 [node name="ShootLine" type="Line2D" parent="."]
 unique_name_in_owner = true
+show_behind_parent = true
 width_curve = SubResource("Curve_u0lu2")
 
 [node name="PrevLine" type="Line2D" parent="."]
 unique_name_in_owner = true
+show_behind_parent = true
 width = 2.0
 width_curve = SubResource("Curve_u0lu2")
 default_color = Color(1, 1, 1, 0.45098)

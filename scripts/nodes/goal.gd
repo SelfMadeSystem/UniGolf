@@ -36,7 +36,7 @@ func _ready():
 
 func _draw():
 	draw_circle(Vector2.ZERO, get_radius(), outline_color)
-	draw_circle(Vector2.ZERO, get_radius() / (1 + outline), inner_color)
+	draw_circle(Vector2.ZERO, col_shape.radius, inner_color)
 
 
 func get_savable_attributes() -> Array:
@@ -47,7 +47,6 @@ func get_savable_attributes() -> Array:
 	return attrs
 
 func _process(_delta):
-	queue_redraw()
 	for ball in balls.duplicate():
 		var diff = ball.global_position - global_position
 		if diff.length_squared() < col_shape.radius * col_shape.radius:
@@ -57,6 +56,8 @@ func _process(_delta):
 
 func _on_body_entered(body):
 	if body is Ball:
+		if body.get_radius() >= get_radius():
+			return
 		balls.append(body)
 
 func _on_body_exited(body):
@@ -76,6 +77,7 @@ func resize(ratio: Vector2):
 	col_shape.radius *= r
 	var d = col_shape.radius - p
 	position += Vector2(d, d)
+	queue_redraw()
 
 func get_bounding_rect() -> Rect2:
 	return Rect2(position - Vector2(col_shape.radius, col_shape.radius),

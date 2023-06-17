@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bcnseoje7b2mr"]
 
 [node name="ObjectTemplate" type="Button"]
-custom_minimum_size = Vector2(64, 82)
+custom_minimum_size = Vector2(82, 112)
 
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
@@ -12,5 +12,6 @@ anchor_bottom = 1.0
 offset_top = -26.0
 grow_horizontal = 2
 grow_vertical = 0
-text = "Wall"
+text = "Inanimate Ball"
 horizontal_alignment = 1
+autowrap_mode = 2

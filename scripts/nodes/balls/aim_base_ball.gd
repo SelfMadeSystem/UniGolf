@@ -38,6 +38,8 @@ func _ready():
 	GameInfo.quick_unpress.connect(quick_unpress)
 
 func reload():
+	if persist:
+		return
 	var new_me = remake_myself()
 	new_me.prev_shoot = prev_shoot
 	new_me.mouse_down = true

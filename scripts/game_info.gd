@@ -1,6 +1,9 @@
 @tool
 extends Node
 
+## Called before "reload"ing. Cancels reload if bool in passed array is set to false
+signal pre_reload(v: Array)
+
 ## Reloads the node to its initial state (may not apply if node has persistent attributes; for node to decide)
 signal reload
 
@@ -128,6 +131,7 @@ func to_main_menu():
 	map_pack = null
 
 @onready var timer = get_tree().create_timer(0.1)
+var down = false
 
 func _unhandled_input(event):
 	if current_level.is_empty():
@@ -137,12 +141,18 @@ func _unhandled_input(event):
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if event.pressed:
-				reload.emit()
-				start.emit()
-				timer = get_tree().create_timer(0.1)
-			elif timer.time_left <= 0:
+				var arr = [true]
+				pre_reload.emit(arr)
+				if arr[0]:
+					down = true
+					reload.emit()
+					start.emit()
+					timer = get_tree().create_timer(0.1)
+			elif down && timer.time_left <= 0:
+				down = false
 				unpress.emit(event.global_position)
 			else:
+				down = false
 				quick_unpress.emit()
 
 signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)

@@ -44,6 +44,7 @@ class FloatAttribute:
 	var min = 0.0
 	var max = 1.0
 	var step = 0.1
+	var logarithmic = false
 	
 	func add_control_node(parent: Control):
 		super.add_control_node(parent)
@@ -56,7 +57,10 @@ class FloatAttribute:
 		range.value = self.get_val()
 		range.min_value = self.min
 		range.max_value = self.max
-		range.step = self.step
+		if self.step > 0:
+			range.step = self.step
+		
+		range.exp_edit = self.logarithmic
 		
 		range.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
@@ -74,7 +78,8 @@ class FloatAttribute:
 		name: String,
 		min: float,
 		max: float,
-		step: float):
+		step: float = 0,
+		logarithmic: bool = false):
 		var attr = FloatAttribute.new()
 		attr.var_name = var_name
 		attr.obj = obj
@@ -82,10 +87,59 @@ class FloatAttribute:
 		attr.min = min
 		attr.max = max
 		attr.step = step
+		attr.logarithmic = logarithmic
 		return attr
 
-# class CheckAttribute:
-# class ToggleAttribute:
+class CheckAttribute:
+	extends EditAttribute
+
+	func add_control_node(parent: Control):
+		super.add_control_node(parent)
+		
+		var check = CheckBox.new()
+		check.button_pressed = self.get_val()
+		
+		check.connect("toggled", func(v):
+			self.set_val(v)
+			self.obj.should_update_stuff.emit()
+		)
+		
+		parent.add_child(check)
+	
+	static func create(
+		var_name: String,
+		obj: EditableNode,
+		name: String):
+		var attr = CheckAttribute.new()
+		attr.var_name = var_name
+		attr.obj = obj
+		attr.name = name
+		return attr
+
+class ToggleAttribute:
+	extends EditAttribute
+
+	func add_control_node(parent: Control):
+		super.add_control_node(parent)
+		
+		var toggle = CheckButton.new()
+		toggle.button_pressed = self.get_val()
+		
+		toggle.connect("toggled", func(v):
+			self.set_val(v)
+			self.obj.should_update_stuff.emit()
+		)
+		
+		parent.add_child(toggle)
+	static func create(
+		var_name: String,
+		obj: EditableNode,
+		name: String):
+		var attr = ToggleAttribute.new()
+		attr.var_name = var_name
+		attr.obj = obj
+		attr.name = name
+		return attr
 
 class EnumAttribute:
 	extends EditAttribute
@@ -103,13 +157,10 @@ class EnumAttribute:
 		
 		options.connect("item_selected", func(v):
 			self.set_val(v)
+			self.obj.should_update_stuff.emit()
 		)
 		
 		parent.add_child(options)
-	
-	func set_val(v):
-		super.set_val(v)
-		self.obj.should_update_stuff.emit()
 	
 	static func create(
 		var_name: String,

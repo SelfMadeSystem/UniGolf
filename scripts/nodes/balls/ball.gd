@@ -34,6 +34,7 @@ func get_savable_attributes() -> Array:
 @export var shadow = 0.3
 @export var outline_color = Color.BLACK
 @export var inner_color = Color.WHITE
+@export var persist = false # TODO: Make this a level setting instead of object setting
 
 var me: RigidBody2D
 
@@ -86,6 +87,7 @@ func _ready():
 	if col_shape_radius_temp_for_saving != null:
 		col_shape.radius = col_shape_radius_temp_for_saving
 	
+	GameInfo.pre_reload.connect(pre_reload)
 	GameInfo.reload.connect(reload)
 	GameInfo.start.connect(start)
 
@@ -126,12 +128,22 @@ func get_menu_edit_attributes() -> Array:
 					self,
 					"Mass",
 					0.05,
-					5.00,
-					0.05,
+					25.00,
+					0.01,
+					true
 				))
+	base.append(
+		CheckAttribute.create("persist", self, "persist"),
+	)
 	return base
 
+func pre_reload(arr: Array):
+	if persist && me.linear_velocity.length_squared() > 1:
+		arr[0] = false
+
 func reload():
+	if persist:
+		return
 	var new_me = remake_myself()
 	get_parent().add_child(new_me)
 	get_parent().remove_child(self)

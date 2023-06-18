@@ -8,7 +8,6 @@ func add_object(obj: Dictionary): # TODO: Figure out a better way
 	var templateScene = preload("res://prefabs/editor/object_template.tscn")
 	var template = templateScene.instantiate() as Control
 	var prefab = prefabScene.instantiate()
-	print(template.custom_minimum_size)
 	prefab.prepare_as_sample(Vector2(template.custom_minimum_size.x, template.custom_minimum_size.x))
 	template.add_child(prefab)
 	template.get_node("Label").text = name

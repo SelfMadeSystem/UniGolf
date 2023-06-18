@@ -100,10 +100,11 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 	
 	var pos = state.transform.origin
 	if limited:
-		var diff = pos - limit_origin
+		var ccc = limit_origin + get_parent().global_position
+		var diff = pos - ccc
 		# If outside the limit radius, move back to the limit radius and bounce
 		if diff.length_squared() > limit_radius * limit_radius:
-			state.transform.origin = limit_origin + diff.normalized() * limit_radius
+			state.transform.origin = ccc + diff.normalized() * limit_radius
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
 			state.linear_velocity *= 0.9
 		state.linear_velocity -= diff * 0.05

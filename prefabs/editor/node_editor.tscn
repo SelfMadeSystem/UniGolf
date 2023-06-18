@@ -369,7 +369,5 @@ placeholder_text = "Level Name"
 [connection signal="pressed" from="UI/Bottom/Right/ObjectsButton" to="." method="_on_objects_button_pressed"]
 [connection signal="gui_input" from="UI/SaveDialogue/SaveDialogueExit" to="." method="_on_save_dialogue_exit_gui_input"]
 [connection signal="pressed" from="UI/SaveDialogue/SavePanel/HFlowContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="focus_entered" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_focus_entered"]
-[connection signal="focus_exited" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_focus_exited"]
 [connection signal="text_changed" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_changed"]
 [connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_submitted"]

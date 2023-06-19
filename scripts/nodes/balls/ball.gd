@@ -142,9 +142,9 @@ func get_menu_edit_attributes() -> Array:
 					0.01,
 					true
 				))
-	base.append(
-		CheckAttribute.create("persist", self, "persist"),
-	)
+#	base.append(
+#		CheckAttribute.create("persist", self, "persist"),
+#	)
 	return base
 
 func pre_reload(arr: Array):

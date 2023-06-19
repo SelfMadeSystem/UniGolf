@@ -36,6 +36,8 @@ func get_savable_attributes() -> Array:
 @export var inner_color = Color.WHITE
 @export var persist = false # TODO: Make this a level setting instead of object setting
 
+@export var friction = 1.5
+
 var me: RigidBody2D
 
 # Draw the ball
@@ -101,6 +103,9 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		GameInfo.contact_stuffs.emit(state, self)
 	
 	var pos = state.transform.origin
+	
+# Damp: https://github.com/godotengine/godot/blob/116f783db73f4bf7e9e96ae54dd3d0a20337cc8a/servers/physics_2d/godot_body_2d.cpp#LL575C33-L575C50
+	var total_damp = friction
 	if limited:
 		var ccc = limit_origin + get_parent().global_position
 		var diff = pos - ccc
@@ -108,9 +113,15 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		if diff.length_squared() > limit_radius * limit_radius:
 			state.transform.origin = ccc + diff.normalized() * limit_radius
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
-			state.linear_velocity *= 0.9
-		state.linear_velocity -= diff * 0.05
-		state.linear_velocity *= 0.998
+			
+		total_damp = max(3, total_damp)
+		var damp = 1.0 - state.step * total_damp
+		state.linear_velocity *= damp
+		state.linear_velocity -= diff * 25 * state.step
+	else:
+		var damp = 1.0 - state.step * total_damp
+		state.linear_velocity *= damp
+	me.linear_velocity = state.linear_velocity
 
 
 func resize(ratio: Vector2):
@@ -138,7 +149,7 @@ func get_menu_edit_attributes() -> Array:
 	return base
 
 func pre_reload(arr: Array):
-	if persist && me.linear_velocity.length_squared() > 1:
+	if !limited && persist && me.linear_velocity.length_squared() > 25:
 		arr[0] = false
 
 func reload():

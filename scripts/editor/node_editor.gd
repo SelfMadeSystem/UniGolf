@@ -488,11 +488,12 @@ func _on_name_text_submitted(new_text):
 var prev_height = 0
 
 func _process(__: float):
-	var height = DisplayServer.virtual_keyboard_get_height()
-	if height > 0:
-		if prev_height <= 0:
-			prev_height = %SavePanel.position.y
-		%SavePanel.position.y = get_viewport_rect().size.y - height
-	elif prev_height > 0:
-		%SavePanel.position.y = prev_height
-		prev_height = 0
+	if DisplayServer.has_feature(DisplayServer.FEATURE_VIRTUAL_KEYBOARD):
+		var height = DisplayServer.virtual_keyboard_get_height()
+		if height > 0:
+			if prev_height <= 0:
+				prev_height = %SavePanel.position.y
+			%SavePanel.position.y = get_viewport_rect().size.y - height
+		elif prev_height > 0:
+			%SavePanel.position.y = prev_height
+			prev_height = 0

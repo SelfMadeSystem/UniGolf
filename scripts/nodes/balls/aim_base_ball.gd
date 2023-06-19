@@ -4,7 +4,7 @@ class_name AimBaseBall
 extends Ball
 
 var mouse_down = false
-@export var ball_speed = 18.0
+@export var ball_speed = 30.0
 @export var mouse_limit = 125.0
 @export var line_length = 2.0
 
@@ -13,6 +13,19 @@ var prev_shoot: Vector2
 func get_mouse_strength() -> Vector2:
 	push_error("get_mouse_strength not implemented.")
 	return Vector2.ZERO
+
+
+func get_menu_edit_attributes() -> Array:
+	var base = super.get_menu_edit_attributes()
+	base.append(FloatAttribute.create(
+					"ball_speed",
+					self,
+					"Ball Speed",
+					5.0,
+					50.0,
+					1.0,
+				))
+	return base
 
 var layer = 0
 
@@ -55,6 +68,8 @@ func resize(ratio: Vector2):
 	pass # no resize
 
 func unpress(pos: Vector2):
+	if limited:
+		return
 	mouse_down = false
 	me.freeze = false
 	var mouse_strength = get_mouse_strength()

@@ -26,7 +26,6 @@ max_contacts_reported = 5
 contact_monitor = true
 can_sleep = false
 lock_rotation = true
-linear_damp = 1.2
 script = ExtResource("1_ys2hx")
 inner_color = Color(1, 0.784314, 0, 1)
 

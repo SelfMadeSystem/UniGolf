@@ -26,7 +26,6 @@ max_contacts_reported = 5
 contact_monitor = true
 can_sleep = false
 lock_rotation = true
-linear_damp = 1.2
 script = ExtResource("1_u3as7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]

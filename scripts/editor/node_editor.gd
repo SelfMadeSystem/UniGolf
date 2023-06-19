@@ -35,6 +35,8 @@ func _ready():
 	GameInfo.add_child.call_deferred(self)
 	%Name.text = GameInfo.level_name
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
+	
+	%PersistButton.button_pressed = GameInfo.is_persistant()
 
 func get_editing_rect() -> Rect2:
 	var min = Vector2.INF
@@ -497,3 +499,7 @@ func _process(__: float):
 		elif prev_height > 0:
 			%SavePanel.position.y = prev_height
 			prev_height = 0
+
+
+func _on_persist_button_toggled(button_pressed):
+	GameInfo.level_properties["persist"] = button_pressed

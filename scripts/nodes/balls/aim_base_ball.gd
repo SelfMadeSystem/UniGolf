@@ -15,17 +15,17 @@ func get_mouse_strength() -> Vector2:
 	return Vector2.ZERO
 
 
-func get_menu_edit_attributes() -> Array:
-	var base = super.get_menu_edit_attributes()
-	base.append(FloatAttribute.create(
-					"ball_speed",
-					self,
-					"Ball Speed",
-					5.0,
-					50.0,
-					1.0,
-				))
-	return base
+#func get_menu_edit_attributes() -> Array:
+#	var base = super.get_menu_edit_attributes()
+#	base.append(FloatAttribute.create( # uncertain if good idea
+#					"ball_speed",
+#					self,
+#					"Ball Speed",
+#					5.0,
+#					50.0,
+#					1.0,
+#				))
+#	return base
 
 var layer = 0
 
@@ -51,7 +51,7 @@ func _ready():
 	GameInfo.quick_unpress.connect(quick_unpress)
 
 func reload():
-	if persist:
+	if GameInfo.is_persistant():
 		return
 	var new_me = remake_myself()
 	new_me.prev_shoot = prev_shoot

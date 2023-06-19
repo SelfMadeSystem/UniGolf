@@ -13,6 +13,8 @@ func deserialize_level(stuff: Dictionary):
 	for a in nodes:
 		var node = deserialize_node(a)
 		get_tree().current_scene.add_child(node)
+	
+	GameInfo.level_properties = stuff.get("properties", {})
 
 func deserialize_node(stuff: Dictionary):
 	var scene: PackedScene = load(stuff["name"])
@@ -41,6 +43,7 @@ func serialize_level():
 		"version": LevelUpdater.CURRENT_VERSION,
 		"name": GameInfo.level_name,
 		"nodes": save_arr,
+		"properties": GameInfo.level_properties,
 	}
 
 func get_saved_dict(node: EditableNode):

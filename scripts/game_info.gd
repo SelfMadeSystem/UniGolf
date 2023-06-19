@@ -32,6 +32,9 @@ var pause_button: PauseButton
 var map_pack: MapPack
 
 var current_level: Dictionary = {}
+
+var level_properties: Dictionary = {}
+
 var editing = false
 
 var node_editor: NodeEditor = null
@@ -126,6 +129,7 @@ func to_main_menu():
 	pause_button = null
 	changing_scene = false
 	current_level = {}
+	level_properties = {}
 	editing = false
 	node_editor = null
 	map_pack = null
@@ -156,3 +160,10 @@ func _unhandled_input(event):
 				quick_unpress.emit()
 
 signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)
+
+
+"""
+Stuff level info
+"""
+func is_persistant():
+	return level_properties.get("persist", false)

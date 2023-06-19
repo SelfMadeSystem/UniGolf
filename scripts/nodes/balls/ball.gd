@@ -34,7 +34,6 @@ func get_savable_attributes() -> Array:
 @export var shadow = 0.3
 @export var outline_color = Color.BLACK
 @export var inner_color = Color.WHITE
-@export var persist = false # TODO: Make this a level setting instead of object setting
 
 @export var friction = 1.5
 
@@ -149,11 +148,11 @@ func get_menu_edit_attributes() -> Array:
 	return base
 
 func pre_reload(arr: Array):
-	if !limited && persist && me.linear_velocity.length_squared() > 25:
+	if !limited && GameInfo.is_persistant() && me.linear_velocity.length_squared() > 25:
 		arr[0] = false
 
 func reload():
-	if persist:
+	if GameInfo.is_persistant():
 		return
 	var new_me = remake_myself()
 	get_parent().add_child(new_me)

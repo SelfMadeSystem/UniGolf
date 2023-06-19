@@ -326,13 +326,14 @@ grow_vertical = 2
 [node name="SavePanel" type="Panel" parent="UI/SaveDialogue"]
 unique_name_in_owner = true
 layout_mode = 1
-anchors_preset = 2
+anchors_preset = -1
 anchor_top = 1.0
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 32.0
-offset_top = -160.0
-offset_right = 416.0
-offset_bottom = -96.0
+offset_left = 40.0
+offset_top = -169.0
+offset_right = -40.0
+offset_bottom = -100.0
 grow_vertical = 0
 
 [node name="HFlowContainer" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel"]
@@ -355,6 +356,11 @@ layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Level Name"
 
+[node name="PersistButton" type="CheckButton" parent="UI/SaveDialogue/SavePanel/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Persist:"
+
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/MoreButton" to="." method="_on_more_button_pressed"]
@@ -369,3 +375,4 @@ placeholder_text = "Level Name"
 [connection signal="pressed" from="UI/SaveDialogue/SavePanel/HFlowContainer/SaveButton" to="." method="_on_save_button_pressed"]
 [connection signal="text_changed" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_changed"]
 [connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_submitted"]
+[connection signal="toggled" from="UI/SaveDialogue/SavePanel/HFlowContainer/PersistButton" to="." method="_on_persist_button_toggled"]

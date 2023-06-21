@@ -47,12 +47,15 @@ func pause():
 		preload("res://scenes/PauseMenu.tscn").instantiate()
 	)
 
-var ending_scene = false
+var balls_in_goal = 0
 
 func start_end_scene():
-	if ending_scene:
+	var min_balls = get_ball_win_count()
+	if balls_in_goal >= min_balls:
 		return
-	
+	balls_in_goal += 1
+	if balls_in_goal < min_balls:
+		return
 	await get_tree().create_timer(0.5).timeout
 	end_scene()
 
@@ -130,6 +133,7 @@ func to_main_menu():
 	changing_scene = false
 	current_level = {}
 	level_properties = {}
+	balls_in_goal = 0
 	editing = false
 	node_editor = null
 	map_pack = null
@@ -167,3 +171,6 @@ Stuff level info
 """
 func is_persistant():
 	return level_properties.get("persist", false)
+
+func get_ball_win_count():
+	return level_properties.get("ball_win_count", 1)

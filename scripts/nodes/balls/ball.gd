@@ -54,6 +54,8 @@ var limit_origin = Vector2.ZERO
 var limit_radius = -1
 
 func set_limited(origin: Vector2, rad: float):
+	if limited:
+		return
 	limit_origin = origin
 	limit_radius = rad - get_radius()
 	limited = true
@@ -112,6 +114,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		if diff.length_squared() > limit_radius * limit_radius:
 			state.transform.origin = ccc + diff.normalized() * limit_radius
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
+			total_damp = 99
 			
 		total_damp = max(3, total_damp)
 		var damp = 1.0 - state.step * total_damp

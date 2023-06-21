@@ -37,6 +37,8 @@ func _ready():
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 	
 	%PersistButton.button_pressed = GameInfo.is_persistant()
+	%BallCount.value = GameInfo.get_ball_win_count()
+	%BallCountLabel.text = str(%BallCount.value)
 
 func get_editing_rect() -> Rect2:
 	var min = Vector2.INF
@@ -503,3 +505,8 @@ func _process(__: float):
 
 func _on_persist_button_toggled(button_pressed):
 	GameInfo.level_properties["persist"] = button_pressed
+
+
+func _on_ball_count_value_changed(value):
+	GameInfo.level_properties["ball_win_count"] = value
+	%BallCountLabel.text = str(value)

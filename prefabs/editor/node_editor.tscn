@@ -307,7 +307,6 @@ expand_icon = true
 
 [node name="SaveDialogue" type="Control" parent="UI"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -331,12 +330,12 @@ anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 40.0
-offset_top = -169.0
+offset_top = -205.0
 offset_right = -40.0
 offset_bottom = -100.0
 grow_vertical = 0
 
-[node name="HFlowContainer" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/SaveDialogue/SavePanel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -344,22 +343,50 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SaveButton" type="Button" parent="UI/SaveDialogue/SavePanel/HFlowContainer" groups=["EditorHide"]]
+[node name="HFlowContainer" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="SaveButton" type="Button" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer" groups=["EditorHide"]]
 custom_minimum_size = Vector2(64, 64)
 layout_mode = 2
 icon = ExtResource("10_rwrf8")
 expand_icon = true
 
-[node name="Name" type="LineEdit" parent="UI/SaveDialogue/SavePanel/HFlowContainer"]
+[node name="Name" type="LineEdit" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 placeholder_text = "Level Name"
 
-[node name="PersistButton" type="CheckButton" parent="UI/SaveDialogue/SavePanel/HFlowContainer"]
+[node name="HFlowContainer2" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel/VBoxContainer"]
+layout_mode = 2
+
+[node name="PersistButton" type="CheckButton" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Persist:"
+
+[node name="HFlowContainer" type="HFlowContainer" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2/HFlowContainer"]
+layout_mode = 2
+text = "Ball Count:"
+
+[node name="BallCount" type="HSlider" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 1.0
+max_value = 10.0
+value = 1.0
+
+[node name="BallCountLabel" type="Label" parent="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "1"
 
 [connection signal="pressed" from="UI/PauseButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Left/LeaveButton" to="." method="_on_leave_button_pressed"]
@@ -372,7 +399,8 @@ text = "Persist:"
 [connection signal="pressed" from="UI/Bottom/Right/PlaceButton" to="." method="_on_place_button_pressed"]
 [connection signal="pressed" from="UI/Bottom/Right/ObjectsButton" to="." method="_on_objects_button_pressed"]
 [connection signal="gui_input" from="UI/SaveDialogue/SaveDialogueExit" to="." method="_on_save_dialogue_exit_gui_input"]
-[connection signal="pressed" from="UI/SaveDialogue/SavePanel/HFlowContainer/SaveButton" to="." method="_on_save_button_pressed"]
-[connection signal="text_changed" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_changed"]
-[connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/HFlowContainer/Name" to="." method="_on_name_text_submitted"]
-[connection signal="toggled" from="UI/SaveDialogue/SavePanel/HFlowContainer/PersistButton" to="." method="_on_persist_button_toggled"]
+[connection signal="pressed" from="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer/SaveButton" to="." method="_on_save_button_pressed"]
+[connection signal="text_changed" from="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer/Name" to="." method="_on_name_text_changed"]
+[connection signal="text_submitted" from="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer/Name" to="." method="_on_name_text_submitted"]
+[connection signal="toggled" from="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2/PersistButton" to="." method="_on_persist_button_toggled"]
+[connection signal="value_changed" from="UI/SaveDialogue/SavePanel/VBoxContainer/HFlowContainer2/HFlowContainer/BallCount" to="." method="_on_ball_count_value_changed"]

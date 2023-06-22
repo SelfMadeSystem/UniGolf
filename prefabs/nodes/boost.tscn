@@ -8,7 +8,6 @@ points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
 [node name="Boost" type="Area2D" groups=["Persist"]]
 z_index = 2
 script = ExtResource("1_i0uex")
-allow_inverse_quarter_circle = true
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false

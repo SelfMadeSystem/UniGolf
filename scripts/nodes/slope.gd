@@ -7,7 +7,7 @@ func _draw():
 const Rot = ShapeUtils.Rotation
 
 @export var gravity_direction = Rot.ANGLE_0
-@export var grav = 3200
+@export var grav = 6400
 
 func get_grav_dir() -> Vector2:
 	match gravity_direction:

@@ -59,8 +59,8 @@ func set_limited(origin: Vector2, rad: float):
 	limit_origin = origin
 	limit_radius = rad - get_radius()
 	limited = true
-	me.set_collision_layer_value(1, false)
-	me.set_collision_mask_value(1, false)
+	me.collision_layer = 8 # so they only collide w/ each other
+	me.collision_mask = 8
 	var tween = get_tree().create_tween()
 	tween.tween_property(self, "modulate", Color.from_hsv(0, 0, 0.5), 0.1)
 

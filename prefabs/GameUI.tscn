@@ -1,0 +1,34 @@
+[gd_scene load_steps=3 format=3 uid="uid://b771lqkdptpav"]
+
+[ext_resource type="Script" path="res://scripts/game_ui.gd" id="1_ladty"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gn8ou"]
+font_size = 38
+
+[node name="GameUI" type="Control"]
+visible = false
+z_index = 4096
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_ladty")
+
+[node name="BallCount" type="Label" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "0/1"
+label_settings = SubResource("LabelSettings_gn8ou")
+horizontal_alignment = 2

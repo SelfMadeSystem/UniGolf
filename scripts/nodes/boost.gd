@@ -5,7 +5,7 @@ extends ShapedNode
 func _draw():
 	draw_colored_polygon(get_shape(), color)
 
-@export var speed = 2000
+@export var speed = 4000
 
 var balls: Array[Ball]
 

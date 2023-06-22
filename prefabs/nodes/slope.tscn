@@ -11,16 +11,21 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/sprite_size = 64.0
 shader_parameter/sprite = ExtResource("2_t6cco")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0kfp8"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x8fgp"]
 size = Vector2(64, 64)
 
 [node name="Slope" type="Area2D" groups=["Persist"]]
 z_index = 1
 material = SubResource("ShaderMaterial_xwhrl")
 script = ExtResource("1_nn4nn")
-allow_inverse_quarter_circle = true
+quadrilateral_vertex_top = 0.5
+quadrilateral_vertex_right = 0.5
+quadrilateral_vertex_bottom = 0.5
+quadrilateral_vertex_left = 0.5
+quarter_arc_inner_x = 0.5
+quarter_arc_inner_y = 0.5
 
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_0kfp8")
+shape = SubResource("RectangleShape2D_x8fgp")

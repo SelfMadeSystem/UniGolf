@@ -53,7 +53,7 @@ func start_end_scene():
 	var min_balls = get_ball_win_count()
 	if balls_in_goal >= min_balls:
 		return
-	balls_in_goal += 1
+	set_ball_goal_thing(balls_in_goal + 1)
 	if balls_in_goal < min_balls:
 		return
 	await get_tree().create_timer(0.5).timeout
@@ -95,6 +95,7 @@ func __into_scene(to: Dictionary, instant = false):
 			tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
 			tween.tween_callback(func():
 				changing_scene = false
+				set_ball_goal_thing(0)
 			)
 		else:
 			changing_scene = false
@@ -102,20 +103,15 @@ func __into_scene(to: Dictionary, instant = false):
 		if current_editor != null:
 			current.add_child(current_editor)
 			node_editor = current_editor
+		GameUi.visible = true
 	a.call_deferred()
-
-var reload_level_queued = false
-
-func queue_reload_level():
-	if reload_level_queued:
-		return
-	reload_level_queued = true
-	reload_level.call_deferred()
 
 ## Just calls the reload function on all the nodes so that persistent nodes stay.
 func reload_level():
+	if !is_persistant():
+		set_ball_goal_thing(0)
 	reload.emit()
-	reload_level_queued = false
+	start.emit()
 
 ## completely resets the level
 func reload_scene():
@@ -123,6 +119,7 @@ func reload_scene():
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 	a.call_deferred()
+	set_ball_goal_thing(0)
 
 func to_main_menu():
 	get_tree().change_scene_to_packed(preload("res://scenes/MainMenu.tscn"))
@@ -137,6 +134,8 @@ func to_main_menu():
 	editing = false
 	node_editor = null
 	map_pack = null
+	
+	GameUi.visible = false
 
 @onready var timer = get_tree().create_timer(0.1)
 var down = false
@@ -153,8 +152,7 @@ func _unhandled_input(event):
 				pre_reload.emit(arr)
 				if arr[0]:
 					down = true
-					reload.emit()
-					start.emit()
+					reload_level()
 					timer = get_tree().create_timer(0.1)
 			elif down && timer.time_left <= 0:
 				down = false
@@ -165,6 +163,9 @@ func _unhandled_input(event):
 
 signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)
 
+func set_ball_goal_thing(i: int):
+	GameUi.set_ball_count(i, get_ball_win_count())
+	balls_in_goal = i
 
 """
 Stuff level info

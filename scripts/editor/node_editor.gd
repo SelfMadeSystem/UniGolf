@@ -39,6 +39,7 @@ func _ready():
 	%PersistButton.button_pressed = GameInfo.is_persistant()
 	%BallCount.value = GameInfo.get_ball_win_count()
 	%BallCountLabel.text = str(%BallCount.value)
+	GameUi.visible = false
 
 func get_editing_rect() -> Rect2:
 	var min = Vector2.INF
@@ -221,7 +222,7 @@ func handle_object_input(object: EditableNode, event: InputEvent):
 
 func remove_out_of_bounds():
 	var rect = get_viewport_rect().grow(-1)
-	rect.size.y -= 64
+#	rect.size.y -= 64
 	var nodes_not_removed: Array[EditableNode] = []
 	for node in selected_nodes:
 		if !rect.intersects(node.get_bounding_rect()):
@@ -361,6 +362,11 @@ func play():
 	$Grid.visible = false
 	for child in %PlaceButton.get_children():
 		child.queue_free()
+	
+	GameUi.visible = true
+	
+	GameInfo.set_ball_goal_thing(0)
+	
 	var stuff = LevelSaver.serialize_level()
 	GameInfo.current_level = stuff
 	get_tree().change_scene_to_packed(preload("res://scenes/BlankPlaytest.tscn"))
@@ -370,6 +376,7 @@ func pause():
 	GameInfo.editing = true
 	toggle_editor_hide()
 	$Grid.visible = grid_was_visible
+	GameUi.visible = false
 	GameInfo.reload_scene()
 	set_current_object(current_object)
 

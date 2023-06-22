@@ -46,10 +46,20 @@ text = "Resume"
 custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 
+[node name="Restart" type="Button" parent="HFlowContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Restart"
+
+[node name="Control2" type="Control" parent="HFlowContainer"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
 [node name="Quit" type="Button" parent="HFlowContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "Quit"
 
 [connection signal="pressed" from="HFlowContainer/Resume" to="." method="_on_resume_pressed"]
+[connection signal="pressed" from="HFlowContainer/Restart" to="." method="_on_restart_pressed"]
 [connection signal="pressed" from="HFlowContainer/Quit" to="." method="_on_quit_pressed"]

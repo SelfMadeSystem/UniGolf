@@ -33,13 +33,15 @@ func _ready():
 	set_current_object(preload("res://prefabs/nodes/wall.tscn"))
 	get_parent().remove_child.call_deferred(self)
 	GameInfo.add_child.call_deferred(self)
-	%Name.text = GameInfo.level_name
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 	
+	GameUi.visible = false
+
+func level_loaded():
 	%PersistButton.button_pressed = GameInfo.is_persistant()
 	%BallCount.value = GameInfo.get_ball_win_count()
 	%BallCountLabel.text = str(%BallCount.value)
-	GameUi.visible = false
+	%Name.text = GameInfo.level_name
 
 func get_editing_rect() -> Rect2:
 	var min = Vector2.INF
@@ -70,6 +72,7 @@ func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
 	
 	update_editing_node_attributes()
 	reposition_elements()
+	move_selected_nodes_above()
 	
 	if edit:
 		%SelectionBox.activate()
@@ -100,6 +103,11 @@ func update_editing_node_attributes():
 func reposition_draggy_thingies():
 	for thing in draggy_thingies:
 		thing.reposition()
+
+func move_selected_nodes_above():
+	for node in selected_nodes:
+		var parent = node.get_parent()
+		parent.move_child(node, parent.get_child_count() - 1)
 
 func deyeet():
 	proceed_to_edit_nodes([])
@@ -488,7 +496,7 @@ func _on_save_dialogue_exit_gui_input(event:InputEvent):
 			if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 				%SaveDialogue.visible = false
 
-func _on_name_text_changed(new_text:String):
+func _on_name_text_changed(new_text: String):
 	GameInfo.level_name = new_text
 
 

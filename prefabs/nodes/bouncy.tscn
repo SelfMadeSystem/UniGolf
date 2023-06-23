@@ -6,7 +6,7 @@
 friction = 0.0
 bounce = 1.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nx3rb"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fjwap"]
 size = Vector2(64, 64)
 
 [node name="Bouncy" type="StaticBody2D" groups=["Persist"]]
@@ -26,4 +26,4 @@ quarter_arc_inner_y = 0.5
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_nx3rb")
+shape = SubResource("RectangleShape2D_fjwap")

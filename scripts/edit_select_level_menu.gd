@@ -27,6 +27,5 @@ func _on_bottom_button_pressed():
 	var lvl = default_map.get_map()
 	GameInfo.editing = true
 	GameInfo.current_scene = preload("res://scenes/BlankEditor.tscn")
-	GameInfo.level_name = lvl.get("name")
 	GameInfo.change_scene(lvl, true)
 	queue_free()

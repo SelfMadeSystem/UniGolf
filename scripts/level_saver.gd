@@ -15,6 +15,7 @@ func deserialize_level(stuff: Dictionary):
 		get_tree().current_scene.add_child(node)
 	
 	GameInfo.level_properties = stuff.get("properties", {})
+	GameInfo.level_name = stuff.get("name", "Unknown")
 
 func deserialize_node(stuff: Dictionary):
 	var scene: PackedScene = load(stuff["name"])

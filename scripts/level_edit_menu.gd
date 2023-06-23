@@ -10,7 +10,6 @@ var lvl: Dictionary
 func _on_edit_pressed():
 	GameInfo.editing = true
 	GameInfo.current_scene = preload("res://scenes/BlankEditor.tscn")
-	GameInfo.level_name = lvl.get("name")
 	GameInfo.change_scene(lvl, true)
 	queue_free()
 

@@ -83,8 +83,6 @@ func __into_scene(to: Dictionary, instant = false):
 	get_tree().change_scene_to_packed(current_scene)
 	current_level = to
 	
-	var current_editor = node_editor
-
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 		var current = get_tree().current_scene
@@ -100,9 +98,9 @@ func __into_scene(to: Dictionary, instant = false):
 		else:
 			changing_scene = false
 		
-		if current_editor != null:
-			current.add_child(current_editor)
-			node_editor = current_editor
+		if node_editor != null:
+#			current.add_child(node_editor)
+			node_editor.level_loaded()
 		GameUi.visible = true
 	a.call_deferred()
 

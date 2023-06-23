@@ -7,6 +7,8 @@
 script = ExtResource("2_7kr3r")
 level_data = ""
 add_level = false
+map_pack_data = null
+set_this_to_thing = null
 name = ""
 maps = Array[Dictionary]([{
 "name": "Unnamed Level ",
@@ -57,35 +59,93 @@ grow_vertical = 2
 script = ExtResource("1_g3o53")
 default_map = SubResource("Resource_4sy5h")
 
-[node name="ListOfLevels" type="VBoxContainer" parent="."]
+[node name="TabContainer" type="TabContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+tab_alignment = 1
+
+[node name="Levels" type="Control" parent="TabContainer"]
 layout_mode = 2
-offset_left = 300.0
-offset_top = 492.0
-offset_right = 340.0
-offset_bottom = 492.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Levels"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = -128.0
+offset_bottom = -128.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Back" type="Button" parent="."]
-custom_minimum_size = Vector2(64, 64)
-layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
-text = "x"
+[node name="ListOfLevels" type="VBoxContainer" parent="TabContainer/Levels/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
-[node name="BottomButton" type="Button" parent="."]
+[node name="NewLevel" type="Button" parent="TabContainer/Levels"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -32.0
+offset_left = -71.5
 offset_top = -31.0
-offset_right = 32.0
+offset_right = 71.5
 grow_horizontal = 2
 grow_vertical = 0
 text = "Create New Level"
 
+[node name="Map Packs" type="Control" parent="TabContainer"]
+visible = false
+layout_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="TabContainer/Map Packs"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = -128.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ListOfPacks" type="VBoxContainer" parent="TabContainer/Map Packs/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="NewPack" type="Button" parent="TabContainer/Map Packs"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -71.5
+offset_top = -31.0
+offset_right = 71.5
+grow_horizontal = 2
+grow_vertical = 0
+text = "Create New Map Pack"
+
+[node name="Back" type="Button" parent="."]
+custom_minimum_size = Vector2(64, 32)
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0
+text = "x"
+
+[connection signal="pressed" from="TabContainer/Levels/NewLevel" to="." method="_on_new_level_pressed"]
+[connection signal="pressed" from="TabContainer/Map Packs/NewPack" to="." method="_on_new_pack_pressed"]
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]
-[connection signal="pressed" from="BottomButton" to="." method="_on_bottom_button_pressed"]

@@ -23,6 +23,7 @@ LevelSaver="*res://scripts/level_saver.gd"
 ShapeUtils="*res://scripts/utils/shape_utils.gd"
 LevelUpdater="*res://scripts/level_updater.gd"
 GameUi="*res://prefabs/GameUI.tscn"
+MapPackSaver="*res://scripts/map_pack_saver.gd"
 
 [display]
 

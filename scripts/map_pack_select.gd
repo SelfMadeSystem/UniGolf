@@ -10,6 +10,9 @@ func add_local_maps():
 		maps.append(val)
 	if maps.size() > 0:
 		community_packs.insert(0, MapPack.create("Your Levels", maps))
+	
+	for val in MapPackSaver.get_saved_packs().values():
+		community_packs.insert(1, val)
 
 func create_button(pack: MapPack, container: Control):
 	var button = Button.new()

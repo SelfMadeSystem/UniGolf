@@ -128,6 +128,7 @@ func to_main_menu():
 	changing_scene = false
 	current_level = {}
 	level_properties = {}
+	main_ball = null
 	balls_in_goal = 0
 	editing = false
 	node_editor = null
@@ -173,3 +174,11 @@ func is_persistant():
 
 func get_ball_win_count():
 	return level_properties.get("ball_win_count", 1)
+
+var main_ball: AimBaseBall = null
+
+func get_main_ball() -> AimBaseBall:
+	return main_ball
+
+func set_main_ball(ball: AimBaseBall):
+	main_ball = ball

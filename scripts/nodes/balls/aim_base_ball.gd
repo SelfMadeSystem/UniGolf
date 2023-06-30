@@ -8,15 +8,29 @@ var mouse_down = false
 @export var mouse_limit = 125.0
 @export var line_length = 2.0
 
+var main_ball: bool:
+	get:
+		return GameInfo.get_main_ball() == self
+	set(value):
+		if value:
+			GameInfo.set_main_ball(self)
+		elif main_ball:
+			GameInfo.set_main_ball(null)
+
 var prev_shoot: Vector2
 
 func get_mouse_strength() -> Vector2:
-	push_error("get_mouse_strength not implemented.")
-	return Vector2.ZERO
+	var main_ball = GameInfo.get_main_ball()
+	if main_ball == null || main_ball == self:
+		var mouse_pos = get_local_mouse_position()
+		if mouse_pos.length_squared() > mouse_limit * mouse_limit:
+			mouse_pos = mouse_pos.normalized() * mouse_limit
+		return -mouse_pos
+	return main_ball.get_mouse_strength()
 
 
-#func get_menu_edit_attributes() -> Array:
-#	var base = super.get_menu_edit_attributes()
+func get_menu_edit_attributes() -> Array:
+	var base = super.get_menu_edit_attributes()
 #	base.append(FloatAttribute.create( # uncertain if good idea
 #					"ball_speed",
 #					self,
@@ -25,7 +39,12 @@ func get_mouse_strength() -> Vector2:
 #					50.0,
 #					1.0,
 #				))
-#	return base
+	base.append(ToggleAttribute.create( # uncertain if good idea
+					"main_ball",
+					self,
+					"Main Ball",
+				))
+	return base
 
 var layer = 0
 

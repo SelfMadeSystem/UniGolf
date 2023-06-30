@@ -99,6 +99,10 @@ func unfreeze():
 	$WaterDetector.collision_layer = 2
 	$WaterDetector.collision_mask = 2
 
+func prepare_as_sample(size: Vector2):
+	super.prepare_as_sample(size)
+	remove_from_group("Ball")
+
 func _integrate_forces(state: PhysicsDirectBodyState2D):
 	if state.get_contact_count() > 0:
 		GameInfo.contact_stuffs.emit(state, self)

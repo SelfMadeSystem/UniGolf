@@ -8,7 +8,7 @@ script = ExtResource("2_qw8n1")
 level_data = ""
 add_level = false
 map_pack_data = ""
-set_this_to_thing = null
+set_this_to_thing = false
 name = "Sample Levels "
 maps = [{
 "name": "Apple",

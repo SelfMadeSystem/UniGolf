@@ -35,6 +35,8 @@ func _ready():
 	GameInfo.add_child.call_deferred(self)
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
 	
+	added_nodes()
+	
 	GameUi.visible = false
 
 func level_loaded():
@@ -191,6 +193,7 @@ func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
 						var clone = node.duplicate()
 						node.add_sibling(clone)
 						clones.append(clone)
+					added_nodes()
 					proceed_to_edit_nodes(clones)
 					return true
 	return false
@@ -306,6 +309,7 @@ func _unhandled_input(event): # TODO: hopefully only use this to deselect, multi
 						node.shape_size = Vector2(64, 64)
 						node.position -= Vector2(32, 32)
 					get_tree().current_scene.add_child(node)
+					added_nodes()
 					proceed_to_edit_nodes([node])
 					set_mouse_pos(pos)
 				ActionEnum.SELECT:
@@ -356,6 +360,10 @@ var grid_was_visible = false
 func toggle_editor_hide():
 	for node in get_tree().get_nodes_in_group("EditorHide"):
 		node.visible = !node.visible
+
+func added_nodes():
+	%BallCount.max_value = max(get_tree().get_nodes_in_group("Ball").size(), 1)
+	%BallCount.value = min(%BallCount.value, %BallCount.max_value)
 
 func _on_play_button_pressed():
 	if GameInfo.editing:

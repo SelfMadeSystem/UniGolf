@@ -16,7 +16,7 @@ point_count = 2
 [sub_resource type="CircleShape2D" id="CircleShape2D_6xikl"]
 radius = 4.0
 
-[node name="ReverseBall" type="RigidBody2D" groups=["Persist"]]
+[node name="ReverseBall" type="RigidBody2D" groups=["Ball", "Persist"]]
 z_index = 11
 collision_layer = 129
 collision_mask = 129

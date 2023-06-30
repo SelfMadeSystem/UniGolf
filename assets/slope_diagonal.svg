@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="64mm"
+   height="64mm"
+   viewBox="0 0 64 64"
+   version="1.1"
+   id="svg5"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <g
+     id="layer1">
+    <rect
+       style="fill:#916f6f;stroke-width:7.42028;stroke-linecap:round;stroke-linejoin:round"
+       id="rect358"
+       width="64"
+       height="64"
+       x="1.266929e-07"
+       y="-64"
+       transform="scale(1,-1)" />
+    <path
+       id="rect1108-9"
+       style="fill:#483737;stroke-width:4.68117;stroke-linecap:round;stroke-linejoin:round"
+       d="M 35.882125,62.059 30.22531,33.77469 1.941,28.117875 l 2.8286194,-2.82862 28.2839456,5.65718 5.657179,28.283946 z" />
+    <path
+       id="rect1108-6"
+       style="fill:#483737;stroke-width:4.68117;stroke-linecap:round;stroke-linejoin:round"
+       d="m 47.195833,50.745292 -5.656813,-28.28431 -28.284311,-5.656816 2.828619,-2.828619 28.283946,5.65718 5.657179,28.283945 z" />
+    <path
+       id="rect1108-9-6"
+       style="fill:#483737;stroke-width:4.68117;stroke-linecap:round;stroke-linejoin:round"
+       d="m 58.509542,39.431583 -5.656815,-28.28431 -28.28431,-5.6568147 2.828619,-2.82862 28.283946,5.65718 5.657179,28.2839457 z" />
+  </g>
+</svg>

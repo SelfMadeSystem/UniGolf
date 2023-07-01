@@ -441,7 +441,6 @@ func set_current_object(a):
 	b.prepare_as_sample(Vector2(64, 64))
 	%PlaceButton.add_child(b)
 	current_object = a
-	set_action(ActionEnum.PLACE)
 
 func _on_objects_button_pressed():
 	var selectScene = preload("res://prefabs/editor/object_select.tscn")
@@ -483,7 +482,10 @@ func _on_objects_button_pressed():
 		"prefab": preload("res://prefabs/nodes/boost.tscn"),
 		"name": "Boost"
 	})
-	select.selected.connect(set_current_object)
+	select.selected.connect(func(a):
+		set_current_object(a)
+		set_action(ActionEnum.PLACE)
+	)
 
 
 func _on_leave_button_pressed():

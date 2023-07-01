@@ -203,6 +203,7 @@ offset_top = -33.5
 offset_right = 131.0
 offset_bottom = 33.5
 grow_vertical = 2
+mouse_filter = 0
 alignment = 1
 
 [node name="LeaveButton" type="Button" parent="UI/Bottom/Left" groups=["EditorHide"]]
@@ -248,6 +249,7 @@ offset_right = 30.0
 offset_bottom = 33.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 0
 alignment = 1
 
 [node name="PlayButton" type="Button" parent="UI/Bottom/Center" groups=["EditorHide"]]
@@ -269,6 +271,7 @@ offset_top = -33.0
 offset_bottom = 33.0
 grow_horizontal = 0
 grow_vertical = 2
+mouse_filter = 0
 alignment = 1
 
 [node name="DragButton" type="Button" parent="UI/Bottom/Right" groups=["EditorHide"]]

@@ -117,6 +117,7 @@ func _integrate_forces(state: PhysicsDirectBodyState2D):
 		# If outside the limit radius, move back to the limit radius and bounce
 		if diff.length_squared() > limit_radius * limit_radius:
 			state.transform.origin = ccc + diff.normalized() * limit_radius
+			position = state.transform.origin
 			state.linear_velocity = state.linear_velocity.reflect(diff.normalized().orthogonal())
 			total_damp = 99
 			

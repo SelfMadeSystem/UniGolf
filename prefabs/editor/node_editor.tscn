@@ -194,7 +194,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Left" type="VFlowContainer" parent="UI/Bottom"]
+[node name="Left" type="VFlowContainer" parent="UI/Bottom" groups=["EditorHide"]]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -236,7 +236,7 @@ icon = ExtResource("15_s77gr")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Center" type="VFlowContainer" parent="UI/Bottom"]
+[node name="Center" type="VFlowContainer" parent="UI/Bottom" groups=["EditorHide"]]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -259,7 +259,7 @@ icon = ExtResource("8_flewc")
 icon_alignment = 1
 expand_icon = true
 
-[node name="Right" type="VFlowContainer" parent="UI/Bottom"]
+[node name="Right" type="VFlowContainer" parent="UI/Bottom" groups=["EditorHide"]]
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0

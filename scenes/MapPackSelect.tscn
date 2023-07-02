@@ -4415,7 +4415,23 @@ grow_horizontal = 2
 grow_vertical = 2
 tab_alignment = 1
 
+[node name="Your Map Packs" type="Control" parent="TabContainer"]
+layout_mode = 2
+
+[node name="Container" type="VBoxContainer" parent="TabContainer/Your Map Packs"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 128.0
+offset_top = 128.0
+offset_right = -128.0
+offset_bottom = -128.0
+grow_horizontal = 2
+grow_vertical = 2
+
 [node name="Community" type="Control" parent="TabContainer"]
+visible = false
 layout_mode = 2
 
 [node name="Container" type="VBoxContainer" parent="TabContainer/Community"]

@@ -4,7 +4,7 @@ extends Control
 
 var lvl: Dictionary
 
-
+var menu: EditSelectLevelMenu
 
 
 func _on_edit_pressed():
@@ -15,8 +15,9 @@ func _on_edit_pressed():
 
 
 func _on_delete_pressed():
-	DirAccess.remove_absolute(LevelSaver.SAVE_DIR + LevelSaver.sanitize_file_name(level_name))
-	_on_cancel_pressed() # TODO: refresh the map list
+	DirAccess.remove_absolute(LevelSaver.CUSTOM_DIR + LevelSaver.sanitize_file_name(level_name))
+	menu.reload()
+	_on_cancel_pressed()
 
 
 func _on_cancel_pressed():

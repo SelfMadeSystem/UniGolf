@@ -1,9 +1,15 @@
+class_name EditSelectLevelMenu
 extends Control
 
 @export var default_map: MapPack
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+func reload():
+	for child in %ListOfLevels.get_children():
+		%ListOfLevels.remove_child(child)
+	
+	for child in %ListOfPacks.get_children():
+		%ListOfPacks.remove_child(child)
+	
 	var lvls = LevelSaver.get_saved_levels()
 	for key in lvls.keys():
 		var val = lvls.get(key)
@@ -20,6 +26,10 @@ func _ready():
 		button.connect("pressed", _on_map_button_pressed.bind(val))
 		%ListOfPacks.add_child(button)
 
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	reload()
+
 
 func _on_back_pressed():
 	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
@@ -27,6 +37,7 @@ func _on_back_pressed():
 func _on_level_button_pressed(lvl):
 	var level_edit_menu = preload("res://prefabs/level_edit_menu.tscn")
 	var inst = level_edit_menu.instantiate()
+	inst.menu = self
 	inst.lvl = lvl
 	inst.level_name = lvl.get("name")
 	GameInfo.get_tree().root.add_child(inst)
@@ -50,3 +61,21 @@ func _on_map_button_pressed(map: MapPack):
 
 func _on_new_pack_pressed():
 	get_tree().change_scene_to_file("res://scenes/MapPackEditor.tscn")
+
+
+func _on_import_level_pressed(): # TODO: Better checks to make sure is valid
+	var a = Marshalls.base64_to_variant(DisplayServer.clipboard_get())
+	if !(a is Dictionary):
+		OS.alert("Bad data")
+		return
+	LevelSaver.save_to_file(a)
+	reload()
+
+
+func _on_import_pack_pressed(): # TODO: Better checks to make sure is valid
+	var a = Marshalls.base64_to_variant(DisplayServer.clipboard_get())
+	if !(a is Dictionary):
+		OS.alert("Bad data")
+		return
+	MapPackSaver.save_to_file(MapPack.from_dict(a))
+	reload()

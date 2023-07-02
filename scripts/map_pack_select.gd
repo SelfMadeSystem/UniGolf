@@ -1,5 +1,6 @@
 extends Control
 
+@export var your_packs: Array[MapPack] = []
 @export var community_packs: Array[MapPack] = []
 @export var official_packs: Array[MapPack] = []
 @export var challenge_packs: Array[MapPack] = []
@@ -9,9 +10,12 @@ func add_local_maps():
 	for val in LevelSaver.get_saved_levels().values():
 		maps.append(val)
 	if maps.size() > 0:
-		community_packs.insert(0, MapPack.create("Your Levels", maps))
+		your_packs.insert(0, MapPack.create("Your Levels", maps))
 	
 	for val in MapPackSaver.get_saved_packs().values():
+		your_packs.insert(1, val)
+	
+	for val in MapPackSaver.get_saved_packs(true).values():
 		community_packs.insert(1, val)
 
 func create_button(pack: MapPack, container: Control):

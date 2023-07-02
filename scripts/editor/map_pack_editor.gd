@@ -63,3 +63,9 @@ func _on_add_all_pressed():
 	for item in items.values():
 		map_pack.maps.append(item)
 		add_item_ctrl(item)
+
+
+func _on_delete_pack_pressed():
+	DirAccess.remove_absolute(MapPackSaver.CUSTOM_DIR + MapPackSaver.sanitize_file_name(map_pack.name))
+	GameInfo.to_main_menu()
+

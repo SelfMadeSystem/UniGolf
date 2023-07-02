@@ -7,10 +7,10 @@
 script = ExtResource("2_7kr3r")
 level_data = ""
 add_level = false
-map_pack_data = null
-set_this_to_thing = null
+map_pack_data = ""
+set_this_to_thing = false
 name = ""
-maps = Array[Dictionary]([{
+maps = [{
 "name": "Unnamed Level ",
 "nodes": [{
 "name": "res://prefabs/nodes/balls/ball.tscn",
@@ -47,7 +47,7 @@ maps = Array[Dictionary]([{
 "shape_size": Vector2(32, 1024)
 }],
 "version": 1
-}])
+}]
 
 [node name="EditSelectLevelMenu" type="Control"]
 layout_mode = 3
@@ -103,6 +103,16 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Create New Level"
 
+[node name="ImportLevel" type="Button" parent="TabContainer/Levels"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 185.0
+grow_vertical = 0
+text = "Import From Clipboard"
+
 [node name="Map Packs" type="Control" parent="TabContainer"]
 visible = false
 layout_mode = 2
@@ -139,6 +149,16 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "Create New Map Pack"
 
+[node name="ImportPack" type="Button" parent="TabContainer/Map Packs"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 185.0
+grow_vertical = 0
+text = "Import From Clipboard"
+
 [node name="Back" type="Button" parent="."]
 custom_minimum_size = Vector2(64, 32)
 layout_mode = 0
@@ -147,5 +167,7 @@ offset_bottom = 8.0
 text = "x"
 
 [connection signal="pressed" from="TabContainer/Levels/NewLevel" to="." method="_on_new_level_pressed"]
+[connection signal="pressed" from="TabContainer/Levels/ImportLevel" to="." method="_on_import_level_pressed"]
 [connection signal="pressed" from="TabContainer/Map Packs/NewPack" to="." method="_on_new_pack_pressed"]
+[connection signal="pressed" from="TabContainer/Map Packs/ImportPack" to="." method="_on_import_pack_pressed"]
 [connection signal="pressed" from="Back" to="." method="_on_back_pressed"]

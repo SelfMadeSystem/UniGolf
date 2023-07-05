@@ -31,6 +31,7 @@ func create_buttons(packs: Array[MapPack], container: Control):
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_local_maps()
+	create_buttons(your_packs, $"TabContainer/Your Map Packs/Container")
 	create_buttons(community_packs, $TabContainer/Community/Container)
 	create_buttons(official_packs, $TabContainer/Official/Container)
 	create_buttons(challenge_packs, $TabContainer/Challenges/Container)

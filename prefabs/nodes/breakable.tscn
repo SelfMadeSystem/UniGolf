@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqimduiobqx2c"]
+
+[ext_resource type="Script" path="res://scripts/nodes/breakable.gd" id="1_7i7wj"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d6k7a"]
+friction = 0.0
+bounce = 1.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fe2ml"]
+size = Vector2(64, 64)
+
+[node name="Breakable" type="StaticBody2D" groups=["Persist"]]
+z_index = 6
+input_pickable = true
+physics_material_override = SubResource("PhysicsMaterial_d6k7a")
+script = ExtResource("1_7i7wj")
+quadrilateral_vertex_top = 0.5
+quadrilateral_vertex_right = 0.5
+quadrilateral_vertex_bottom = 0.5
+quadrilateral_vertex_left = 0.5
+quarter_arc_inner_x = 0.5
+quarter_arc_inner_y = 0.5
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_fe2ml")

@@ -486,6 +486,10 @@ func _on_objects_button_pressed():
 		"prefab": preload("res://prefabs/nodes/breakable.tscn"),
 		"name": "Breakable"
 	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/toggleable.tscn"),
+		"name": "Toggleable"
+	})
 	select.selected.connect(func(a):
 		set_current_object(a)
 		set_action(ActionEnum.PLACE)

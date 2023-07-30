@@ -29,7 +29,7 @@ func _ready():
 	GameInfo.contact_stuffs.connect(_on_ball_contact_stuffs)
 	GameInfo.reload.connect(reload)
 	orig_toggle_state = toggle_state
-	if !toggle_state:
+	if !GameInfo.editing && !toggle_state:
 		me.collision_layer = 0
 		me.collision_mask = 0
 

@@ -6,6 +6,9 @@ extends EditableNode
 @export var outline = 0.4
 @export var outline_color = Color.ORANGE
 @export var inner_color = Color.BLACK
+@export var inner_color_closed = Color.FIREBRICK
+
+var closed = false
 
 var col_shape: CircleShape2D
 
@@ -34,10 +37,26 @@ func _ready():
 	col_shape = $CollisionShape2D.shape as CircleShape2D
 	if col_shape_radius_temp_for_saving != null:
 		col_shape.radius = col_shape_radius_temp_for_saving
+	
+	if GameInfo.switches_for_goal > GameInfo.switches_for_goal_active:
+		closed = true
+	GameInfo.goal_active.connect(activate)
+	GameInfo.goal_inactive.connect(disactivate)
+
+func activate():
+	closed = false
+	queue_redraw()
+
+func disactivate():
+	closed = true
+	queue_redraw()
 
 func _draw():
 	draw_circle(Vector2.ZERO, get_radius(), outline_color)
-	draw_circle(Vector2.ZERO, col_shape.radius, inner_color)
+	if closed:
+		draw_circle(Vector2.ZERO, col_shape.radius, inner_color_closed)
+	else:
+		draw_circle(Vector2.ZERO, col_shape.radius, inner_color)
 
 
 func get_savable_attributes() -> Array:
@@ -48,6 +67,8 @@ func get_savable_attributes() -> Array:
 	return attrs
 
 func _process(_delta):
+	if closed:
+		return
 	for ball in balls.duplicate():
 		var diff = ball.global_position - global_position
 		if diff.length_squared() < col_shape.radius * col_shape.radius:
@@ -56,6 +77,8 @@ func _process(_delta):
 			GameInfo.start_end_scene()
 
 func _on_body_entered(body):
+	if closed:
+		return
 	if body is Ball:
 		if get_radius() - body.get_radius() < 6:
 			return

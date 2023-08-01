@@ -20,9 +20,6 @@ signal unpress(pos: Vector2)
 signal quick_unpress
 
 
-@export var wall_color = Color.from_hsv(0, 1, 0.65)
-@export var water_color = Color.from_hsv(0.63, 0.82, 0.89)
-
 @export var level_name = "Level"
 
 @export var changing_scene: bool
@@ -93,7 +90,7 @@ func __into_scene(to: Dictionary, instant = false):
 			tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
 			tween.tween_callback(func():
 				changing_scene = false
-				set_ball_goal_thing(0)
+				reset_level()
 			)
 		else:
 			changing_scene = false
@@ -107,7 +104,7 @@ func __into_scene(to: Dictionary, instant = false):
 ## Just calls the reload function on all the nodes so that persistent nodes stay.
 func reload_level():
 	if !is_persistant():
-		set_ball_goal_thing(0)
+		reset_level()
 	reload.emit()
 	start.emit()
 
@@ -117,7 +114,12 @@ func reload_scene():
 	var a = func():
 		LevelSaver.deserialize_level(current_level)
 	a.call_deferred()
+	reset_level()
+
+func reset_level():
 	set_ball_goal_thing(0)
+	switches_for_goal = 0
+	switches_for_goal_active = 0
 
 func to_main_menu():
 	get_tree().change_scene_to_packed(preload("res://scenes/MainMenu.tscn"))
@@ -133,6 +135,8 @@ func to_main_menu():
 	editing = false
 	node_editor = null
 	map_pack = null
+	switches_for_goal = 0
+	switches_for_goal_active = 0
 	
 	GameUi.visible = false
 
@@ -165,6 +169,18 @@ signal contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball)
 func set_ball_goal_thing(i: int):
 	GameUi.set_ball_count(i, get_ball_win_count())
 	balls_in_goal = i
+
+
+"""
+Switches I guess
+"""
+
+var switches_for_goal = 0
+var switches_for_goal_active = 0
+
+signal goal_active
+signal goal_inactive
+
 
 """
 Stuff level info

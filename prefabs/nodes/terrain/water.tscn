@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://bsdmeuxbkek3y"]
 
-[ext_resource type="Script" path="res://scripts/nodes/water.gd" id="1_ggoop"]
+[ext_resource type="Script" path="res://scripts/nodes/terrain/water.gd" id="1_ggoop"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0wfml"]
 size = Vector2(64, 64)

@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://bp34lje8i1wca"]
+
+[ext_resource type="Script" path="res://scripts/nodes/terrain/boost.gd" id="1_4l5gj"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_4eoxa"]
+points = PackedVector2Array(32, 0, 64, 32, 32, 64, 0, 32)
+
+[node name="Boost" type="Area2D" groups=["Persist"]]
+z_index = 2
+script = ExtResource("1_4l5gj")
+
+[node name="HitBox" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("ConvexPolygonShape2D_4eoxa")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

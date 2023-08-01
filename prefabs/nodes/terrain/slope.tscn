@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c5v0ra6f4m4j4"]
 
 [ext_resource type="Shader" path="res://assets/shaders/slope.gdshader" id="1_je4rr"]
-[ext_resource type="Script" path="res://scripts/nodes/slope.gd" id="1_nn4nn"]
+[ext_resource type="Script" path="res://scripts/nodes/terrain/slope.gd" id="1_nn4nn"]
 [ext_resource type="Texture2D" uid="uid://bms5s3na3ow4w" path="res://assets/slope.svg" id="2_t6cco"]
 [ext_resource type="Texture2D" uid="uid://0kkg0dns22im" path="res://assets/slope_diagonal.svg" id="4_04ybh"]
 
@@ -12,7 +12,7 @@ shader_parameter/offset = Vector2(0, 0)
 shader_parameter/sprite_size = 64.0
 shader_parameter/sprite = ExtResource("2_t6cco")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_vmlp3"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3m7wj"]
 size = Vector2(64, 64)
 
 [node name="Slope" type="Area2D" groups=["Persist"]]
@@ -31,4 +31,4 @@ quarter_arc_inner_y = 0.5
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_vmlp3")
+shape = SubResource("RectangleShape2D_3m7wj")

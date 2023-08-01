@@ -30,7 +30,7 @@ func _ready():
 	set_grid_size(GRID_BIG)
 	GameInfo.current_scene = preload("res://scenes/BlankPlaytest.tscn")
 	GameInfo.node_editor = self
-	set_current_object(preload("res://prefabs/nodes/wall.tscn"))
+	set_current_object(preload("res://prefabs/nodes/walls/wall.tscn"))
 	get_parent().remove_child.call_deferred(self)
 	GameInfo.add_child.call_deferred(self)
 	($Grid.material as ShaderMaterial).set_shader_parameter("offset", grid_offset)
@@ -149,7 +149,7 @@ enum ActionEnum { DRAG, SELECT, PLACE }
 
 var current_action = ActionEnum.DRAG
 
-var current_object = preload("res://prefabs/nodes/wall.tscn")
+var current_object = preload("res://prefabs/nodes/walls/wall.tscn")
 
 func set_action(action: ActionEnum):
 	current_action = action
@@ -463,32 +463,36 @@ func _on_objects_button_pressed():
 		"name": "Goal"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/wall.tscn"),
+		"prefab": preload("res://prefabs/nodes/walls/wall.tscn"),
 		"name": "Wall"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/water.tscn"),
+		"prefab": preload("res://prefabs/nodes/terrain/water.tscn"),
 		"name": "Water"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/slope.tscn"),
+		"prefab": preload("res://prefabs/nodes/terrain/slope.tscn"),
 		"name": "Slope"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/bouncy.tscn"),
+		"prefab": preload("res://prefabs/nodes/walls/bouncy.tscn"),
 		"name": "Bouncy"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/boost.tscn"),
+		"prefab": preload("res://prefabs/nodes/terrain/boost.tscn"),
 		"name": "Boost"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/breakable.tscn"),
+		"prefab": preload("res://prefabs/nodes/walls/breakable.tscn"),
 		"name": "Breakable"
 	})
 	select.add_object({
-		"prefab": preload("res://prefabs/nodes/toggleable.tscn"),
+		"prefab": preload("res://prefabs/nodes/walls/toggleable.tscn"),
 		"name": "Toggleable"
+	})
+	select.add_object({
+		"prefab": preload("res://prefabs/nodes/terrain/switch.tscn"),
+		"name": "Switch"
 	})
 	select.selected.connect(func(a):
 		set_current_object(a)

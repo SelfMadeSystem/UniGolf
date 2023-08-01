@@ -1,19 +1,21 @@
-[gd_scene load_steps=4 format=3 uid="uid://yb6e1rltk48v"]
+[gd_scene load_steps=4 format=3 uid="uid://cdtudynggvbve"]
 
-[ext_resource type="Script" path="res://scripts/nodes/toggleable.gd" id="1_sf8hp"]
+[ext_resource type="Script" path="res://scripts/nodes/walls/bouncy.gd" id="1_6hcvg"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_d6k7a"]
 friction = 0.0
 bounce = 1.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_x5xlf"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bg2mw"]
 size = Vector2(64, 64)
 
-[node name="Toggleable" type="StaticBody2D" groups=["Persist"]]
+[node name="Bouncy" type="StaticBody2D" groups=["Persist"]]
 z_index = 6
 input_pickable = true
 physics_material_override = SubResource("PhysicsMaterial_d6k7a")
-script = ExtResource("1_sf8hp")
+script = ExtResource("1_6hcvg")
+color = Color(1, 0, 0, 1)
+speed = 2000
 quadrilateral_vertex_top = 0.5
 quadrilateral_vertex_right = 0.5
 quadrilateral_vertex_bottom = 0.5
@@ -24,4 +26,4 @@ quarter_arc_inner_y = 0.5
 [node name="HitBox" type="CollisionShape2D" parent="."]
 visible = false
 position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_x5xlf")
+shape = SubResource("RectangleShape2D_bg2mw")

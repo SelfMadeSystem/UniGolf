@@ -46,14 +46,14 @@ func level_loaded():
 	%Name.text = GameInfo.level_name
 
 func get_editing_rect() -> Rect2:
-	var min = Vector2.INF
-	var max = -Vector2.INF
+	var min_n = Vector2.INF
+	var max_n = -Vector2.INF
 	
 	for node in selected_nodes:
 		var rect = node.get_bounding_rect()
-		min = min.clamp(-Vector2.INF, rect.position)
-		max = max.clamp(rect.position + rect.size, Vector2.INF)
-	return Rect2(min, max - min)
+		min_n = min_n.clamp(-Vector2.INF, rect.position)
+		max_n = max_n.clamp(rect.position + rect.size, Vector2.INF)
+	return Rect2(min_n, max_n - min_n)
 
 func proceed_to_edit_nodes(nodes: Array[EditableNode], edit = true):
 	for node in selected_nodes:
@@ -168,7 +168,7 @@ enum ButtonEnum { NONE, RESIZE, ROTATE, INFO, TRASH, COPY, NODE }
 
 var button_pressed: ButtonEnum = ButtonEnum.NONE
 
-func on_button_input(event: InputEvent, type: ButtonEnum, button: Control):
+func on_button_input(event: InputEvent, type: ButtonEnum, _button: Control):
 	if event is InputEventMouseButton:
 		if event.button_index == 1 && event.pressed:
 			match type:
@@ -385,8 +385,12 @@ func play():
 	
 	var stuff = LevelSaver.serialize_level()
 	GameInfo.current_level = stuff
-	get_tree().change_scene_to_packed(preload("res://scenes/BlankPlaytest.tscn"))
-	LevelSaver.deserialize_level.call_deferred(stuff)
+	var new = preload("res://scenes/BlankPlaytest.tscn").instantiate()
+	get_tree().current_scene.queue_free()
+	get_tree().root.remove_child(get_tree().current_scene)
+	get_tree().root.add_child(new)
+	get_tree().current_scene = new
+	LevelSaver.deserialize_level(stuff)
 
 func pause():
 	GameInfo.editing = true

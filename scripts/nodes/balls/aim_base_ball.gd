@@ -83,10 +83,10 @@ func start():
 	mouse_down = true
 
 
-func resize(ratio: Vector2):
+func resize(_ratio: Vector2):
 	pass # no resize
 
-func unpress(pos: Vector2):
+func unpress(_pos: Vector2):
 	if limited:
 		return
 	mouse_down = false

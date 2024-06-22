@@ -77,29 +77,35 @@ func change_scene(to: Dictionary, instant = false):
 		tween.tween_callback(__into_scene.bind(to))
 
 func __into_scene(to: Dictionary, instant = false):
-	get_tree().change_scene_to_packed(current_scene)
+	var new = current_scene.instantiate()
+	get_tree().current_scene.queue_free()
+	get_tree().root.remove_child(get_tree().current_scene)
+	get_tree().root.add_child(new)
+	get_tree().current_scene = new
 	current_level = to
 	
-	var a = func():
-		LevelSaver.deserialize_level(current_level)
-		var current = get_tree().current_scene
-		
-		if !instant:
-			current.global_position = Vector2(get_viewport().get_visible_rect().size.x * 1.5, 0)
-			var tween = get_tree().create_tween()
-			tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
-			tween.tween_callback(func():
-				changing_scene = false
-				reset_level()
-			)
-		else:
+	var current = get_tree().current_scene
+	print(current)
+	if current == null:
+		return
+
+	LevelSaver.deserialize_level(current_level)
+	
+	if !instant:
+		current.global_position = Vector2(get_viewport().get_visible_rect().size.x * 1.5, 0)
+		var tween = get_tree().create_tween()
+		tween.tween_property(current, "global_position", Vector2(0, 0), 0.5)
+		tween.tween_callback(func():
 			changing_scene = false
-		
-		if node_editor != null:
+			reset_level()
+		)
+	else:
+		changing_scene = false
+	
+	if node_editor != null:
 #			current.add_child(node_editor)
-			node_editor.level_loaded()
-		GameUi.visible = true
-	a.call_deferred()
+		node_editor.level_loaded()
+	GameUi.visible = true
 
 ## Just calls the reload function on all the nodes so that persistent nodes stay.
 func reload_level():
@@ -110,10 +116,12 @@ func reload_level():
 
 ## completely resets the level
 func reload_scene():
-	get_tree().change_scene_to_packed(current_scene)
-	var a = func():
-		LevelSaver.deserialize_level(current_level)
-	a.call_deferred()
+	var new = current_scene.instantiate()
+	get_tree().current_scene.queue_free()
+	get_tree().root.remove_child(get_tree().current_scene)
+	get_tree().root.add_child(new)
+	get_tree().current_scene = new
+	LevelSaver.deserialize_level(current_level)
 	reset_level()
 
 func reset_level():

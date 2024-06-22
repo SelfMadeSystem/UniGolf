@@ -33,7 +33,7 @@ func _ready():
 		me.collision_layer = 0
 		me.collision_mask = 0
 
-func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball):
+func _on_ball_contact_stuffs(_stuff: PhysicsDirectBodyState2D, _ball: Ball):
 	toggle_state = !toggle_state
 	queue_redraw()
 	if toggle_state:

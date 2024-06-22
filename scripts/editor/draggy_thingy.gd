@@ -15,19 +15,20 @@ func reposition():
 	pos += obj.position
 	global_position = pos
 
-func roundThing(v: float, size: float, offset: float, roundTo: float) -> float:
-		return ((roundf((v * size + offset) / roundTo)) * roundTo - offset) / size
+@warning_ignore("SHADOWED_VARIABLE_BASE_CLASS")
+func round_thing(v: float, size: float, offset: float, round_to: float) -> float:
+	return ((roundf((v * size + offset) / round_to)) * round_to - offset) / size
 
 func calc_thing(pos: Vector2):
-	var min = attr.start
-	var max = attr.end
+	var min_n = attr.start
+	var max_n = attr.end
 	
 	var obj = attr.obj
 	if obj is ShapedNode:
-		min *= obj.shape_size
-		max *= obj.shape_size
-	min += obj.position
-	max += obj.position
+		min_n *= obj.shape_size
+		max_n *= obj.shape_size
+	min_n += obj.position
+	max_n += obj.position
 	
 	"""
 	lerped = min + (max - min) * val # we want to find val
@@ -35,34 +36,34 @@ func calc_thing(pos: Vector2):
 	(lerped - min) / (max - min) = val
 	"""
 	
-	var val = (pos - min) / (max - min)
+	var val = (pos - min_n) / (max_n - min_n)
 	
 	if abs(val.x) == INF:
 		val.x = 0
 	if abs(val.y) == INF:
 		val.y = 0 # they're inf if they have the same x or y
 	
-	if min.x == max.x: # round to grid if line is vertical
+	if min_n.x == max_n.x: # round to grid if line is vertical
 		var roundTo = GameInfo.node_editor.grid_size.y
 		var roundOffset = GameInfo.node_editor.grid_offset.y
 		
-		if min.y < max.y:
-			roundOffset += min.y
+		if min_n.y < max_n.y:
+			roundOffset += min_n.y
 		else:
-			roundOffset -= min.y
+			roundOffset -= min_n.y
 		
-		val.y = roundThing(val.y, attr.obj.shape_size.y, roundOffset, roundTo)
+		val.y = round_thing(val.y, attr.obj.shape_size.y, roundOffset, roundTo)
 		
-	elif min.y == max.y: # round to grid if line is horizontal
+	elif min_n.y == max_n.y: # round to grid if line is horizontal
 		var roundTo = GameInfo.node_editor.grid_size.x
 		var roundOffset = GameInfo.node_editor.grid_offset.x
 		
-		if min.x < max.x:
-			roundOffset += min.x
+		if min_n.x < max_n.x:
+			roundOffset += min_n.x
 		else:
-			roundOffset -= min.x
+			roundOffset -= min_n.x
 		
-		val.x = roundThing(val.x, attr.obj.shape_size.x, roundOffset, roundTo)
+		val.x = round_thing(val.x, attr.obj.shape_size.x, roundOffset, roundTo)
 	
 	val.x = clamp(val.x, 0, 1)
 	val.y = clamp(val.y, 0, 1)

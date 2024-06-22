@@ -13,7 +13,7 @@ config_version=5
 config/name="UniGolf"
 run/main_scene="res://scenes/MainMenu.tscn"
 config/quit_on_go_back=false
-config/features=PackedStringArray("4.1", "GL Compatibility")
+config/features=PackedStringArray("4.2", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
@@ -24,6 +24,13 @@ ShapeUtils="*res://scripts/utils/shape_utils.gd"
 LevelUpdater="*res://scripts/level_updater.gd"
 GameUi="*res://prefabs/GameUI.tscn"
 MapPackSaver="*res://scripts/map_pack_saver.gd"
+
+[debug]
+
+gdscript/warnings/shadowed_variable=0
+gdscript/warnings/confusable_identifier=0
+gdscript/warnings/confusable_local_declaration=0
+gdscript/warnings/confusable_local_usage=0
 
 [display]
 

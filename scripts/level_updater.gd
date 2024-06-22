@@ -40,8 +40,8 @@ func update_level(lvl: Dictionary) -> Dictionary:
 ## Fixes old ball location
 func update_0_to_1(lvl: Dictionary):
 	for node in lvl.get("nodes", []):
-		var name = node.get("name", "")
-		if name == "res://prefabs/nodes/ball.tscn":
+		var n_name = node.get("n_name", "")
+		if n_name == "res://prefabs/nodes/ball.tscn":
 			node["name"] = "res://prefabs/nodes/balls/ball.tscn"
 
 ## Removes old "persist" on nodes
@@ -53,18 +53,19 @@ func update_1_to_2(lvl: Dictionary):
 ## Fixes old location for a lot of stuff
 func update_2_to_3(lvl: Dictionary):
 	for node in lvl.get("nodes", []):
-		var name = node.get("name", "")
-		if name == "res://prefabs/nodes/boost.tscn":
-			node["name"] = "res://prefabs/nodes/terrain/boost.tscn"
-		elif name == "res://prefabs/nodes/slope.tscn":
-			node["name"] = "res://prefabs/nodes/terrain/slope.tscn"
-		elif name == "res://prefabs/nodes/water.tscn":
-			node["name"] = "res://prefabs/nodes/terrain/water.tscn"
-		elif name == "res://prefabs/nodes/bouncy.tscn":
-			node["name"] = "res://prefabs/nodes/walls/bouncy.tscn"
-		elif name == "res://prefabs/nodes/breakable.tscn":
-			node["name"] = "res://prefabs/nodes/walls/breakable.tscn"
-		elif name == "res://prefabs/nodes/toggleable.tscn":
-			node["name"] = "res://prefabs/nodes/walls/toggleable.tscn"
-		elif name == "res://prefabs/nodes/wall.tscn":
-			node["name"] = "res://prefabs/nodes/walls/wall.tscn"
+		var n_name = node.get("n_name", "")
+		match n_name:
+			"res://prefabs/nodes/boost.tscn":
+				node["name"] = "res://prefabs/nodes/terrain/boost.tscn"
+			"res://prefabs/nodes/slope.tscn":
+				node["name"] = "res://prefabs/nodes/terrain/slope.tscn"
+			"res://prefabs/nodes/water.tscn":
+				node["name"] = "res://prefabs/nodes/terrain/water.tscn"
+			"res://prefabs/nodes/bouncy.tscn":
+				node["name"] = "res://prefabs/nodes/walls/bouncy.tscn"
+			"res://prefabs/nodes/breakable.tscn":
+				node["name"] = "res://prefabs/nodes/walls/breakable.tscn"
+			"res://prefabs/nodes/toggleable.tscn":
+				node["name"] = "res://prefabs/nodes/walls/toggleable.tscn"
+			"res://prefabs/nodes/wall.tscn":
+				node["name"] = "res://prefabs/nodes/walls/wall.tscn"

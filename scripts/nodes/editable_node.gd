@@ -41,8 +41,8 @@ class EditAttribute:
 class FloatAttribute:
 	extends EditAttribute
 	
-	var min = 0.0
-	var max = 1.0
+	var min_v = 0.0
+	var max_v = 1.0
 	var step = 0.1
 	var logarithmic = false
 	
@@ -53,39 +53,39 @@ class FloatAttribute:
 		
 		label.text = str("%.2f" % self.get_val())
 		
-		var range = HSlider.new()
-		range.value = self.get_val()
-		range.min_value = self.min
-		range.max_value = self.max
+		var range_s = HSlider.new()
+		range_s.value = self.get_val()
+		range_s.min_value = self.min_v
+		range_s.max_value = self.max_v
 		if self.step > 0:
-			range.step = self.step
+			range_s.step = self.step
 		
-		range.exp_edit = self.logarithmic
+		range_s.exp_edit = self.logarithmic
 		
-		range.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		range_s.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		
-		range.connect("value_changed", func(v):
+		range_s.connect("value_changed", func(v):
 			self.set_val(v)
 			label.text = str("%.2f" % self.get_val())
 		)
 		
-		parent.add_child(range)
+		parent.add_child(range_s)
 		parent.add_child(label)
 	
 	static func create(
 		var_name: String,
 		obj: EditableNode,
 		name: String,
-		min: float,
-		max: float,
+		min_v: float,
+		max_v: float,
 		step: float = 0,
 		logarithmic: bool = false):
 		var attr = FloatAttribute.new()
 		attr.var_name = var_name
 		attr.obj = obj
 		attr.name = name
-		attr.min = min
-		attr.max = max
+		attr.min_v = min_v
+		attr.max_v = max_v
 		attr.step = step
 		attr.logarithmic = logarithmic
 		return attr
@@ -229,7 +229,7 @@ func prepare_as_sample(size: Vector2):
 func var_updated():
 	pass
 
-func resize(ratio: Vector2):
+func resize(_ratio: Vector2):
 	pass
 
 ## Returns true if this node contains a point. The point is relative

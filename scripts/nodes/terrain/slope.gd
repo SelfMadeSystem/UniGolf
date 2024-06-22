@@ -32,7 +32,7 @@ func get_grav_dir() -> Vector2:
 		return _get_grav_dir()
 
 func rotate_ccw(rect: Rect2):
-	gravity_direction = (gravity_direction + 1) % Rot.size()
+	gravity_direction = (gravity_direction + 1) % Rot.size() as Rot
 	super.rotate_ccw(rect)
 
 func get_menu_edit_attributes() -> Array:

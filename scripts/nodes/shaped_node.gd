@@ -375,7 +375,7 @@ func rotate_ccw(rect: Rect2): # !!! IMPORTANT: CALL super. *AFTER* BECAUSE OVERR
 		Shape.QUARTER_CIRCLE, \
 		Shape.QUARTER_ARC, \
 		Shape.RIGHT_TRIANGLE:
-			shape_rotation = (shape_rotation + 1) % Rotation.size()
+			shape_rotation = (shape_rotation + 1) % Rotation.size() as Rotation
 		Shape.QUADRILATERAL:
 			var temp = quadrilateral_vertex_bottom
 			quadrilateral_vertex_bottom = quadrilateral_vertex_left

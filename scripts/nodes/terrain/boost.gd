@@ -20,7 +20,7 @@ func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D):
 			a.call_deferred()
 			return
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	for ball in balls:
 		ball.linear_velocity = ball.linear_velocity.normalized() * speed
 

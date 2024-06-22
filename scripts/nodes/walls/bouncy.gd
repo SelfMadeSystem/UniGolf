@@ -15,7 +15,7 @@ func _ready():
 		return
 	GameInfo.contact_stuffs.connect(_on_ball_contact_stuffs)
 
-func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D, ball: Ball):
+func _on_ball_contact_stuffs(stuff: PhysicsDirectBodyState2D, _ball: Ball):
 	for i in range(0, stuff.get_contact_count()):
 		var obj = stuff.get_contact_collider_object(i)
 		if obj == self:

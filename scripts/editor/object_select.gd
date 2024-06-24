@@ -4,7 +4,7 @@ signal selected(node: PackedScene)
 
 func add_object(obj: Dictionary): # TODO: Figure out a better way
 	var prefab_scene: PackedScene = obj.get("prefab")
-	var obj_name: String = obj.get("obj_name")
+	var obj_name: String = obj.get("name")
 	var templateScene = preload("res://prefabs/editor/object_template.tscn")
 	var template = templateScene.instantiate() as Control
 	var prefab = prefab_scene.instantiate()

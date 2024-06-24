@@ -40,7 +40,7 @@ func update_level(lvl: Dictionary) -> Dictionary:
 ## Fixes old ball location
 func update_0_to_1(lvl: Dictionary):
 	for node in lvl.get("nodes", []):
-		var n_name = node.get("n_name", "")
+		var n_name = node.get("name", "")
 		if n_name == "res://prefabs/nodes/ball.tscn":
 			node["name"] = "res://prefabs/nodes/balls/ball.tscn"
 
@@ -53,7 +53,7 @@ func update_1_to_2(lvl: Dictionary):
 ## Fixes old location for a lot of stuff
 func update_2_to_3(lvl: Dictionary):
 	for node in lvl.get("nodes", []):
-		var n_name = node.get("n_name", "")
+		var n_name = node.get("name", "")
 		match n_name:
 			"res://prefabs/nodes/boost.tscn":
 				node["name"] = "res://prefabs/nodes/terrain/boost.tscn"

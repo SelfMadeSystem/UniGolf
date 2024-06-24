@@ -85,9 +85,6 @@ func __into_scene(to: Dictionary, instant = false):
 	current_level = to
 	
 	var current = get_tree().current_scene
-	print(current)
-	if current == null:
-		return
 
 	LevelSaver.deserialize_level(current_level)
 	
